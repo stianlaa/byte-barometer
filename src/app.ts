@@ -1,16 +1,44 @@
-import { OpenAI } from "langchain/llms/openai";
 import * as dotenv from "dotenv";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+import { fetchComments } from "./hackernews-client.js";
+
 dotenv.config();
-if (!process.env.OPENAI_API_KEY) {
-  // if you are missing the OPENAI_API_KEY environment variable you probably need to create your .env file in the root of the project
-  throw new Error("Missing OPENAI_API_KEY environment variable");
-}
+
+const getCliArguments = () => {
+  const argv = yargs(hideBin(process.argv))
+    .option("pointLimit", {
+      alias: "p",
+      type: "number",
+      description: "minimum number of points on parent post to include",
+      demandOption: true,
+    })
+    .option("commentCount", {
+      alias: "c",
+      type: "number",
+      description: "number of comments to fetch",
+      demandOption: true,
+    })
+
+    .parseSync();
+
+  const { pointLimit, commentCount } = argv;
+  if (!pointLimit || !commentCount) {
+    console.error("Please provide a pointLimit and commentCount");
+    process.exit(1);
+  }
+
+  return { pointLimit, commentCount };
+};
+
 export const run = async () => {
-  const model = new OpenAI({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-  });
-  const res = await model.call("What is the meaning of life ?");
-  console.log({ res });
+  // Get current run arguments
+  const { pointLimit, commentCount } = getCliArguments();
+
+  // Search Hacker News for the relevant comments
+  const comments = await fetchComments("react", pointLimit, commentCount);
+
+  console.log("pointLimit: ", pointLimit, "commentCount:", commentCount);
 };
 
 run();
