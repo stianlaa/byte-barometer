@@ -1,44 +1,24 @@
 import * as dotenv from "dotenv";
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 import { fetchComments } from "./hackernews-client.js";
+import { inferSentiment } from "./sentiment-client.js";
+import { getCliArguments } from "./util.js";
 
-dotenv.config();
-
-const getCliArguments = () => {
-  const argv = yargs(hideBin(process.argv))
-    .option("pointLimit", {
-      alias: "p",
-      type: "number",
-      description: "minimum number of points on parent post to include",
-      demandOption: true,
-    })
-    .option("commentCount", {
-      alias: "c",
-      type: "number",
-      description: "number of comments to fetch",
-      demandOption: true,
-    })
-
-    .parseSync();
-
-  const { pointLimit, commentCount } = argv;
-  if (!pointLimit || !commentCount) {
-    console.error("Please provide a pointLimit and commentCount");
-    process.exit(1);
-  }
-
-  return { pointLimit, commentCount };
-};
+dotenv.config({ override: true });
 
 export const run = async () => {
   // Get current run arguments
-  const { pointLimit, commentCount } = getCliArguments();
+  const { query, commentCount } = getCliArguments();
 
-  // Search Hacker News for the relevant comments
-  const comments = await fetchComments("react", pointLimit, commentCount);
+  // Search Hacker News for the relevant comments since last year
+  const fromSeconds = Math.floor(Date.now() / 1000) - 31536000;
+  const comments = await fetchComments(query, commentCount, fromSeconds);
 
-  console.log("pointLimit: ", pointLimit, "commentCount:", commentCount);
+  // Infer the sentiment of the comments with regards to the query
+  const inferredSentimentArray = await inferSentiment(comments);
+
+  for (let sentinment of inferredSentimentArray) {
+    console.log(sentinment.comment_text, sentinment.sentiment, "\n");
+  }
 };
 
 run();

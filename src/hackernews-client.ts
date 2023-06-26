@@ -1,19 +1,17 @@
 import axios from "axios";
 
-const algoliaApiUrl = "http://hn.algolia.com/api/v1/";
-const hitsPerPage = 1000;
+const ALGOLIA_API_URL = "http://hn.algolia.com/api/v1/";
+const hitsPerPage = 100;
 
-const axiosClient = axios.create({
-  baseURL: algoliaApiUrl,
-});
-
-type Comment = {
+export type Comment = {
   id: number;
+  story_id: number;
+  parent_id: number;
+  objectID: number;
   created_at: string;
   author: string;
-  text: string;
+  comment_text: string;
   points: number | null;
-  parent_id: number;
 };
 
 type SearchResponse = {
@@ -23,13 +21,10 @@ type SearchResponse = {
   hitsPerPage: number;
 };
 
-// TODO add date filter
-// http://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=created_at_i>X,created_at_i<Y
-
 export const fetchComments = async (
   query: string,
-  pointLimit: number,
-  commentCount: number
+  commentCount: number,
+  fromSeconds: number
 ): Promise<Comment[]> => {
   const comments: Comment[] = [];
 
@@ -37,28 +32,28 @@ export const fetchComments = async (
     // Query Algolia for the relevant comments until we have enough
     let page = 0;
     while (comments.length < commentCount) {
-      const { data } = await axiosClient.get(
-        `/search_by_date?query=${query}&tags=comment&page=${page}&hitsPerPage=${hitsPerPage}`
+      const { data } = await axios.get(
+        `${ALGOLIA_API_URL}search_by_date?query=${query}&tags=comment&page=${page}&hitsPerPage=${hitsPerPage}&numericFilters=created_at_i>${fromSeconds}`
       );
-      const response = data as SearchResponse;
-
-      if (comments.length - response.hits.length > commentCount) {
-        console.log("Grabbing all 1000: ", comments.length);
-        comments.push.apply(comments, response.hits);
+      const { hits } = data as SearchResponse;
+      if (hits.length + comments.length < commentCount) {
+        // If we have room for all the comments, just add them
+        comments.push.apply(comments, hits);
       } else {
-        console.log("Slicing: ", commentCount - comments.length);
-        comments.push.apply(
-          comments,
-          response.hits.slice(0, commentCount - comments.length)
-        );
+        // Otherwise, we need to slice the response to get the right number of comments
+        const commentSlice = hits.slice(0, commentCount - hitsPerPage);
+        comments.push.apply(comments, commentSlice);
       }
-      page += 1;
+
+      if (page + 1 < data.nbPages) {
+        page += 1;
+      } else {
+        console.warn("No more pages to fetch", data.nbPages);
+        break;
+      }
     }
   } catch (error) {
     console.error("Error during request: ", error);
   }
-
-  console.log("Fetched", comments.length, "comments");
-
   return comments;
 };
