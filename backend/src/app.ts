@@ -19,7 +19,7 @@ const run = async () => {
   if (query && commentCount) {
     // If query and commentCount are provided, run the sentiment service
     const queryResult = await handleQuery(query, commentCount);
-    console.log("queryResult:", queryResult);
+    console.debug("queryResult:", queryResult);
     return;
   } else {
     // If not, start the express server and listen for queries

@@ -11,11 +11,13 @@ const NEGATIVE = "Negative";
 type CommentWithSentiment = {
   objectID: number;
   parentID: number;
+  storyID: number;
   author: string;
   commentText: string;
   positive: number;
   negative: number;
   neutral: number;
+  storyUrl: string;
 };
 
 // Await huggingface model loaded
@@ -59,11 +61,13 @@ export const inferSentiment = async (
 
   // Enumerate the comments and their inferred sentiment
   for (const [index, comment] of comments.entries()) {
-    let inferredSentiment = {
+    let inferredSentiment: CommentWithSentiment = {
       objectID: comment.objectID,
       parentID: comment.parent_id,
+      storyID: comment.story_id,
       author: comment.author,
       commentText: comment.comment_text,
+      storyUrl: comment.story_url,
       positive: 0,
       negative: 0,
       neutral: 0,
