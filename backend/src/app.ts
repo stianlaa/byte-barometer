@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import cors from "cors";
 import express, { Request, Response } from "express";
 import { getCliArguments } from "./util.js";
 import { handleQuery } from "./sentiment-service.js";
@@ -26,6 +27,7 @@ const run = async () => {
 
     const app = express();
 
+    app.use(cors());
     app.use(express.json());
 
     app.post("/query", async (req: Request, res: Response) => {
