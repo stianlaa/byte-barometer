@@ -8,18 +8,11 @@ const HUGGING_FACE_URL = "https://api-inference.huggingface.co/";
 const POSITIVE = "Positive";
 const NEGATIVE = "Negative";
 
-type Sentiment = {
-  label: string;
-  score: number;
-};
-
-type RawSentiment = {
-  comment_text: string;
-  sentiment: Sentiment[];
-};
-
-type InferredSentiment = {
-  comment_text: string;
+type CommentWithSentiment = {
+  objectID: number;
+  parentID: number;
+  author: string;
+  commentText: string;
   positive: number;
   negative: number;
   neutral: number;
@@ -42,8 +35,11 @@ export const awaitModelLoaded = async () => {
   }
 };
 
-export const inferSentiment = async (query: string, comments: Comment[]) => {
-  const inferredSentimentArray: InferredSentiment[] = [];
+export const inferSentiment = async (
+  query: string,
+  comments: Comment[]
+): CommentWithSentiment[] => {
+  const inferredSentimentArray: CommentWithSentiment[] = [];
   const inputs = comments.map(
     (comment) => `[CLS] ${comment.comment_text} [SEP] ${query} [SEP]`
   );
@@ -62,7 +58,10 @@ export const inferSentiment = async (query: string, comments: Comment[]) => {
   // Enumerate the comments and their inferred sentiment
   for (const [index, comment] of comments.entries()) {
     let inferredSentiment = {
-      comment_text: comment.comment_text,
+      objectID: comment.objectID,
+      parentID: comment.parent_id,
+      author: comment.author,
+      commentText: comment.comment_text,
       positive: 0,
       negative: 0,
       neutral: 0,

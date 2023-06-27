@@ -24,12 +24,9 @@ export const run = async () => {
     (a, b) => a.positive - a.negative - (b.positive - b.negative)
   );
 
-  for (const sentinment of sortedSentiment) {
-    console.log(
-      sentinment.comment_text,
-      sentinment.positive - sentinment.negative,
-      "\n"
-    );
+  // Select the top 3 negative and positive comments
+  for (const sentiment of sortedSentiment) {
+    console.log(sentiment);
   }
 };
 
