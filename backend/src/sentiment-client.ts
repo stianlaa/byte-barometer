@@ -23,9 +23,11 @@ type CommentWithSentiment = {
 export const awaitModelLoaded = async () => {
   for (let retries = 0; retries < 5; retries++) {
     try {
+      console.log("Checking if model is loaded");
       await axios.get(`${HUGGING_FACE_URL}models/${MODEL}`, {
         headers: { Authorization: `Bearer ${getEnv("HUGGINGFACE_API_KEY")}` },
       });
+      console.log("Model is loaded");
       return;
     } catch (error) {
       console.log("Should check 503 and retry");
