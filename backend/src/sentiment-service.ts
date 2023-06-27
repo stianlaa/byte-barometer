@@ -1,14 +1,10 @@
 import * as dotenv from "dotenv";
 import { fetchComments } from "./hackernews-client.js";
 import { awaitModelLoaded, inferSentiment } from "./sentiment-client.js";
-import { getCliArguments } from "./util.js";
 
 dotenv.config({ override: true });
 
-export const run = async () => {
-  // Get current run arguments
-  const { query, commentCount } = getCliArguments();
-
+export const handleQuery = async (query: string, commentCount: number) => {
   // Ensure model is ready
   await awaitModelLoaded();
 
@@ -20,14 +16,7 @@ export const run = async () => {
   const inferredSentimentArray = await inferSentiment(query, comments);
 
   // Sort the inferredSentimentArray by sentiment score, 1 to -1 (positive to negative)
-  const sortedSentiment = inferredSentimentArray.sort(
+  return inferredSentimentArray.sort(
     (a, b) => a.positive - a.negative - (b.positive - b.negative)
   );
-
-  // Select the top 3 negative and positive comments
-  for (const sentiment of sortedSentiment) {
-    console.log(sentiment);
-  }
 };
-
-run();

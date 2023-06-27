@@ -38,7 +38,7 @@ export const awaitModelLoaded = async () => {
 export const inferSentiment = async (
   query: string,
   comments: Comment[]
-): CommentWithSentiment[] => {
+): Promise<CommentWithSentiment[]> => {
   const inferredSentimentArray: CommentWithSentiment[] = [];
   const inputs = comments.map(
     (comment) => `[CLS] ${comment.comment_text} [SEP] ${query} [SEP]`

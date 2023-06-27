@@ -15,22 +15,15 @@ export const getCliArguments = () => {
       alias: "q",
       type: "string",
       description: "search query string",
-      demandOption: true,
+      demandOption: false,
     })
     .option("commentCount", {
       alias: "c",
       type: "number",
       description: "number of comments to fetch",
-      demandOption: true,
+      demandOption: false,
     })
-
     .parseSync();
-
   const { query, commentCount } = argv;
-  if (!query || !commentCount) {
-    console.error("Please provide a pointLimit and commentCount");
-    process.exit(1);
-  }
-
   return { query, commentCount };
 };
