@@ -7,16 +7,15 @@ export type CommentWithSentiment = {
   storyID: number;
   author: string;
   commentText: string;
+  queryMatch: string;
   positive: number;
   negative: number;
   neutral: number;
   storyUrl: string;
 };
 
-const MAX_COMMENT_LENGTH = 200;
-
 function Comment({
-  commentText,
+  queryMatch,
   author,
   storyUrl,
   objectID,
@@ -43,10 +42,9 @@ function Comment({
         <Link href={storyUrl} isExternal>
           Source
         </Link>
-        <Box>{positive - negative}</Box>
+        <Box>{(positive - negative).toFixed(3)}</Box>
       </HStack>
-
-      <Text>{commentText.slice(0, MAX_COMMENT_LENGTH)}</Text>
+      <Text>{queryMatch}</Text>
     </Box>
   );
 }

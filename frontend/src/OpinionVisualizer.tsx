@@ -25,9 +25,7 @@ function OpinionVisualizer({
             tickFormat={(t) => `${t}`}
             tickValues={[-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1]}
             style={{
-              axisLabel: { fill: "white" },
               tickLabels: { fill: "white", angle: 45, fontSize: 6 },
-              axis: { stroke: "white" },
             }}
           />
           <VictoryAxis
@@ -36,11 +34,14 @@ function OpinionVisualizer({
             style={{
               axisLabel: { fill: "white" },
               tickLabels: { fill: "white", fontSize: 6 },
-              axis: { stroke: "white" },
             }}
           />
           <VictoryHistogram
-            style={{ data: { fill: "#F1737F" } }}
+            width={400} // example width
+            height={400 * 0.6} // height is 60% of width
+            style={{
+              data: { fill: "#CD5C5C", stroke: "darkred", strokeWidth: 2 },
+            }}
             cornerRadius={3}
             bins={[-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1]}
             data={data}

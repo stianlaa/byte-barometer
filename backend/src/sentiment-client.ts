@@ -14,6 +14,7 @@ type CommentWithSentiment = {
   storyID: number;
   author: string;
   commentText: string;
+  queryMatch: string;
   positive: number;
   negative: number;
   neutral: number;
@@ -44,7 +45,7 @@ export const inferSentiment = async (
 ): Promise<CommentWithSentiment[]> => {
   const inferredSentimentArray: CommentWithSentiment[] = [];
   const inputs = comments.map(
-    (comment) => `[CLS] ${comment.comment_text} [SEP] ${query} [SEP]`
+    (comment) => `[CLS] ${comment.query_match} [SEP] ${query} [SEP]`
   );
 
   // Time request
@@ -66,6 +67,7 @@ export const inferSentiment = async (
       storyID: comment.story_id,
       author: comment.author,
       commentText: comment.comment_text,
+      queryMatch: comment.query_match,
       storyUrl: comment.story_url,
       positive: 0,
       negative: 0,
