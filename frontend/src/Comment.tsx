@@ -44,7 +44,13 @@ function Comment({
         </Link>
         <Box>{(positive - negative).toFixed(3)}</Box>
       </HStack>
-      <Text>{queryMatch}</Text>
+      <Text
+        paddingLeft={"0.25rem"}
+        marginLeft={"0.25rem"}
+        borderLeft="3px solid grey"
+      >
+        {queryMatch}
+      </Text>
     </Box>
   );
 }
