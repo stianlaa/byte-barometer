@@ -30,16 +30,13 @@ const run = async () => {
     app.use(cors());
     app.use(express.json());
 
-    app.post("/query", async (req: Request, res: Response) => {
-      // TypeScript will now know the shape of req.body
-      const body: PostRequestBody = req.body;
-
-      console.log(`Query: ${body.query}`);
-      console.log(`CommentCount: ${body.commentCount}`);
-
-      const response = await handleQuery(body.query, body.commentCount);
-      res.json(response);
-    });
+    app.post<PostRequestBody>(
+      "/query",
+      async ({ body }: Request<PostRequestBody>, res: Response) => {
+        const response = await handleQuery(body.query, body.commentCount);
+        res.json(response);
+      }
+    );
 
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}`);

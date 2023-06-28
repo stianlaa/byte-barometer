@@ -11,8 +11,10 @@ import { useState, KeyboardEvent } from "react";
 import axios, { AxiosResponse } from "axios";
 import { CommentWithSentiment } from "./Comment";
 import Comment from "./Comment";
+import OpinionVisualizer from "./OpinionVisualizer";
 
-const VISIBLE_COMMENTS = 3;
+const VISIBLE_COMMENTS = 5;
+const REQUEST_COMMENTS = 10;
 const PORT = 3000;
 
 // TODO replace with varying example
@@ -31,12 +33,10 @@ function App() {
     axios
       .post(`http://localhost:${PORT}/query`, {
         query: subject,
-        commentCount: 2,
+        commentCount: REQUEST_COMMENTS,
       })
       .then((response: AxiosResponse<CommentWithSentiment[]>) => {
-        console.log(response);
         const data = response.data;
-        console.log(response);
         setPositiveComments(
           data.filter(({ positive, negative }) => positive > negative)
         );
@@ -56,6 +56,10 @@ function App() {
     <Box w="100%" bgColor="var(--bg-dark)" color="var(--text-light)">
       <Box w="100%">
         <Heading>Byte Barometer</Heading>
+        <OpinionVisualizer
+          positiveComments={positiveComments}
+          negativeComments={negativeComments}
+        />
         <Input
           value={queryString}
           onChange={(e) => setQueryString(e.target.value)}
@@ -64,7 +68,7 @@ function App() {
           placeholder={`What does hackernews think about.. ${exampleSubject}`}
           color="white"
           size="md"
-          w="80%"
+          w="50%"
           onKeyDown={handleCompletion}
         />
       </Box>
@@ -73,7 +77,9 @@ function App() {
 
       <SimpleGrid columns={2} spacing={10}>
         <VStack h="auto">
-          <Heading size="sm">Positive</Heading>
+          <Heading size="sm" mt={"0.25rem"}>
+            Positive
+          </Heading>
           {positiveComments.length > 0
             ? positiveComments
                 .slice(0, VISIBLE_COMMENTS)
@@ -84,12 +90,16 @@ function App() {
             : null}
         </VStack>
         <VStack h="auto">
-          <Heading size="sm">Negative</Heading>
+          <Heading size="sm" mt={"0.25rem"}>
+            Negative
+          </Heading>
           {negativeComments.length > 0
             ? negativeComments
                 .slice(0, VISIBLE_COMMENTS)
                 .sort((a, b) => b.negative - a.negative)
-                .map((comment) => <Comment {...comment} />)
+                .map((comment) => (
+                  <Comment key={comment.objectID} {...comment} />
+                ))
             : null}
         </VStack>
       </SimpleGrid>

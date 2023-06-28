@@ -37,7 +37,7 @@ export const fetchComments = async (
         commentCount
       );
       const { data } = await axios.get<SearchResponse>(
-        `${ALGOLIA_API_URL}search_by_date?query=${query}&tags=comment&page=${page}&hitsPerPage=${requestHits}&numericFilters=created_at_i>${fromSeconds}`
+        `${ALGOLIA_API_URL}search?query=${query}&tags=comment&page=${page}&hitsPerPage=${requestHits}&numericFilters=created_at_i>${fromSeconds}`
       );
       comments.push.apply(comments, data.hits);
       if (page + 1 < data.nbPages) {

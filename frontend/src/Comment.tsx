@@ -21,6 +21,8 @@ function Comment({
   storyUrl,
   objectID,
   storyID,
+  positive,
+  negative,
 }: CommentWithSentiment) {
   return (
     <Box textAlign="left" p={"1rem"} mr="auto">
@@ -41,6 +43,7 @@ function Comment({
         <Link href={storyUrl} isExternal>
           Source
         </Link>
+        <Box>{positive - negative}</Box>
       </HStack>
 
       <Text>{commentText.slice(0, MAX_COMMENT_LENGTH)}</Text>

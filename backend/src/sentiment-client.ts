@@ -21,7 +21,6 @@ type CommentWithSentiment = {
 };
 
 // Await huggingface model loaded
-// TODO improve to actually make sense
 export const awaitModelLoaded = async () => {
   for (let retries = 0; retries < 5; retries++) {
     try {
@@ -33,8 +32,8 @@ export const awaitModelLoaded = async () => {
       return;
     } catch (error) {
       console.log("Should check 503 and retry");
-      // Wait for 3 seconds
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Wait for 6 seconds
+      await new Promise((resolve) => setTimeout(resolve, 6000));
     }
   }
 };
