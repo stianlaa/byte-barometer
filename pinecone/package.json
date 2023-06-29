@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "delete": "ts-node --esm src/delete-index.ts",
     "query": "ts-node --esm src/query-index.ts",
     "populate": "ts-node --esm src/populate-index.ts"
   },

@@ -37,7 +37,6 @@ type CommentResponse = {
 };
 
 // TODO Which embedding model are you using, and what chunk sizes does it perform optimally on? For instance, sentence-transformer models work well on individual sentences, but a model like text-embedding-ada-002 performs better on chunks containing 256 or 512 tokens.
-
 // TODO Make sensible chunks: https://www.pinecone.io/learn/chunking-strategies/
 const chunkComment = (comment: CommentItem): DocumentWithId[] => {
   const documents: DocumentWithId[] = [];
@@ -46,6 +45,8 @@ const chunkComment = (comment: CommentItem): DocumentWithId[] => {
   const commentText = comment.comment_text;
 
   // TODO remove htmltags and other noise
+  // TODO alternatively, investigate direct fetching from HN API
+  // TODO Check if format from HN api contains noise
   let start = 0;
   let end = DOCUMENT_SIZE_LIMIT;
   let chunk = 0;
@@ -86,7 +87,7 @@ export const getDocuments = async (
             const commentDocuments = chunkComment(comment);
 
             for (let document of commentDocuments) {
-              if (documents.length > commentCount) {
+              if (documents.length >= commentCount) {
                 return documents;
               }
               documents.push(document);

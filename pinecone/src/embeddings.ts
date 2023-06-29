@@ -1,9 +1,4 @@
-import {
-  Configuration,
-  CreateEmbeddingResponse,
-  CreateEmbeddingResponseDataInner,
-  OpenAIApi,
-} from "openai";
+import { Configuration, OpenAIApi } from "openai";
 import { Vector } from "@pinecone-database/pinecone";
 import { getEnv, sliceIntoChunks } from "./util.js";
 
@@ -62,9 +57,12 @@ class Embedder {
   ) {
     const batches = sliceIntoChunks<DocumentWithId>(documents, batchSize);
     for (const batch of batches) {
+      console.time("Embedding batch");
       const embeddings = await Promise.all(
         batch.map((document) => this.embed(document))
       );
+      console.timeEnd("Embedding batch");
+
       await onDoneBatch(embeddings.flatMap((embedding) => embedding));
     }
   }
