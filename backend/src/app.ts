@@ -3,7 +3,6 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import { getCliArguments } from "./util.js";
 import { handleQuery } from "./sentiment-service.js";
-import { mockresponse } from "./data/mock.js";
 
 dotenv.config({ override: true });
 

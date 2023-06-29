@@ -82,8 +82,6 @@ function App() {
           />
           <InputRightElement>
             <Button
-              // width="9rem"
-              // size="sm"
               onClick={() => {
                 querySubject(queryString);
               }}
