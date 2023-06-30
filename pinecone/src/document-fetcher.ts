@@ -4,7 +4,7 @@ import axios from "axios";
 const ALGOLIA_API_URL = "http://hn.algolia.com/api/v1/";
 const DOCUMENT_SIZE_LIMIT = 200;
 
-export type StoryItem = {
+type StoryItem = {
   objectID: string;
   title: string;
   points: number;
@@ -20,7 +20,7 @@ type StoryResponse = {
   hitsPerPage: number;
 };
 
-export type CommentItem = {
+type CommentItem = {
   objectID: string;
   author: string;
   story_url: string;
@@ -46,7 +46,6 @@ const chunkComment = (comment: CommentItem): DocumentWithId[] => {
 
   // TODO remove htmltags and other noise
   // TODO alternatively, investigate direct fetching from HN API
-  // TODO Check if format from HN api contains noise
   let start = 0;
   let end = DOCUMENT_SIZE_LIMIT;
   let chunk = 0;

@@ -17,7 +17,6 @@ const progressBar = new cliProgress.SingleBar(
   cliProgress.Presets.shades_classic
 );
 
-// const indexName = getEnv("PINECONE_INDEX");
 const indexName = getEnv("PINECONE_INDEX");
 let counter = 0;
 

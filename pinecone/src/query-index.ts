@@ -46,10 +46,7 @@ const run = async () => {
   console.log("Results:");
   console.log(
     results.matches?.map((match) => ({
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      text: match.metadata?.text,
-      score: match.score,
+      ...match,
     }))
   );
 };

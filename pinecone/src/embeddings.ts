@@ -2,6 +2,10 @@ import { Configuration, OpenAIApi } from "openai";
 import { Vector } from "@pinecone-database/pinecone";
 import { getEnv, sliceIntoChunks } from "./util.js";
 
+// $0.0001 / 1K tokens
+// TODO - add tokenizing and pricing calculation to the script
+const embeddingModel = "text-embedding-ada-002";
+
 export type DocumentWithId = {
   id: string;
   text: string;
@@ -33,7 +37,7 @@ class Embedder {
     if (!this.openaiClient) throw new Error("OpenAI client not initialized");
 
     const { data } = await this.openaiClient.createEmbedding({
-      model: "text-embedding-ada-002",
+      model: embeddingModel,
       input: text,
     });
 
