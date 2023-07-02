@@ -10,9 +10,15 @@ const run = async () => {
 
   // Initialize the Pinecone client
   const pineconeClient = await getPineconeClient();
-  await pineconeClient.deleteIndex({
-    indexName,
-  });
+
+  const indexList = await pineconeClient.listIndexes();
+  if (indexList.includes(indexName)) {
+    await pineconeClient.deleteIndex({
+      indexName,
+    });
+  } else {
+    console.warn(`Index ${indexName} does not exist`);
+  }
 };
 
 run();
