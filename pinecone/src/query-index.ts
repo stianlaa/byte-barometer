@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { embedder } from "./embeddings.js";
+import { embed } from "./embeddings.js";
 import { getPineconeClient } from "./pinecone-client.js";
 import {
   getEnv,
@@ -18,23 +18,22 @@ const run = async () => {
 
   // Insert the embeddings into the index
   const index = pineconeClient.Index(indexName);
-  await embedder.init();
 
   // Embed the query
-  const queryEmbedding = await embedder.embed({
+  const queryEmbedding = await embed({
     id: "placeholder",
     text: query,
   });
 
-  let test = queryEmbedding.map((value) => value.values);
-  if (test.length !== 1) {
+  let queryEmbeddingValues = queryEmbedding.map((value) => value.values);
+  if (queryEmbeddingValues.length !== 1) {
     console.error("Query embedding is not a single vector");
   }
 
   // Query the index
   const results = await index.query({
     queryRequest: {
-      vector: test[0],
+      vector: queryEmbeddingValues[0],
       topK,
       includeMetadata: true,
       includeValues: false,

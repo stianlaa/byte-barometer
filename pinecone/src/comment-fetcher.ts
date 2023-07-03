@@ -43,30 +43,6 @@ export type Comment = {
   parentId: number;
 };
 
-// TODO Which embedding model are you using, and what chunk sizes does it perform optimally on? For instance, sentence-transformer models work well on individual sentences, but a model like text-embedding-ada-002 performs better on chunks containing 256 or 512 tokens.
-// TODO Make sensible chunks: https://www.pinecone.io/learn/chunking-strategies/
-// const chunkComment = (comment: CommentItem): DocumentWithId[] => {
-//   const documents: DocumentWithId[] = [];
-
-//   // Simple, naive chunking, count up to character limit
-//   const commentText = comment.comment_text;
-
-//   // TODO remove htmltags and other noise
-//   // TODO alternatively, investigate direct fetching from HN API
-//   let start = 0;
-//   let end = DOCUMENT_SIZE_LIMIT;
-//   let chunk = 0;
-//   while (start < commentText.length) {
-//     documents.push({
-//       id: `${comment.objectID}-${chunk++}`,
-//       text: commentText.substring(start, end),
-//     });
-//     start = end;
-//     end = Math.min(commentText.length, end + DOCUMENT_SIZE_LIMIT);
-//   }
-//   return documents;
-// };
-
 export const getComments = async (commentCount: number): Promise<Comment[]> => {
   const comments: Comment[] = [];
   const hitsPerPage = 10;
