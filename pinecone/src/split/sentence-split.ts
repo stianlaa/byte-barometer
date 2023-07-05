@@ -2,8 +2,10 @@ import { encoding_for_model } from "tiktoken";
 import { EMBEDDING_MODEL } from "../embeddings.js";
 import { tokenSplitText } from "./token-split.js";
 
-const chunkMinTokenLimit = 15;
+const chunkMinTokenLimit = 50;
 const chunkMaxTokenLimit = 200;
+
+const encoder = encoding_for_model(EMBEDDING_MODEL);
 
 const separators = ["\\.", "\\!", "\\?", "\\n"];
 export const sentenceSplitText = (text: string): string[] => {
@@ -13,7 +15,6 @@ export const sentenceSplitText = (text: string): string[] => {
   // 1. Take arbitrary string in, split it by the separators.
   // 2. From the start select first split element, count the token length of current chunk.
   // 3. If the token length is below N, add the next split element to the current chunk, and repeat step 3.
-  const encoder = encoding_for_model(EMBEDDING_MODEL);
 
   const chunks: string[] = [];
   const splitText = text.split(new RegExp(separators.join("|"), "g"));

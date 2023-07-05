@@ -43,16 +43,25 @@ export type Comment = {
   parentId: number;
 };
 
-export const getComments = async (commentCount: number): Promise<Comment[]> => {
+export type CommentQueryResult = {
+  comments: Comment[];
+  from: number;
+  to: number;
+};
+
+export const getComments = async (
+  from: number,
+  to: number
+): Promise<Comment[]> => {
   const comments: Comment[] = [];
-  const hitsPerPage = 10;
-  const pageLimit = 10;
+  const hitsPerPage = 100;
+  const pageLimit = 100;
 
   try {
     // Outer loop, fetch frontpage stories from newest to oldest
     for (let storyPage = 0; storyPage < pageLimit; storyPage++) {
       const storyResponse = await axios.get<StoryResponse>(
-        `${ALGOLIA_API_URL}search_by_date?tags=story,front_page&page=${storyPage}&hitsPerPage=${hitsPerPage}`
+        `${ALGOLIA_API_URL}search_by_date?tags=story,front_page&page=${storyPage}&hitsPerPage=${hitsPerPage}&numericFilters=created_at_i>${from},created_at_i<${to}`
       );
 
       // Mid loop, iterate over comments from each story
@@ -64,9 +73,6 @@ export const getComments = async (commentCount: number): Promise<Comment[]> => {
 
           // Inner loops, process comments into persistable documents
           for (let comment of commentResponse.data.hits) {
-            if (comments.length >= commentCount) {
-              return comments;
-            }
             comments.push({
               id: comment.objectID,
               author: comment.author,
@@ -76,7 +82,15 @@ export const getComments = async (commentCount: number): Promise<Comment[]> => {
               parentId: comment.parent_id,
             });
           }
+
+          if (commentPage >= commentResponse.data.nbPages) {
+            break;
+          }
         }
+      }
+
+      if (storyPage >= storyResponse.data.nbPages) {
+        break;
       }
     }
   } catch (error) {

@@ -21,9 +21,7 @@ const splitText = (splitStrategy: SplitStrategy, text: string): string[] => {
   }
 };
 
-export const createDocuments = async (
-  comments: Comment[]
-): Promise<Document[]> => {
+export const createDocuments = (comments: Comment[]): Document[] => {
   const documents: Document[] = [];
   for (const { id, commentText } of comments) {
     splitText(SplitStrategy.SENTENCE_SPLIT, commentText).forEach(
