@@ -12,13 +12,14 @@
     "build": "tsc",
     "delete": "ts-node --esm src/delete-index.ts",
     "query": "ts-node --esm src/query-index.ts",
-    "populate": "ts-node --esm src/populate-index.ts"
+    "populate": "ts-node --esm src/populate-documents.ts"
   },
   "dependencies": {
     "@pinecone-database/pinecone": "^0.1.6",
     "@types/node": "^18.15.10",
+    "@xenova/transformers": "^2.3.1",
     "axios": "^1.4.0",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "openai": "^3.3.0",
     "tiktoken": "^1.0.10",
     "typescript": "^5.0.2",

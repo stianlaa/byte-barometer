@@ -28,7 +28,7 @@ export const createDocuments = (comments: Comment[]): Document[] => {
       (chunk, chunkIndex) => {
         documents.push({
           id: `${id}-${chunkIndex}`,
-          text: chunk,
+          text: chunk.trim(),
         });
       }
     );

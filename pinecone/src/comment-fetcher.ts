@@ -83,15 +83,11 @@ export const getComments = async (
             });
           }
 
-          if (commentPage >= commentResponse.data.nbPages) {
-            break;
-          }
+          if (commentPage >= commentResponse.data.nbPages) break;
         }
       }
 
-      if (storyPage >= storyResponse.data.nbPages) {
-        break;
-      }
+      if (storyPage >= storyResponse.data.nbPages) break;
     }
   } catch (error) {
     console.error("Error during request: ", error);
