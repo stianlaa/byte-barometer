@@ -11,9 +11,7 @@ import pinecone
 path = 'documents.jsonl'
 chunk_size = 100
 
-# $0.0001 / 1K tokens
-# TODO - add tokenizing and pricing calculation to the script
-dense_model_id = "text-embedding-ada-002"
+dense_model_id = "text-embedding-ada-002"  # $0.0001 / 1K tokens
 sparse_model_id = "naver/splade-cocondenser-ensembledistil"
 device = 'cpu'  # Would be ideal to use GPU
 log_sparse = False
@@ -21,8 +19,22 @@ log_sparse = False
 
 load_dotenv(".env")
 
+# Expected environment
+pinecone_index = os.environ['PINECONE_INDEX']
+
+# OpenAI
+# TODO Should be unneccessary, since we've got the environment variable set
+openai.api_key = os.environ['OPENAI_API_KEY']
+
+# Splade
 sparse_model = Splade(sparse_model_id, agg='max')
 sparse_model.eval()
+
+# Pinecone
+pinecone.init(
+    api_key=os.environ['PINECONE_API_KEY'],
+    environment=os.environ['PINECONE_ENVIRONMENT']
+)
 
 
 def create_dense_embeddings(text):
@@ -66,18 +78,29 @@ def create_sparse_embeddings(text):
         return sparse
 
 
-def build_upserts(dense_vec, sparse_vec, context):
+def create_index_if_missing():
+    index_name = os.environ['PINECONE_INDEX']
+    indices = pinecone.list_indexes()
+    if any(map(lambda i: i == index_name, indices)):
+        print(f'Index {index_name} already exists')
+        return
+    else:
+        print(f'Creating index: {index_name}')
+        pinecone.create_index(
+            index_name,
+            dimension=1536,
+            metric="dotproduct",
+            pod_type="s1"
+        )
 
 
 def main():
-    # TODO Should be unneccessary, since we've got the environemnt variable set
-    openai.api_key = os.environ['OPENAI_API_KEY']
-
+    create_index_if_missing()
     # load comments.jsonl into a dataframe
     with open(f'{path}') as f:
         df = pd.read_json(f, lines=True)
         print(f'Embedding {df.shape[0]} documents')
-        print(df.head())
+        print(f'{df.head()}\n')
 
         # Grab chunks of chunk_size documents
         for i in range(0, df.shape[0], chunk_size):
@@ -86,33 +109,25 @@ def main():
 
             # For each chunk, embed the text
             for _, row in chunk.iterrows():
+                id = row['id']
                 text = row['text']
+
+                # TODO Do in parallel
                 dense_embedding = create_dense_embeddings(text)
                 sparse_embedding = create_sparse_embeddings(text)
 
-                # Append all to upserts list as pinecone.Vector (or GRPCVector)
+                # Append all to upserts list
                 upserts.append({
-                    'id': '_id',  # TODO
+                    'id': id,
                     'values': dense_embedding,
                     'sparse_values': sparse_embedding,
-                    'metadata': {'context': "context"}  # TODO
                 })
 
-            # Upsert
-
-            # print(chunk)
-
-#   Create embeddings
-#   console.log("  Creating embeddings");
-#   const vectors = await createEmbeddings(documents);
-
-#   TODO adjust upsert to match hybrid
-#   https://docs.pinecone.io/docs/hybrid-search
-#   https://docs.pinecone.io/docs/ecommerce-search
-
-#   TODO
-#   Use this: https://huggingface.co/docs/transformers.js/index
-#   Essentially this: https://github.com/pinecone-io/examples/blob/master/search/hybrid-search/medical-qa/pubmed-splade.ipynb
+            # Upsert data
+            print(f'Upserting {len(upserts)} documents')
+            index = pinecone.GRPCIndex(pinecone_index)
+            index.upsert(upserts)
+        print(f'Index {pinecone_index}:\n{index.describe_index_stats()}')
 
 
 if __name__ == '__main__':

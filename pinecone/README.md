@@ -11,3 +11,8 @@ PINECONE_ENVIRONMENT=<environment>
 PINECONE_API_KEY=<api-key>
 PINECONE_INDEX=<index-name>
 ```
+
+## Inspiration
+
+https://docs.pinecone.io/docs/hybrid-search & https://docs.pinecone.io/docs/ecommerce-search
+https://github.com/pinecone-io/examples/blob/master/search/hybrid-search/medical-qa/pubmed-splade.ipynb
