@@ -3,7 +3,7 @@ import pandas as pd
 import openai
 import torch
 import pinecone
-import concurrent.futures
+import time
 from argparse import ArgumentParser
 from transformers import AutoTokenizer
 from splade.models.transformer_rep import Splade
@@ -74,44 +74,18 @@ def create_sparse_embeddings(chunk):
             indices = sparse_embeddings.nonzero().squeeze().cpu().tolist()
             values = sparse_embeddings[indices].cpu().tolist()
             sparse = {'indices': indices, 'values': values}
-
-            if log_sparse:
-                idx2token = {idx: token for token,
-                             idx in toolbox.tokenizer.get_vocab().items()}
-
-                # Then create the mappings like we did with the Pinecone-friendly sparse format above.
-                sparse_dict_tokens = {
-                    idx2token[idx]: round(weight, 2) for idx, weight in zip(indices, values)
-                }
-
-                # Sort so we can see most relevant tokens first
-                sparse_dict_tokens = {
-                    k: v for k, v in sorted(
-                        sparse_dict_tokens.items(),
-                        key=lambda item: item[1],
-                        reverse=True
-                    )
-                }
-                print(sparse_dict_tokens)
             chunk_result.append(sparse)
     return chunk_result
 
 
 def batch_create_embeddings(chunk):
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        dense_future = executor.submit(
-            lambda c: create_dense_embeddings(c), chunk)
-        sparse_future = executor.submit(
-            lambda c: create_sparse_embeddings(c), chunk)
-
-        dense_embedding = dense_future.result()
-        sparse_embedding = sparse_future.result()
-
-        return dense_embedding, sparse_embedding
+    dense_embedding = create_dense_embeddings(chunk)
+    sparse_embedding = create_sparse_embeddings(chunk)
+    return dense_embedding, sparse_embedding
 
 
 def create_index_if_missing():
-    toolbox.index
+    toolbox.index  # Initialize index if not already done
     indices = pinecone.list_indexes()
     if any(map(lambda i: i == pinecone_index, indices)):
         print(f'Index {pinecone_index} already exists')
@@ -127,6 +101,7 @@ def create_index_if_missing():
 
 
 def delete_if_exists(args):
+    toolbox.index  # Initialize index if not already done
     indices = pinecone.list_indexes()
     if any(map(lambda i: i == pinecone_index, indices)):
         print(f'Deleting {pinecone_index}')
@@ -146,6 +121,7 @@ def populate(args):
         # Grab chunks of chunk_size documents
         for i in range(0, df.shape[0], chunk_size):
             chunk = df.iloc[i:i+chunk_size]
+            chunk_start = time.time()
             upserts = []
 
             chunktext = chunk["text"].values.tolist()
@@ -164,18 +140,20 @@ def populate(args):
                 })
 
             # Upsert data
-            print(f'Upserting {len(upserts)} documents')
+            chunk_end = time.time()
             toolbox.index.upsert(upserts)
+            print(
+                f'Upserted {len(upserts)} documents, {round(chunk_size/(chunk_end - chunk_start), 2)} documents/second')
         print(
             f'Index {pinecone_index}:\n{toolbox.index.describe_index_stats()}')
 
 
 def query(args):
     subject = args.subject
-    print(f'Querying: {subject}')
-    dense, sparse = batch_create_embeddings(list(subject))
-    print(toolbox.index.query(vector=dense[0], sparse_vector=sparse[0],
-                              top_k=2, include_metadata=True))
+    top_k = 1 if args.topK is None else args.topK
+    dense_embeddings, sparse_embeddings = batch_create_embeddings([subject])
+    print(toolbox.index.query(vector=dense_embeddings[0], sparse_vector=sparse_embeddings[0],
+                              top_k=top_k, include_metadata=True))
 
 
 options = {
@@ -194,9 +172,8 @@ def main():
                         help="action to execute"
                         )
     parser.add_argument('-s', '--subject', type=str)
+    parser.add_argument('-k', '--topK', type=int)
 
-    # TODO add topk param
-    # TODO improve accuracy, suspect that the order is altered in between the embedding and the upsert
     # TODO add weight between sparse and dense query
 
     args = parser.parse_args()
