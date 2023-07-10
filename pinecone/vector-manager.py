@@ -84,6 +84,19 @@ def batch_create_embeddings(chunk):
     return dense_embedding, sparse_embedding
 
 
+def hybrid_scale(dense, sparse, alpha: float):
+    # check alpha value is in range
+    if alpha < 0 or alpha > 1:
+        raise ValueError("Alpha must be between 0 and 1")
+    # scale sparse and dense vectors to create hybrid search vecs
+    hsparse = {
+        'indices': sparse['indices'],
+        'values':  [v * (1 - alpha) for v in sparse['values']]
+    }
+    hdense = [v * alpha for v in dense]
+    return hdense, hsparse
+
+
 def create_index_if_missing():
     toolbox.index  # Initialize index if not already done
     indices = pinecone.list_indexes()
@@ -151,9 +164,13 @@ def populate(args):
 def query(args):
     subject = args.subject
     top_k = 1 if args.topK is None else args.topK
+    alpha = 0.5 if args.alpha is None else args.alpha
     dense_embeddings, sparse_embeddings = batch_create_embeddings([subject])
-    print(toolbox.index.query(vector=dense_embeddings[0], sparse_vector=sparse_embeddings[0],
-                              top_k=top_k, include_metadata=True))
+    scaled_dense, scaled_sparse = hybrid_scale(
+        dense_embeddings[0], sparse_embeddings[0], alpha)
+    result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
+                                 top_k=top_k, include_metadata=True)
+    print(result)
 
 
 options = {
@@ -173,6 +190,7 @@ def main():
                         )
     parser.add_argument('-s', '--subject', type=str)
     parser.add_argument('-k', '--topK', type=int)
+    parser.add_argument('-a', '--alpha', type=float)
 
     # TODO add weight between sparse and dense query
 
