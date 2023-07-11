@@ -4,7 +4,8 @@ import openai
 import torch
 import pinecone
 import time
-from transformers import AutoTokenizer
+import asyncio
+from transformers import AutoTokenizer, pipeline
 from splade.models.transformer_rep import Splade
 from dotenv import load_dotenv
 
@@ -25,6 +26,7 @@ class Toolbox:
     _sparse_model = None
     _tokenizer = None
     _index = None
+    _sentiment_pipeline = None
 
     @property
     def sparse_model(self):
@@ -51,19 +53,26 @@ class Toolbox:
             self._index = pinecone.GRPCIndex(pinecone_index)
         return self._index
 
+    @property
+    def sentiment_pipeline(self):
+        if self._sentiment_pipeline is None:
+
+            self._sentiment_pipeline = pipeline("sentiment-analysis")
+        return self._sentiment_pipeline
+
 
 toolbox = Toolbox()
 
 
-def create_dense_embeddings(chunk):
+async def create_dense_embeddings(chunk):
     response = openai.Embedding.create(input=chunk, model=dense_model_id)
     embeddings = map(lambda entry: entry['embedding'], response['data'])
     return list(embeddings)
 
 
-def create_sparse_embeddings(chunk):
+async def create_sparse_embeddings(chunktext):
     chunk_result = list([])
-    for text in chunk:
+    for text in chunktext:
         tokens = toolbox.tokenizer(text, return_tensors='pt')
         with torch.no_grad():
             sparse_embeddings = toolbox.sparse_model(
@@ -77,11 +86,8 @@ def create_sparse_embeddings(chunk):
     return chunk_result
 
 
-def batch_create_embeddings(chunk):
-    # Todo, process in parallel
-    dense_embedding = create_dense_embeddings(chunk)
-    sparse_embedding = create_sparse_embeddings(chunk)
-    return dense_embedding, sparse_embedding
+async def infer_sentiment(chunktext):
+    return toolbox.sentiment_pipeline(chunktext)
 
 
 def hybrid_scale(dense, sparse, alpha: float):
@@ -97,7 +103,7 @@ def hybrid_scale(dense, sparse, alpha: float):
     return hdense, hsparse
 
 
-def create_index_if_missing():
+async def create_index_if_missing():
     toolbox.index  # Initialize index if not already done
     indices = pinecone.list_indexes()
     if any(map(lambda i: i == pinecone_index, indices)):
@@ -113,7 +119,7 @@ def create_index_if_missing():
         )
 
 
-def delete_if_exists():
+async def delete_if_exists():
     toolbox.index  # Initialize index if not already done
     indices = pinecone.list_indexes()
     if any(map(lambda i: i == pinecone_index, indices)):
@@ -123,8 +129,8 @@ def delete_if_exists():
         print(f'Index {pinecone_index} doesn\'t exist')
 
 
-def populate():
-    create_index_if_missing()
+async def populate():
+    await create_index_if_missing()
     # load comments.jsonl into a dataframe
     with open(f'{path}') as f:
         df = pd.read_json(f, lines=True)
@@ -139,24 +145,35 @@ def populate():
 
             chunktext = chunk["text"].values.tolist()
             chunkids = chunk["id"].values.tolist()
-            dense_embeddings, sparse_embeddings = batch_create_embeddings(
-                chunktext)
+            coroutines = [
+                create_dense_embeddings(chunktext),
+                create_sparse_embeddings(chunktext),
+                infer_sentiment(chunktext)
+            ]
 
-            for dense, sparse, text, id in zip(dense_embeddings, sparse_embeddings, chunktext, chunkids):
-                upserts.append({
-                    'id': id,
-                    'values': dense,
-                    'sparse_values': sparse,
-                    'metadata': {
-                        'context': text
-                    }
-                })
+            try:
+                results = await asyncio.gather(*coroutines)
+                # All coroutines have been executed successfully
+                for dense, sparse, sentiment, text, id in zip(results[0], results[1], results[2], chunktext, chunkids):
+                    upserts.append({
+                        'id': id,
+                        'values': dense,
+                        'sparse_values': sparse,
+                        'metadata': {
+                            'context': text,
+                            'sentiment': sentiment['score'] if sentiment['label'] == 'POSITIVE' else -sentiment['score'],
+                        }
+                    })
 
-            # Upsert data
-            chunk_end = time.time()
-            toolbox.index.upsert(upserts)
-            print(
-                f'Upserted {len(upserts)} documents, {round(chunk_size/(chunk_end - chunk_start), 2)} documents/second')
+                # Upsert data
+                chunk_end = time.time()
+                toolbox.index.upsert(upserts)
+                print(
+                    f'Upserted {len(upserts)} documents, {round(chunk_size/(chunk_end - chunk_start), 2)} documents/second')
+            except Exception as error:
+                # An error occurred in one of the coroutines
+                print(error)
+
         print(
             f'Index {pinecone_index}:\n{toolbox.index.describe_index_stats()}')
 
@@ -172,16 +189,18 @@ class Metadata:
 
 
 class Match:
-    def __init__(self, id: str, score: float, context: str):
+    def __init__(self, id: str, score: float, context: str, sentiment: float):
         self.id = id
         self.score = score
         self.context = context
+        self.sentiment = sentiment
 
     def to_dict(self):
         return {
             "id": self.id,
             "score": self.score,
-            "context": self.context
+            "context": self.context,
+            "sentiment": self.sentiment,
         }
 
 
@@ -195,19 +214,30 @@ class MatchList:
         }
 
 
-def query(query_text: str, top_k: int, alpha: float) -> MatchList:
-    dense_embeddings, sparse_embeddings = batch_create_embeddings([query_text])
-    scaled_dense, scaled_sparse = hybrid_scale(
-        dense_embeddings[0], sparse_embeddings[0], alpha)
-    result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
-                                 top_k=top_k, include_metadata=True)
-    matches = result['matches']
+async def query(query_text: str, top_k: int, alpha: float) -> MatchList:
+    coroutines = [
+        create_dense_embeddings([query_text]),
+        create_sparse_embeddings([query_text])
+    ]
 
-    # Convert to Match objects
-    result = []
-    for match in matches:
-        id = match['id']
-        score = match['score']
-        context = match['metadata']['context']
-        result.append(Match(id, score, context))
-    return MatchList(result)
+    try:
+        embedding_lists = await asyncio.gather(*coroutines)
+        dense, sparse = embedding_lists[0][0], embedding_lists[1][0]
+        # Since the functions are made for batch
+
+        scaled_dense, scaled_sparse = hybrid_scale(dense, sparse, alpha)
+        query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
+                                           top_k=top_k, include_metadata=True)
+        # Convert to Match objects
+        result_objects = []
+        for match in query_result['matches']:
+            id = match['id']
+            score = match['score']
+            metadata = match['metadata']
+            context = metadata['context']
+            sentiment = metadata['sentiment']
+            result_objects.append(Match(id, score, context, sentiment))
+        return MatchList(result_objects)
+    except Exception as error:
+        # An error occurred in one of the coroutines
+        print(error)

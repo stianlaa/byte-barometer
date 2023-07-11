@@ -2,28 +2,29 @@ from argparse import ArgumentParser
 from api import query_endpoint
 from pinecone_util import delete_if_exists, populate, query
 from flask import Flask
+import asyncio
 
 
-def delete_action(args):
+async def delete_action(args):
     print('Deleting index')
-    delete_if_exists()
+    await delete_if_exists()
 
 
-def populate_action(args):
+async def populate_action(args):
     print('Populating index')
-    populate()
+    await populate()
 
 
-def query_action(args):
+async def query_action(args):
     print('Querying index')
     subject = args.subject
     top_k = 1 if args.topK is None else args.topK
     alpha = 0.5 if args.alpha is None else args.alpha
-    result = query(subject, top_k, alpha)
-    print(result)
+    result = await query(subject, top_k, alpha)
+    print(result.to_dict())
 
 
-def serve_action(args):
+async def serve_action(args):
     print('Serving index')
     app = Flask(__name__)
     app.route('/query', methods=['POST'])(query_endpoint)
@@ -38,7 +39,7 @@ options = {
 }
 
 
-def main():
+async def main():
     parser = ArgumentParser(prog='vector-manager',
                             description='Manages vector database data')
 
@@ -54,8 +55,8 @@ def main():
 
     # get the function from options dictionary
     func = options.get(args.action)
-    func(args)
+    await func(args)
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
