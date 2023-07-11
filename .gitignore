@@ -1,0 +1,104 @@
+# Logs and Debugs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directories
+lib-cov/
+coverage/
+*.lcov
+.nyc_output/
+
+# Grunt storage
+.grunt/
+
+# Dependency directories
+bower_components/
+node_modules/
+jspm_packages/
+
+# Build directories
+build/Release
+web_modules/
+dist/
+dist-ssr/
+.next/
+out/
+.nuxt/
+
+# Cache directories
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.cache/
+.parcel-cache/
+.fusebox/
+.yarn/cache
+.dynamodb/
+
+# TypeScript and JS related
+*.tsbuildinfo
+.lock-wscript
+
+# Npm and yarn related
+.npm
+.yarn-integrity
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Linting related
+.eslintcache
+.stylelintcache
+
+# Environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+*.local
+
+# Generated build output
+.vuepress/dist
+.docusaurus/
+.serverless/
+
+# Temp directories
+.temp
+
+# Misc
+*.tgz
+.node_repl_history
+.tern-port
+.vscode-test
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+#Python
+__pycache__/
