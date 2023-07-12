@@ -22,7 +22,7 @@ async def query_action(args):
     top_k = 1 if args.topK is None else args.topK
     alpha = 0.5 if args.alpha is None else args.alpha
     result = await query(subject, top_k, alpha)
-    print(result.to_dict())
+    print([match.to_dict() for match in result])
 
 
 async def serve_action(args):
