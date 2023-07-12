@@ -14,7 +14,7 @@ chunk_size = 100
 
 dense_model_id = "text-embedding-ada-002"
 sparse_model_id = "naver/splade-cocondenser-ensembledistil"
-sentiment_model_id = "finiteautomata/bertweet-base-sentiment-analysis"
+sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
 log_sparse = False
 
 load_dotenv("../.env")
@@ -57,9 +57,8 @@ class Toolbox:
     @property
     def sentiment_pipeline(self):
         if self._sentiment_pipeline is None:
-
             self._sentiment_pipeline = pipeline(
-                "sentiment-analysis", model=sentiment_model_id)
+                "text-classification", model=sentiment_model_id)
         return self._sentiment_pipeline
 
 
@@ -88,8 +87,11 @@ async def create_sparse_embeddings(chunktext):
     return chunk_result
 
 
-async def infer_sentiment(chunktext):
-    return toolbox.sentiment_pipeline(chunktext)
+def infer_sentiment(chunktext, aspect):
+    masked_text = list(
+        map(lambda text: f"[CLS] {text} [SEP] {aspect} [SEP]", chunktext))
+    result = toolbox.sentiment_pipeline(masked_text)
+    return result
 
 
 def hybrid_scale(dense, sparse, alpha: float):
@@ -150,20 +152,18 @@ async def populate():
             coroutines = [
                 create_dense_embeddings(chunktext),
                 create_sparse_embeddings(chunktext),
-                infer_sentiment(chunktext)
             ]
 
             try:
                 results = await asyncio.gather(*coroutines)
                 # All coroutines have been executed successfully
-                for dense, sparse, sentiment, text, id in zip(results[0], results[1], results[2], chunktext, chunkids):
+                for dense, sparse, text, id in zip(results[0], results[1], chunktext, chunkids):
                     upserts.append({
                         'id': id,
                         'values': dense,
                         'sparse_values': sparse,
                         'metadata': {
                             'context': text,
-                            'sentiment': sentiment['score'] if sentiment['label'] == 'POSITIVE' else -sentiment['score'],
                         }
                     })
 
@@ -191,7 +191,7 @@ class Metadata:
 
 
 class Match:
-    def __init__(self, id: str, score: float, context: str, sentiment: float):
+    def __init__(self, id: str, score: float, context: str, sentiment: dict):
         self.id = id
         self.score = score
         self.context = context
@@ -214,20 +214,26 @@ async def query(query_text: str, top_k: int, alpha: float) -> list[Match]:
 
     try:
         embedding_lists = await asyncio.gather(*coroutines)
-        dense, sparse = embedding_lists[0][0], embedding_lists[1][0]
         # Since the functions are made for batch
+        dense, sparse = embedding_lists[0][0], embedding_lists[1][0]
 
         scaled_dense, scaled_sparse = hybrid_scale(dense, sparse, alpha)
         query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
                                            top_k=top_k, include_metadata=True)
+
+        # Improvable?
+        matches = query_result['matches']
+        comment_texts = list(
+            map(lambda match: match['metadata']['context'], matches))
+        sentiments = infer_sentiment(comment_texts, query_text)
+
         # Convert to Match objects
         result_objects: list[Match] = []
-        for match in query_result['matches']:
+        for match, sentiment in zip(matches, sentiments):
             id = match['id']
             score = match['score']
             metadata = match['metadata']
             context = metadata['context']
-            sentiment = metadata['sentiment']
             result_objects.append(Match(id, score, context, sentiment))
         return result_objects
     except Exception as error:

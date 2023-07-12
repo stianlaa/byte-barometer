@@ -28,7 +28,6 @@ async def query_action(args):
 async def serve_action(args):
     print('Serving index')
     app = Flask(__name__)
-    # CORS
     CORS(app)
     app.route('/query', methods=['POST'])(query_endpoint)
     app.run()
