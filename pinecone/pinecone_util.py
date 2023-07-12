@@ -14,6 +14,7 @@ chunk_size = 100
 
 dense_model_id = "text-embedding-ada-002"
 sparse_model_id = "naver/splade-cocondenser-ensembledistil"
+sentiment_model_id = "finiteautomata/bertweet-base-sentiment-analysis"
 log_sparse = False
 
 load_dotenv("../.env")
@@ -57,7 +58,8 @@ class Toolbox:
     def sentiment_pipeline(self):
         if self._sentiment_pipeline is None:
 
-            self._sentiment_pipeline = pipeline("sentiment-analysis")
+            self._sentiment_pipeline = pipeline(
+                "sentiment-analysis", model=sentiment_model_id)
         return self._sentiment_pipeline
 
 
@@ -204,17 +206,7 @@ class Match:
         }
 
 
-class MatchList:
-    def __init__(self, matches: list[Match]):
-        self.matches = matches
-
-    def to_dict(self):
-        return {
-            "matches": [match.to_dict() for match in self.matches]
-        }
-
-
-async def query(query_text: str, top_k: int, alpha: float) -> MatchList:
+async def query(query_text: str, top_k: int, alpha: float) -> list[Match]:
     coroutines = [
         create_dense_embeddings([query_text]),
         create_sparse_embeddings([query_text])
@@ -229,7 +221,7 @@ async def query(query_text: str, top_k: int, alpha: float) -> MatchList:
         query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
                                            top_k=top_k, include_metadata=True)
         # Convert to Match objects
-        result_objects = []
+        result_objects: list[Match] = []
         for match in query_result['matches']:
             id = match['id']
             score = match['score']
@@ -237,7 +229,7 @@ async def query(query_text: str, top_k: int, alpha: float) -> MatchList:
             context = metadata['context']
             sentiment = metadata['sentiment']
             result_objects.append(Match(id, score, context, sentiment))
-        return MatchList(result_objects)
+        return result_objects
     except Exception as error:
         # An error occurred in one of the coroutines
         print(error)

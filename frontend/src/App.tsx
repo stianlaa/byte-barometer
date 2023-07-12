@@ -20,7 +20,7 @@ import { Spinner } from "@chakra-ui/react";
 
 const VISIBLE_COMMENTS = 5;
 const REQUEST_COMMENTS = 30;
-const PORT = 3000;
+const PORT = 5000;
 
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,17 +35,23 @@ function App() {
   const querySubject = (subject: string) => {
     setLoading(true);
     axios
-      .post(`http://localhost:${PORT}/query`, {
-        query: subject,
-        commentCount: REQUEST_COMMENTS,
-      })
+      .post(
+        `http://localhost:${PORT}/query`,
+        {
+          query: subject,
+          commentCount: REQUEST_COMMENTS,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((response: AxiosResponse<CommentWithSentiment[]>) => {
         const data = response.data;
-        setPositiveComments(
-          data.filter(({ positive, negative }) => positive > negative)
-        );
+        setPositiveComments(data.filter(({ sentiment }) => sentiment > 0));
         setNegativeComments(
-          data.filter(({ positive, negative }) => positive < negative).reverse()
+          data.filter(({ sentiment }) => sentiment < 0).reverse()
         );
       })
       .catch((error) => {
@@ -108,7 +114,7 @@ function App() {
           {negativeComments.length > 0
             ? negativeComments
                 .slice(0, VISIBLE_COMMENTS)
-                .sort((a, b) => b.negative - a.negative)
+                .sort((a, b) => b.sentiment - a.sentiment)
                 .map((comment) => (
                   <Comment key={comment.objectID} {...comment} />
                 ))
@@ -121,7 +127,7 @@ function App() {
           {positiveComments.length > 0
             ? positiveComments
                 .slice(0, VISIBLE_COMMENTS)
-                .sort((a, b) => b.positive - a.positive)
+                .sort((a, b) => b.sentiment - a.sentiment)
                 .map((comment) => (
                   <Comment key={comment.objectID} {...comment} />
                 ))

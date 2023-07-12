@@ -13,7 +13,7 @@ function OpinionVisualizer({
   negativeComments,
 }: OpinionVisualizerInput) {
   const data = [...positiveComments, ...negativeComments].map((comment) => {
-    return { x: comment.positive - comment.negative };
+    return { x: comment.sentiment };
   });
   if (data.length === 0) {
     return <Box textAlign="left" p={"1rem"} mr="auto"></Box>;

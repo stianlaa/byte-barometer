@@ -2,7 +2,7 @@ from flask import request, abort, jsonify
 from pinecone_util import query
 
 
-def query_endpoint():
+async def query_endpoint():
     data = request.get_json()
 
     # Get the 'query' field, defaulting to an empty string
@@ -12,5 +12,5 @@ def query_endpoint():
     comment_count = data.get('commentCount', 10)
     alpha = data.get('alpha', 0.5)
 
-    result = query(query_text, comment_count, alpha)
-    return jsonify(result.to_dict())
+    result = await query(query_text, comment_count, alpha)
+    return jsonify([match.to_dict() for match in result])

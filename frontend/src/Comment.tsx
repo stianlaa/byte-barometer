@@ -8,9 +8,7 @@ export type CommentWithSentiment = {
   author: string;
   commentText: string;
   queryMatch: string;
-  positive: number;
-  negative: number;
-  neutral: number;
+  sentiment: number;
   storyUrl: string;
 };
 
@@ -20,8 +18,7 @@ function Comment({
   storyUrl,
   objectID,
   storyID,
-  positive,
-  negative,
+  sentiment,
 }: CommentWithSentiment) {
   return (
     <Box textAlign="left" p={"1rem"} mr="auto">
@@ -42,7 +39,7 @@ function Comment({
         <Link href={storyUrl} isExternal>
           Source
         </Link>
-        <Box>{(positive - negative).toFixed(3)}</Box>
+        <Box>{sentiment.toFixed(3)}</Box>
       </HStack>
       <Text
         paddingLeft={"0.25rem"}

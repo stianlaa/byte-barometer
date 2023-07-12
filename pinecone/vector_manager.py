@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from api import query_endpoint
 from pinecone_util import delete_if_exists, populate, query
 from flask import Flask
+from flask_cors import CORS
 import asyncio
 
 
@@ -27,6 +28,8 @@ async def query_action(args):
 async def serve_action(args):
     print('Serving index')
     app = Flask(__name__)
+    # CORS
+    CORS(app)
     app.route('/query', methods=['POST'])(query_endpoint)
     app.run()
 
