@@ -22,6 +22,10 @@ const VISIBLE_COMMENTS = 5;
 const REQUEST_COMMENTS = 30;
 const PORT = 5000;
 
+const positive = "Positive";
+const negative = "Negative";
+// const neutral = "Neutral";
+
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [queryString, setQueryString] = useState<string>("");
@@ -49,9 +53,11 @@ function App() {
       )
       .then((response: AxiosResponse<CommentWithSentiment[]>) => {
         const data = response.data;
-        setPositiveComments(data.filter(({ sentiment }) => sentiment > 0));
+        setPositiveComments(
+          data.filter(({ sentiment }) => sentiment.label === positive)
+        );
         setNegativeComments(
-          data.filter(({ sentiment }) => sentiment < 0).reverse()
+          data.filter(({ sentiment }) => sentiment.label === negative).reverse()
         );
       })
       .catch((error) => {
@@ -114,10 +120,8 @@ function App() {
           {negativeComments.length > 0
             ? negativeComments
                 .slice(0, VISIBLE_COMMENTS)
-                .sort((a, b) => b.sentiment - a.sentiment)
-                .map((comment) => (
-                  <Comment key={comment.objectID} {...comment} />
-                ))
+                .sort((a, b) => b.sentiment.score - a.sentiment.score)
+                .map((comment) => <Comment key={comment.id} {...comment} />)
             : null}
         </VStack>
         <VStack h="auto">
@@ -127,10 +131,8 @@ function App() {
           {positiveComments.length > 0
             ? positiveComments
                 .slice(0, VISIBLE_COMMENTS)
-                .sort((a, b) => b.sentiment - a.sentiment)
-                .map((comment) => (
-                  <Comment key={comment.objectID} {...comment} />
-                ))
+                .sort((a, b) => b.sentiment.score - a.sentiment.score)
+                .map((comment) => <Comment key={comment.id} {...comment} />)
             : null}
         </VStack>
       </SimpleGrid>

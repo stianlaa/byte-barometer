@@ -12,9 +12,13 @@ function OpinionVisualizer({
   positiveComments,
   negativeComments,
 }: OpinionVisualizerInput) {
-  const data = [...positiveComments, ...negativeComments].map((comment) => {
-    return { x: comment.sentiment };
-  });
+  const data = [...positiveComments, ...negativeComments].map(
+    ({ sentiment }) => {
+      return {
+        x: sentiment.label === "Positive" ? sentiment.score : -sentiment.score,
+      };
+    }
+  );
   if (data.length === 0) {
     return <Box textAlign="left" p={"1rem"} mr="auto"></Box>;
   } else {

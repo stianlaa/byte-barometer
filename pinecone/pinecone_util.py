@@ -1,48 +1,22 @@
-import os
-import pandas as pd
-import openai
-import torch
-import pinecone
-import time
+from sparse_embedding import create_sparse_embeddings
+from sentiment import infer_sentiment
+from dense_embedding import create_dense_embeddings
 import asyncio
-from transformers import AutoTokenizer, pipeline
-from splade.models.transformer_rep import Splade
+import time
+import pinecone
+import pandas as pd
+import os
 from dotenv import load_dotenv
+load_dotenv("../.env")
 
 path = 'documents.jsonl'
 chunk_size = 100
 
-dense_model_id = "text-embedding-ada-002"
-sparse_model_id = "naver/splade-cocondenser-ensembledistil"
-sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
-log_sparse = False
-
-load_dotenv("../.env")
-openai.api_key = os.environ['OPENAI_API_KEY']
 pinecone_index = os.environ['PINECONE_INDEX']
 
 
 class Toolbox:
-    # Practical way to lazily initialize various models
-    _sparse_model = None
-    _tokenizer = None
     _index = None
-    _sentiment_pipeline = None
-
-    @property
-    def sparse_model(self):
-        if self._sparse_model is None:
-            self._sparse_model = Splade(sparse_model_id, agg='max')
-            # Would be preferable to use GPU
-            self._sparse_model.to('cpu')
-            self._sparse_model.eval()
-        return self._sparse_model
-
-    @property
-    def tokenizer(self):
-        if self._tokenizer is None:
-            self._tokenizer = AutoTokenizer.from_pretrained(sparse_model_id)
-        return self._tokenizer
 
     @property
     def index(self):
@@ -54,44 +28,8 @@ class Toolbox:
             self._index = pinecone.GRPCIndex(pinecone_index)
         return self._index
 
-    @property
-    def sentiment_pipeline(self):
-        if self._sentiment_pipeline is None:
-            self._sentiment_pipeline = pipeline(
-                "text-classification", model=sentiment_model_id)
-        return self._sentiment_pipeline
-
 
 toolbox = Toolbox()
-
-
-async def create_dense_embeddings(chunk):
-    response = openai.Embedding.create(input=chunk, model=dense_model_id)
-    embeddings = map(lambda entry: entry['embedding'], response['data'])
-    return list(embeddings)
-
-
-async def create_sparse_embeddings(chunktext):
-    chunk_result = list([])
-    for text in chunktext:
-        tokens = toolbox.tokenizer(text, return_tensors='pt')
-        with torch.no_grad():
-            sparse_embeddings = toolbox.sparse_model(
-                d_kwargs=tokens.to('cpu')
-            )['d_rep'].squeeze()
-
-            indices = sparse_embeddings.nonzero().squeeze().cpu().tolist()
-            values = sparse_embeddings[indices].cpu().tolist()
-            sparse = {'indices': indices, 'values': values}
-            chunk_result.append(sparse)
-    return chunk_result
-
-
-def infer_sentiment(chunktext, aspect):
-    masked_text = list(
-        map(lambda text: f"[CLS] {text} [SEP] {aspect} [SEP]", chunktext))
-    result = toolbox.sentiment_pipeline(masked_text)
-    return result
 
 
 def hybrid_scale(dense, sparse, alpha: float):
