@@ -1,11 +1,10 @@
 import { encoding_for_model } from "tiktoken";
-import { EMBEDDING_MODEL } from "../embeddings.js";
-import { tokenSplitText } from "./token-split.js";
+import { embeddingModel, tokenSplitText } from "./token-split.js";
 
 const chunkMinTokenLimit = 50;
 const chunkMaxTokenLimit = 200;
 
-const encoder = encoding_for_model(EMBEDDING_MODEL);
+const encoder = encoding_for_model(embeddingModel);
 
 const separators = ["\\.", "\\!", "\\?", "\\n"];
 export const sentenceSplitText = (text: string): string[] => {

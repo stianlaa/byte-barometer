@@ -1,7 +1,7 @@
 import { encoding_for_model } from "tiktoken";
-import { EMBEDDING_MODEL } from "../embeddings.js";
 
 const chunkTokenLimit = 50;
+export const embeddingModel = "text-embedding-ada-002";
 
 export const tokenSplitText = (text: string): string[] => {
   // Token split strategy:
@@ -9,7 +9,7 @@ export const tokenSplitText = (text: string): string[] => {
   // 1. Take arbitrary string in, convert it to tokens as seen by the target model,
   // 2. For each of the splits, check if the length is below N tokens, otherwise repeat the process until we have a bunch of splits of sufficnet size.
 
-  const encoder = encoding_for_model(EMBEDDING_MODEL);
+  const encoder = encoding_for_model(embeddingModel);
   const encodedText = encoder.encode(text);
 
   const encodedTextArray: Uint32Array[] = [];
