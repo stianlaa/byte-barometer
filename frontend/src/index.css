@@ -1,4 +1,11 @@
-  :root {
+html {
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+} 
+
+:root {
   --bg-dark: #242424;
   background-color: var(--bg-dark);
 
@@ -11,10 +18,11 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  max-width: 1280px;
   margin: auto;
-  margin-top: 2rem;
   padding: 0;
   text-align: center;
+
   width: 100%;
-  }
+  max-width: 1280px;
+  height: 100%;
+}

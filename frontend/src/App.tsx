@@ -24,12 +24,15 @@ const PORT = 5000;
 
 const positive = "Positive";
 const negative = "Negative";
-// const neutral = "Neutral";
+const neutral = "Neutral";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [queryString, setQueryString] = useState<string>("");
   const [positiveComments, setPositiveComments] = useState<
+    CommentWithSentiment[]
+  >([]);
+  const [neutralComments, setNeutralComments] = useState<
     CommentWithSentiment[]
   >([]);
   const [negativeComments, setNegativeComments] = useState<
@@ -56,8 +59,11 @@ function App() {
         setPositiveComments(
           data.filter(({ sentiment }) => sentiment.label === positive)
         );
+        setNeutralComments(
+          data.filter(({ sentiment }) => sentiment.label === neutral)
+        );
         setNegativeComments(
-          data.filter(({ sentiment }) => sentiment.label === negative).reverse()
+          data.filter(({ sentiment }) => sentiment.label === negative)
         );
       })
       .catch((error) => {
@@ -73,13 +79,20 @@ function App() {
   };
 
   return (
-    <Box w="100%" bgColor="var(--bg-dark)" color="var(--text-light)">
+    <Box
+      w="100%"
+      h="100%"
+      bgColor="var(--bg-dark)"
+      color="var(--text-light)"
+      boxShadow="dark-lg"
+    >
       <Box w="100%">
-        <Heading>Byte Barometer</Heading>
-        <Divider mt={"0.25rem"} mb={"0.25rem"} />
+        <Heading pt="1rem">Byte Barometer</Heading>
+        <Divider pt="1rem" mb="0.25rem" />
 
         <OpinionVisualizer
           positiveComments={positiveComments}
+          neutralComments={neutralComments}
           negativeComments={negativeComments}
         />
 
