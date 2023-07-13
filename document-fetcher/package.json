@@ -17,12 +17,14 @@
     "@xenova/transformers": "^2.3.1",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
+    "he": "^1.2.0",
     "openai": "^3.3.0",
     "tiktoken": "^1.0.10",
     "typescript": "^5.0.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@types/he": "^1.2.0",
     "@types/js-yaml": "^4.0.5",
     "@types/yargs": "^17.0.24",
     "ts-node": "^10.9.1"

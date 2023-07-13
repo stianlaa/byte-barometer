@@ -79,14 +79,8 @@ function App() {
   };
 
   return (
-    <Box
-      w="100%"
-      h="100%"
-      bgColor="var(--bg-dark)"
-      color="var(--text-light)"
-      boxShadow="dark-lg"
-    >
-      <Box w="100%">
+    <Box bgColor="var(--bg-dark)" color="var(--text-light)" boxShadow="dark-lg">
+      <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
         <Divider pt="1rem" mb="0.25rem" />
 

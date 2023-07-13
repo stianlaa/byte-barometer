@@ -170,10 +170,10 @@ async def query(query_text: str, top_k: int, alpha: float) -> list[Match]:
         query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
                                            top_k=top_k, include_metadata=True)
 
-        # Improvable?
         matches = query_result['matches']
         comment_texts = list(
             map(lambda match: match['metadata']['context'], matches))
+        # TODO live sentiment inference is slow, either do in advance, swap to gpu, infer in batch, stream inference, or use a faster model
         sentiments = infer_sentiment(comment_texts, query_text)
 
         # Convert to Match objects

@@ -1,4 +1,5 @@
 import axios from "axios";
+import he from "he";
 
 const ALGOLIA_API_URL = "http://hn.algolia.com/api/v1/";
 
@@ -74,12 +75,14 @@ export const getComments = async (
 
           // Inner loops, process comments into persistable documents
           for (let comment of commentResponse.data.hits) {
+            const decodedComment = he.decode(comment.comment_text);
+
             comments.push({
               id: comment.objectID,
               storyId: story.objectID,
               author: comment.author,
               storyUrl: comment.story_url,
-              commentText: comment.comment_text,
+              commentText: decodedComment,
               createdAt: comment.created_at,
               parentId: comment.parent_id,
             });

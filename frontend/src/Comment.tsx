@@ -1,16 +1,6 @@
 import { Text, Box, Heading, HStack, Link } from "@chakra-ui/react";
 import "./index.css";
-
-export type DocumentId = {
-  id: string;
-  partIndex: number;
-};
-
-export const parseId = (id: string): DocumentId => {
-  // Id's are in the form {id}-{partIndex}
-  const parts = id.split("-");
-  return { id: parts[0], partIndex: parseInt(parts[1]) };
-};
+import { parseId } from "./document-util";
 
 export type Sentiment = {
   label: string;
@@ -37,7 +27,14 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
   return (
     <Box textAlign="left" p={"1rem"} mr="auto">
       <HStack>
-        <Heading size="sm">{metadata.author}</Heading>
+        <Heading size="sm">
+          <Link
+            href={`https://news.ycombinator.com/user?id=${metadata.author}`}
+            isExternal
+          >
+            {metadata.author}
+          </Link>
+        </Heading>
         <Link
           href={`https://news.ycombinator.com/item?id=${metadata.storyId}`}
           isExternal
