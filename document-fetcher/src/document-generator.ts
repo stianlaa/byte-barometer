@@ -4,6 +4,7 @@ import { sentenceSplitText } from "./split/sentence-split.js";
 
 export type Document = {
   id: string;
+  storyId: string;
   text: string;
   author: string;
   storyUrl: string;
@@ -30,6 +31,7 @@ export const createDocuments = (comments: Comment[]): Document[] => {
 
   for (const {
     id,
+    storyId,
     commentText,
     author,
     storyUrl,
@@ -40,6 +42,7 @@ export const createDocuments = (comments: Comment[]): Document[] => {
       (chunk, chunkIndex) => {
         documents.push({
           id: `${id}-${chunkIndex}`,
+          storyId: storyId,
           text: chunk.trim(),
           author: author,
           storyUrl: storyUrl,

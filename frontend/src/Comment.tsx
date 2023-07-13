@@ -17,36 +17,40 @@ export type Sentiment = {
   score: number;
 };
 
-export type CommentWithSentiment = {
-  id: string;
-  // parentID: number;
-  // storyID: number;
-  // author: string;
-  commentText: string;
+export type Metadata = {
+  author: string;
+  storyId: string;
   context: string;
-  sentiment: Sentiment;
+  parentId: string;
   storyUrl: string;
+  createdAt: string;
 };
 
-function Comment({ id, context, storyUrl, sentiment }: CommentWithSentiment) {
+export type CommentWithSentiment = {
+  id: string;
+  metadata: Metadata;
+  sentiment: Sentiment;
+};
+
+function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
   const documentId = parseId(id);
   return (
     <Box textAlign="left" p={"1rem"} mr="auto">
       <HStack>
-        <Heading size="sm">{"author"}</Heading>
-        {/* <Link
-          href={`https://news.ycombinator.com/item?id=${storyID}`}
+        <Heading size="sm">{metadata.author}</Heading>
+        <Link
+          href={`https://news.ycombinator.com/item?id=${metadata.storyId}`}
           isExternal
         >
           Story
-        </Link> */}
+        </Link>
         <Link
           href={`https://news.ycombinator.com/item?id=${documentId.id}`}
           isExternal
         >
           Comment
         </Link>
-        <Link href={storyUrl} isExternal>
+        <Link href={metadata.storyUrl} isExternal>
           Source
         </Link>
         <Box>{sentiment.score.toFixed(3)}</Box>
@@ -56,7 +60,7 @@ function Comment({ id, context, storyUrl, sentiment }: CommentWithSentiment) {
         marginLeft={"0.25rem"}
         borderLeft="3px solid grey"
       >
-        {context}
+        {metadata.context}
       </Text>
     </Box>
   );

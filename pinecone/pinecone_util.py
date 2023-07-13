@@ -85,25 +85,36 @@ async def populate():
             chunk_start = time.time()
             upserts = []
 
-            chunktext = chunk["text"].values.tolist()
-            chunkids = chunk["id"].values.tolist()
+            idList = chunk["id"].values.tolist()
+            storyIdList = chunk["storyId"].values.tolist()
+            textList = chunk["text"].values.tolist()
+            authorList = chunk["author"].values.tolist()
+            storyUrlList = chunk["storyUrl"].values.tolist()
+            parentIdList = chunk["parentId"].values.tolist()
+            createdAtList = chunk["createdAt"].values.tolist()
             coroutines = [
-                create_dense_embeddings(chunktext),
-                create_sparse_embeddings(chunktext),
+                create_dense_embeddings(textList),
+                create_sparse_embeddings(textList),
             ]
 
             try:
                 results = await asyncio.gather(*coroutines)
                 # All coroutines have been executed successfully
-                for dense, sparse, text, id in zip(results[0], results[1], chunktext, chunkids):
-                    upserts.append({
+                for dense, sparse, id, storyId, text, author, storyUrl, parentId, createdAt in zip(results[0], results[1], idList, storyIdList, textList, authorList, storyUrlList, parentIdList, createdAtList):
+                    temp = {
                         'id': id,
                         'values': dense,
                         'sparse_values': sparse,
                         'metadata': {
                             'context': text,
+                            'author': author,
+                            'storyUrl': '' if storyUrl is None else storyUrl,
+                            'parentId': parentId,
+                            'storyId': storyId,
+                            'createdAt': createdAt,
                         }
-                    })
+                    }
+                    upserts.append(temp)
 
                 # Upsert data
                 chunk_end = time.time()
@@ -129,18 +140,18 @@ class Metadata:
 
 
 class Match:
-    def __init__(self, id: str, score: float, context: str, sentiment: dict):
+    def __init__(self, id: str, score: float, metadata: dict, sentiment: dict):
         self.id = id
         self.score = score
-        self.context = context
+        self.metadata = metadata
         self.sentiment = sentiment
 
     def to_dict(self):
         return {
             "id": self.id,
             "score": self.score,
-            "context": self.context,
             "sentiment": self.sentiment,
+            "metadata": self.metadata,
         }
 
 
@@ -171,8 +182,7 @@ async def query(query_text: str, top_k: int, alpha: float) -> list[Match]:
             id = match['id']
             score = match['score']
             metadata = match['metadata']
-            context = metadata['context']
-            result_objects.append(Match(id, score, context, sentiment))
+            result_objects.append(Match(id, score, metadata, sentiment))
         return result_objects
     except Exception as error:
         # An error occurred in one of the coroutines

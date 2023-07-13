@@ -36,6 +36,7 @@ type CommentResponse = {
 
 export type Comment = {
   id: string;
+  storyId: string;
   author: string;
   storyUrl: string;
   commentText: string;
@@ -65,16 +66,17 @@ export const getComments = async (
       );
 
       // Mid loop, iterate over comments from each story
-      for (let { objectID } of storyResponse.data.hits) {
+      for (let story of storyResponse.data.hits) {
         for (let commentPage = 0; commentPage < pageLimit; commentPage++) {
           const commentResponse = await axios.get<CommentResponse>(
-            `${ALGOLIA_API_URL}search?tags=comment,story_${objectID}&page=${commentPage}&hitsPerPage=${hitsPerPage}`
+            `${ALGOLIA_API_URL}search?tags=comment,story_${story.objectID}&page=${commentPage}&hitsPerPage=${hitsPerPage}`
           );
 
           // Inner loops, process comments into persistable documents
           for (let comment of commentResponse.data.hits) {
             comments.push({
               id: comment.objectID,
+              storyId: story.objectID,
               author: comment.author,
               storyUrl: comment.story_url,
               commentText: comment.comment_text,
