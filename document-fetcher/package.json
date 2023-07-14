@@ -12,13 +12,10 @@
     "populate": "ts-node --esm src/populate-documents.ts"
   },
   "dependencies": {
-    "@pinecone-database/pinecone": "^0.1.6",
     "@types/node": "^18.15.10",
-    "@xenova/transformers": "^2.3.1",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "he": "^1.2.0",
-    "openai": "^3.3.0",
     "tiktoken": "^1.0.10",
     "typescript": "^5.0.2",
     "yargs": "^17.7.2"

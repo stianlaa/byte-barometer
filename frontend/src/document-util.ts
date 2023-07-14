@@ -1,4 +1,4 @@
-export type DocumentId = {
+type DocumentId = {
   id: string;
   partIndex: number;
 };

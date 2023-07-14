@@ -30,7 +30,7 @@ async def serve_action(args):
     app = Flask(__name__)
     CORS(app)
     app.route('/query', methods=['POST'])(query_endpoint)
-    app.run()
+    app.run(port=3000)
 
 
 options = {

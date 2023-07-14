@@ -2,12 +2,12 @@ import { Text, Box, Heading, HStack, Link } from "@chakra-ui/react";
 import "./index.css";
 import { parseId } from "./document-util";
 
-export type Sentiment = {
+type Sentiment = {
   label: string;
   score: number;
 };
 
-export type Metadata = {
+type Metadata = {
   author: string;
   storyId: string;
   context: string;
