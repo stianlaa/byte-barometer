@@ -22,3 +22,9 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [ ] Display how many comments are being analyzed
 - [ ] Add icons for the various links, story, comments, author etc
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well
+
+## Alternative pallettes:
+
+# dark red-brown https://coolors.co/320a28-511730-8e443d-cb9173-e0d68a
+
+# dark to orange https://coolors.co/242424-1f2223-6d1000-f79f79-f7d08a

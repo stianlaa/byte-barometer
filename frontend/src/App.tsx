@@ -69,7 +69,7 @@ function App() {
     <Box boxShadow="dark-lg" height="100vh">
       <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
-        <Divider pt="1rem" mb="0.25rem" />
+        <Divider pt="1rem" mb="0.25rem" mr="auto" ml="auto" w="50%" />
 
         <OpinionVisualizer groupedComments={groupedComments} />
 
