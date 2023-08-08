@@ -1,16 +1,15 @@
-html {    
-  position: sticky;
-  height: 100vh;
+html, body {
+  height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-} 
+  overflow: hidden;
+}
 
 #root {
   margin: auto;
   padding: 0;
   text-align: center;
-
   width: 100%;
   max-width: 1280px;
   height: 100%;

@@ -66,7 +66,7 @@ function App() {
   };
 
   return (
-    <Box boxShadow="dark-lg" height="100vh">
+    <Box boxShadow="dark-lg" height="100vh" overflow="scroll">
       <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
         <Divider pt="1rem" mb="0.25rem" mr="auto" ml="auto" w="50%" />
@@ -120,7 +120,7 @@ function App() {
             Positive
           </Heading>
           {groupedComments
-            ?.get(NEGATIVE)
+            ?.get(POSITIVE)
             ?.slice(0, VISIBLE_COMMENTS)
             .sort((a, b) => b.sentiment.score - a.sentiment.score)
             .map((comment) => (
