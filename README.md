@@ -8,9 +8,10 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 
 ## Future work
 
+- [ ] Do sentiment analysis before upserting?
+- [ ] Consider doing a general sentiment analysis per document being sent in, instead of aspect based analysis.
 - [ ] Add an animation to the byte-barometer, when it receives new data.
 - [ ] Add a sort of streaming of comments and sentiment analysis, so that the byte-barometer is updated in real time.
-- [ ] Find and apply a suitable theme color pallette
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters, but keep original available too.
 - [ ] Populate an index with a larger amount of data
 - [ ] Change commentdisplay to show the comments as cards
@@ -23,8 +24,6 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [ ] Add icons for the various links, story, comments, author etc
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well
 
-## Alternative pallettes:
+## pallette:
 
-# dark red-brown https://coolors.co/320a28-511730-8e443d-cb9173-e0d68a
-
-# dark to orange https://coolors.co/242424-1f2223-6d1000-f79f79-f7d08a
+# https://coolors.co/c9c4b2-ddd8c4-c0d1b6-a3c9a8-84b59f-69a297-749189-6b6b6b-945d5d-50808e

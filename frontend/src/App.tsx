@@ -66,24 +66,36 @@ function App() {
   };
 
   return (
-    <Box boxShadow="dark-lg" height="100vh" overflow="scroll">
+    <Box
+      boxShadow="dark-lg"
+      bgColor="twarmwhite"
+      height="100vh"
+      overflow="scroll"
+    >
       <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
-        <Divider pt="1rem" mb="0.25rem" mr="auto" ml="auto" w="50%" />
+        <Divider
+          borderColor="tgreen"
+          pt="1rem"
+          mb="0.25rem"
+          mr="auto"
+          ml="auto"
+          w="50%"
+        />
 
         <OpinionVisualizer groupedComments={groupedComments} />
 
         <InputGroup size="md" width={"50%"} mr="auto" ml="auto" mb={5}>
           <Input
-            pr="9rem"
+            borderColor="tgreen"
             value={queryString}
             onChange={(e) => setQueryString(e.target.value)}
             placeholder={`What does Hackernews think about.. React.js`} // TODO: change to random subject
-            color="white"
             onKeyDown={handleCompletion}
           />
           <InputRightElement>
             <Button
+              bgColor="tgreen"
               onClick={() => {
                 querySubject(queryString);
               }}
@@ -100,27 +112,27 @@ function App() {
         </InputGroup>
       </Box>
 
-      <Divider mt={"0.25rem"} mb={"0.25rem"} />
+      <Divider borderColor="tgreen" mt={"0.25rem"} mb={"0.25rem"} />
 
       <SimpleGrid columns={2} spacing={10}>
-        <VStack h="auto">
+        <VStack h="auto" pr="0.5rem">
           <Heading size="sm" mt={"0.25rem"}>
-            Negative
+            Positive
           </Heading>
           {groupedComments
-            ?.get(NEGATIVE)
+            ?.get(POSITIVE)
             ?.slice(0, VISIBLE_COMMENTS)
             .sort((a, b) => b.sentiment.score - a.sentiment.score)
             .map((comment) => (
               <Comment key={comment.id} {...comment} />
             ))}
         </VStack>
-        <VStack h="auto">
+        <VStack h="auto" pl="0.5rem">
           <Heading size="sm" mt={"0.25rem"}>
-            Positive
+            Negative
           </Heading>
           {groupedComments
-            ?.get(POSITIVE)
+            ?.get(NEGATIVE)
             ?.slice(0, VISIBLE_COMMENTS)
             .sort((a, b) => b.sentiment.score - a.sentiment.score)
             .map((comment) => (

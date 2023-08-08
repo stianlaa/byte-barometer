@@ -9,9 +9,9 @@ type OpinionVisualizerProps = {
 
 function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
   const data = [
-    { x: POSITIVE, y: groupedComments?.get(POSITIVE)?.length || 0 },
-    { x: NEUTRAL, y: groupedComments?.get(NEUTRAL)?.length || 0 },
-    { x: NEGATIVE, y: groupedComments?.get(NEGATIVE)?.length || 0 },
+    { x: POSITIVE, y: groupedComments?.get(POSITIVE)?.length || 1 },
+    { x: NEUTRAL, y: groupedComments?.get(NEUTRAL)?.length || 1 },
+    { x: NEGATIVE, y: groupedComments?.get(NEGATIVE)?.length || 1 },
   ];
   return (
     <Center mr="auto" ml="auto" w="100%">
@@ -20,7 +20,7 @@ function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
           standalone={false}
           width={400}
           height={400}
-          colorScale={["tomato", "orange", "navy"]}
+          colorScale={["#749189", "#6B6B6B", "#945d5d"]}
           cornerRadius={15}
           startAngle={-90}
           endAngle={90}
@@ -31,14 +31,9 @@ function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
           innerRadius={30}
           labelPlacement="vertical"
           style={{
-            data: {
-              fillOpacity: 0.9,
-              stroke: "black",
-              strokeWidth: 3,
-            },
             labels: {
-              fill: "white",
-              fontSize: 10,
+              fill: "#DDD8C4",
+              fontSize: 6,
               fontWeight: "bold",
               textAnchor: "middle",
             },

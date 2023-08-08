@@ -6,6 +6,17 @@ const config: ThemeConfig = {
 };
 
 const theme = extendTheme({
+  colors: {
+    tpositive: "#749189",
+    tneutral: "#6B6B6B",
+    tnegative: "#945d5d",
+    tgreywhite: "#C9C4B2",
+    twarmwhite: "#DDD8C4",
+    tlightgreen: "#A3C9A8",
+    tgreen: "#84B59F",
+    tdarkgreen: "#69A297",
+    tbluegreen: "#50808E",
+  },
   fonts: {
     body: "system-ui, sans-serif",
     heading: "Georgia, serif",
@@ -66,8 +77,8 @@ const theme = extendTheme({
   styles: {
     global: () => ({
       body: {
-        bg: "#242424",
-        color: "#F5F5F5",
+        bg: "#C9C4B2",
+        color: "#50808E",
       },
     }),
   },

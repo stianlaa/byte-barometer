@@ -25,7 +25,12 @@ export type CommentWithSentiment = {
 function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
   const documentId = parseId(id);
   return (
-    <Box textAlign="left" p={"1rem"} mr="auto">
+    <Box
+      backgroundColor="rgba(255, 255, 255, 0.15)"
+      borderRadius="1rem"
+      textAlign="left"
+      p="1rem"
+    >
       <HStack>
         <Heading size="sm">
           <Link
@@ -52,11 +57,7 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
         </Link>
         <Box>{sentiment.score.toFixed(3)}</Box>
       </HStack>
-      <Text
-        paddingLeft={"0.25rem"}
-        marginLeft={"0.25rem"}
-        borderLeft="3px solid grey"
-      >
+      <Text pl="0.25rem" mt="0.5rem" ml="0.25rem">
         {metadata.context}
       </Text>
     </Box>
