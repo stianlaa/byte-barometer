@@ -8,7 +8,10 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 
 ## Future work
 
-- [ ] Do sentiment analysis before upserting?
+- [ ] Investigate current responsetimes
+
+- [ ] Improve responsiveness, current pipeline, but speed up aspect based sentiment analyis and add streaming
+
 - [ ] Consider doing a general sentiment analysis per document being sent in, instead of aspect based analysis.
 - [ ] Add an animation to the byte-barometer, when it receives new data.
 - [ ] Add a sort of streaming of comments and sentiment analysis, so that the byte-barometer is updated in real time.

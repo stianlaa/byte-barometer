@@ -115,7 +115,7 @@ function App() {
       <Divider borderColor="tgreen" mt={"0.25rem"} mb={"0.25rem"} />
 
       <SimpleGrid columns={2} spacing={10}>
-        <VStack h="auto" pr="0.5rem">
+        <VStack h="auto" ml="1rem">
           <Heading size="sm" mt={"0.25rem"}>
             Positive
           </Heading>
@@ -127,7 +127,7 @@ function App() {
               <Comment key={comment.id} {...comment} />
             ))}
         </VStack>
-        <VStack h="auto" pl="0.5rem">
+        <VStack h="auto" mr="1rem">
           <Heading size="sm" mt={"0.25rem"}>
             Negative
           </Heading>

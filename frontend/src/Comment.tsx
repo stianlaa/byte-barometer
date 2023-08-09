@@ -1,8 +1,9 @@
 import { Text, Box, Heading, HStack, Link } from "@chakra-ui/react";
 import "./index.css";
 import { parseId } from "./document-util";
+import SentimentTag from "./SentimentTag";
 
-type Sentiment = {
+export type Sentiment = {
   label: string;
   score: number;
 };
@@ -55,7 +56,7 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
         <Link href={metadata.storyUrl} isExternal>
           Source
         </Link>
-        <Box>{sentiment.score.toFixed(3)}</Box>
+        <SentimentTag sentiment={sentiment} />
       </HStack>
       <Text pl="0.25rem" mt="0.5rem" ml="0.25rem">
         {metadata.context}
