@@ -17,6 +17,7 @@ function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
     <Center mr="auto" ml="auto" w="100%">
       <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>
         <VictoryPie
+          animate={{ duration: 2000 }}
           standalone={false}
           width={400}
           height={400}
