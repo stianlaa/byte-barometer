@@ -75,7 +75,7 @@ function App() {
       <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
         <Divider
-          borderColor="tgreen"
+          borderColor="grey.500"
           pt="1rem"
           mb="0.25rem"
           mr="auto"
@@ -87,21 +87,21 @@ function App() {
 
         <InputGroup size="md" width={"50%"} mr="auto" ml="auto" mb={5}>
           <Input
-            borderColor="tgreen"
+            borderColor="grey.500"
             value={queryString}
             onChange={(e) => setQueryString(e.target.value)}
-            placeholder={`What does Hackernews think about.. React.js`} // TODO: change to random subject
+            placeholder={`What does Hackernews think about.. Rust?`} // TODO: change to random subject
             onKeyDown={handleCompletion}
           />
           <InputRightElement>
             <Button
-              bgColor="tgreen"
+              bgColor="beige.700"
               onClick={() => {
                 querySubject(queryString);
               }}
             >
               {loading ? (
-                <Box>
+                <Box bgColor="beige.700">
                   <Spinner />
                 </Box>
               ) : (
@@ -112,7 +112,7 @@ function App() {
         </InputGroup>
       </Box>
 
-      <Divider borderColor="tgreen" mt={"0.25rem"} mb={"0.25rem"} />
+      <Divider borderColor="grey.500" mt={"0.25rem"} mb={"0.25rem"} />
 
       <SimpleGrid columns={2} spacing={10}>
         <VStack h="auto" ml="1rem">
