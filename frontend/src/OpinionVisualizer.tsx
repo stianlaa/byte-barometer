@@ -7,12 +7,32 @@ type OpinionVisualizerProps = {
   groupedComments: Map<string, CommentWithSentiment[]> | undefined;
 };
 
-function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
-  const data = [
-    { x: POSITIVE, y: groupedComments?.get(POSITIVE)?.length || 1 },
-    { x: NEUTRAL, y: groupedComments?.get(NEUTRAL)?.length || 1 },
-    { x: NEGATIVE, y: groupedComments?.get(NEGATIVE)?.length || 1 },
+function mapVisualizerData(
+  positiveCount: number | undefined,
+  neutralCount: number | undefined,
+  negativeCount: number | undefined
+) {
+  if (!positiveCount && !neutralCount && !negativeCount) {
+    // Undefined or all 0, without data we just display equal piechunks for aestetic reasons
+    return [
+      { x: POSITIVE, y: 1 },
+      { x: NEUTRAL, y: 1 },
+      { x: NEGATIVE, y: 1 },
+    ];
+  }
+  return [
+    { x: POSITIVE, y: positiveCount },
+    { x: NEUTRAL, y: neutralCount },
+    { x: NEGATIVE, y: negativeCount },
   ];
+}
+
+function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
+  const data = mapVisualizerData(
+    groupedComments?.get(POSITIVE)?.length,
+    groupedComments?.get(NEUTRAL)?.length,
+    groupedComments?.get(NEGATIVE)?.length
+  );
   return (
     <Center mr="auto" ml="auto" w="100%">
       <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>
@@ -26,6 +46,7 @@ function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
           startAngle={-90}
           endAngle={90}
           data={data}
+          labels={({ datum }) => (datum.y === 0 ? "" : datum.x)}
           labelRadius={({ innerRadius, radius }) =>
             ((radius as number) - (innerRadius as number)) * 0.75
           }
