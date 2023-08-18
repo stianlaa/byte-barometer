@@ -1,8 +1,5 @@
 from argparse import ArgumentParser
-from api import query_endpoint
 from pinecone_util import delete_if_exists, populate, query
-from flask import Flask
-from flask_cors import CORS
 import asyncio
 
 
@@ -25,16 +22,7 @@ async def query_action(args):
     print([match.to_dict() for match in result])
 
 
-async def serve_action(args):
-    print('Serving index')
-    app = Flask(__name__)
-    CORS(app)
-    app.route('/query', methods=['POST'])(query_endpoint)
-    app.run(port=3000)
-
-
 options = {
-    "serve": serve_action,
     "populate": populate_action,
     "delete": delete_action,
     "query": query_action,
@@ -46,7 +34,7 @@ async def main():
                             description='Manages vector database data')
 
     parser.add_argument("action",
-                        choices=["serve", "populate", "delete", "query"],
+                        choices=["populate", "delete", "query"],
                         help="action to execute"
                         )
     parser.add_argument('-s', '--subject', type=str)
