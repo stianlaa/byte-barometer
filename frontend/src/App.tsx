@@ -67,8 +67,7 @@ function App() {
 
   return (
     <Box
-      boxShadow="dark-lg"
-      bgColor="twarmwhite"
+      // boxShadow="dark-lg"
       height="100vh"
       overflow="scroll"
     >
@@ -85,8 +84,20 @@ function App() {
 
         <OpinionVisualizer groupedComments={groupedComments} />
 
-        <InputGroup size="md" width={"50%"} mr="auto" ml="auto" mb={5}>
+        <InputGroup
+          size="lg"
+          width={"75%"}
+          mr="auto"
+          ml="auto"
+          mb={5}
+
+          // background: linear-gradient(to right, red, purple);
+          // padding: 3px;
+        >
           <Input
+            fontSize={20}
+            color="grey.900"
+            bgColor="beige.500"
             borderColor="grey.500"
             value={queryString}
             onChange={(e) => setQueryString(e.target.value)}
@@ -95,13 +106,14 @@ function App() {
           />
           <InputRightElement>
             <Button
-              bgColor="beige.700"
+              size="s"
+              bgColor="beige.500"
               onClick={() => {
                 querySubject(queryString);
               }}
             >
               {loading ? (
-                <Box bgColor="beige.700">
+                <Box bgColor="beige.500">
                   <Spinner />
                 </Box>
               ) : (
@@ -116,7 +128,7 @@ function App() {
 
       <SimpleGrid columns={2} spacing={10}>
         <VStack h="auto" ml="1rem">
-          <Heading size="sm" mt={"0.25rem"}>
+          <Heading size="xl" mt={"0.25rem"}>
             Positive
           </Heading>
           {groupedComments
@@ -128,7 +140,7 @@ function App() {
             ))}
         </VStack>
         <VStack h="auto" mr="1rem">
-          <Heading size="sm" mt={"0.25rem"}>
+          <Heading size="xl" mt={"0.25rem"}>
             Negative
           </Heading>
           {groupedComments

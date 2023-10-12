@@ -15,8 +15,7 @@ This project runs a semantic search for a subject and runs aspect based sentimen
       Time taken to create sparse embeddings: 0.0179 seconds
       Time taken to query index: 0.4001 seconds
       Time taken to infer sentiment: 14.4596 seconds for 30 documents
-
-- [ ] Add an animation to the byte-barometer, when it receives new data.
+- [x] Add an animation to the byte-barometer, when it receives new data.
 - [ ] Improve responsiveness, current pipeline, but speed up aspect based sentiment analyis and add streaming
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters, but keep original available too.
