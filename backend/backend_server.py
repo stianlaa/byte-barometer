@@ -10,7 +10,26 @@ def handle_query(json):
     # Query specifies X number of results desired
     # Begin streaming these
     print('Received message:', str(json))
-    socketio.emit('queryresponse', {'data': 'Server response!'})
+    socketio.emit('queryresponse', {
+        'data': [
+            {
+                'id': "123",
+                'metadata': {
+                    'author': "string;",
+                    'storyId': "string;",
+                    'context': "string;",
+                    'parentId': "string;",
+                    'storyUrl': "string;",
+                    'createdAt': "string;",
+                },
+                'sentiment': {
+                    'label': "Positive",
+                    'score': 0,
+                }
+            }
+        ]
+    }
+    )
 
 
 print("SocketIO running")

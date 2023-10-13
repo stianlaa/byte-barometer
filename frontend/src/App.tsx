@@ -1,84 +1,35 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Heading,
-  Input,
-  InputGroup,
-  InputRightElement,
-  SimpleGrid,
-  VStack,
-} from "@chakra-ui/react";
-import { ArrowRightIcon } from "@chakra-ui/icons";
-import { useState, useRef, KeyboardEvent, useEffect } from "react";
-import axios from "axios";
+import { Box, Divider, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
+import { useState } from "react";
 import { CommentWithSentiment } from "./Comment";
 import Comment from "./Comment";
 import OpinionVisualizer from "./OpinionVisualizer";
-import { Spinner } from "@chakra-ui/react";
-import {
-  NEGATIVE,
-  NEUTRAL,
-  PORT,
-  POSITIVE,
-  REQUEST_COMMENTS,
-  VISIBLE_COMMENTS,
-} from "./constants";
+import { NEGATIVE, NEUTRAL, POSITIVE, VISIBLE_COMMENTS } from "./constants";
 import "./index.css";
-import { io } from "socket.io-client";
+import QueryInput from "./QueryInput";
+
+const emptyMap = () => {
+  return new Map<string, CommentWithSentiment[]>([
+    [POSITIVE, []],
+    [NEUTRAL, []],
+    [NEGATIVE, []],
+  ]);
+};
 
 function App() {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [queryString, setQueryString] = useState<string>("");
-  const [groupedComments, setGroupedComments] = useState<
-    Map<string, CommentWithSentiment[]> | undefined
-  >(undefined);
+  const [groupedComments, setGroupedComments] = useState(emptyMap());
 
-  const querySubject = async (query: string) => {
-    setLoading(true);
-    const response = await axios.post<CommentWithSentiment[]>(
-      `http://localhost:${PORT}/query`,
-      {
-        query,
-        commentCount: REQUEST_COMMENTS,
-      }
+  const onQuery = () => setGroupedComments(emptyMap);
+  const onReceiveResultBatch = (comments: CommentWithSentiment[]) => {
+    // TODO have to use setState
+    const extendedMap = new Map<string, CommentWithSentiment[]>(
+      groupedComments
     );
-    setGroupedComments(
-      response.data.reduce(
-        (acc, comment) => {
-          acc.get(comment.sentiment.label)?.push(comment);
-          return acc;
-        },
-        new Map<string, CommentWithSentiment[]>([
-          [POSITIVE, []],
-          [NEUTRAL, []],
-          [NEGATIVE, []],
-        ])
-      )
-    );
-
-    setLoading(false);
-  };
-
-  const socket = useRef<any>(undefined);
-
-  useEffect(() => {
-    if (!socket.current) {
-      socket.current = io("localhost:3000");
-
-      socket.current.on("queryresponse", (message: any) => {
-        console.log("Result received", message);
-      });
-
-      console.log(socket.current);
-    }
-  }, []);
-
-  const handleCompletion = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && queryString) {
-      socket.current.emit("query", { queryString: queryString });
-      // querySubject(queryString);
-    }
+    comments.forEach((comment) => {
+      console.log("Pushing ", comment);
+      groupedComments.get(comment.sentiment.label)?.push(comment);
+      console.log("Result ", groupedComments);
+    });
+    setGroupedComments(extendedMap);
   };
 
   return (
@@ -95,45 +46,10 @@ function App() {
         />
 
         <OpinionVisualizer groupedComments={groupedComments} />
-
-        <InputGroup
-          size="lg"
-          width={"75%"}
-          mr="auto"
-          ml="auto"
-          mb={5}
-
-          // background: linear-gradient(to right, red, purple);
-          // padding: 3px;
-        >
-          <Input
-            fontSize={20}
-            color="grey.900"
-            bgColor="beige.500"
-            borderColor="grey.500"
-            value={queryString}
-            onChange={(e) => setQueryString(e.target.value)}
-            placeholder={`What does Hackernews think about.. Rust?`} // TODO: change to random subject
-            onKeyDown={handleCompletion}
-          />
-          <InputRightElement>
-            <Button
-              size="s"
-              bgColor="beige.500"
-              onClick={() => {
-                querySubject(queryString);
-              }}
-            >
-              {loading ? (
-                <Box bgColor="beige.500">
-                  <Spinner />
-                </Box>
-              ) : (
-                <ArrowRightIcon />
-              )}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
+        <QueryInput
+          onQuery={onQuery}
+          onReceiveResultBatch={onReceiveResultBatch}
+        />
       </Box>
 
       <Divider borderColor="grey.500" mt={"0.25rem"} mb={"0.25rem"} />
