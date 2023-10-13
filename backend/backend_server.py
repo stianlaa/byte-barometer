@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_socketio import SocketIO
+import random
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -13,7 +14,7 @@ def handle_query(json):
     socketio.emit('queryresponse', {
         'data': [
             {
-                'id': "123",
+                'id': f'unique-id-${str(random.randint(0, 50000))}',
                 'metadata': {
                     'author': "string;",
                     'storyId': "string;",

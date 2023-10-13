@@ -20,10 +20,7 @@ function App() {
 
   const onQuery = () => setGroupedComments(emptyMap);
   const onReceiveResultBatch = (comments: CommentWithSentiment[]) => {
-    // TODO have to use setState
-    const extendedMap = new Map<string, CommentWithSentiment[]>(
-      groupedComments
-    );
+    const extendedMap = new Map(groupedComments);
     comments.forEach((comment) => {
       console.log("Pushing ", comment);
       groupedComments.get(comment.sentiment.label)?.push(comment);

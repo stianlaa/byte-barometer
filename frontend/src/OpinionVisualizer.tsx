@@ -4,7 +4,7 @@ import { NEGATIVE, NEUTRAL, POSITIVE } from "./constants";
 import { CommentWithSentiment } from "./Comment";
 
 type OpinionVisualizerProps = {
-  groupedComments: Map<string, CommentWithSentiment[]> | undefined;
+  groupedComments: Map<string, CommentWithSentiment[]>;
 };
 
 function mapVisualizerData(
@@ -29,9 +29,9 @@ function mapVisualizerData(
 
 function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
   const data = mapVisualizerData(
-    groupedComments?.get(POSITIVE)?.length,
-    groupedComments?.get(NEUTRAL)?.length,
-    groupedComments?.get(NEGATIVE)?.length
+    groupedComments.get(POSITIVE)?.length,
+    groupedComments.get(NEUTRAL)?.length,
+    groupedComments.get(NEGATIVE)?.length
   );
   return (
     <Center mr="auto" ml="auto" w="100%">
