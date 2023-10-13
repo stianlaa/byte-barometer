@@ -55,7 +55,7 @@ function OpinionVisualizer({ groupedComments }: OpinionVisualizerProps) {
           style={{
             labels: {
               fill: "#DDD8C4",
-              fontSize: 6,
+              fontSize: 10,
               fontWeight: "bold",
               textAnchor: "middle",
             },

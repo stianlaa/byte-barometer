@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import { useState, KeyboardEvent } from "react";
+import { useState, useRef, KeyboardEvent, useEffect } from "react";
 import axios from "axios";
 import { CommentWithSentiment } from "./Comment";
 import Comment from "./Comment";
@@ -25,6 +25,7 @@ import {
   VISIBLE_COMMENTS,
 } from "./constants";
 import "./index.css";
+import { io } from "socket.io-client";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -59,18 +60,29 @@ function App() {
     setLoading(false);
   };
 
+  const socket = useRef<any>(undefined);
+
+  useEffect(() => {
+    if (!socket.current) {
+      socket.current = io("localhost:3000");
+
+      socket.current.on("queryresponse", (message: any) => {
+        console.log("Result received", message);
+      });
+
+      console.log(socket.current);
+    }
+  }, []);
+
   const handleCompletion = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && queryString) {
-      querySubject(queryString);
+      socket.current.emit("query", { queryString: queryString });
+      // querySubject(queryString);
     }
   };
 
   return (
-    <Box
-      // boxShadow="dark-lg"
-      height="100vh"
-      overflow="scroll"
-    >
+    <Box height="100vh" overflow="scroll">
       <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
         <Divider
