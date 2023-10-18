@@ -1,4 +1,5 @@
 from flask import request
+from app_setup import logger
 from flask_setup import socketio, app
 from query_handler import Query, process_query
 
@@ -14,5 +15,5 @@ def handle_query(json: dict):
 
 
 if __name__ == "__main__":
-    print("Launching byte-barometer backend")
+    logger.info("Launching backend")
     socketio.run(app, port=3000)

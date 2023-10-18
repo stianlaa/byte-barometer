@@ -1,9 +1,9 @@
-import torch
+from app_setup import logger
+from torch import no_grad
 from splade.models.transformer_rep import Splade
 from transformers import AutoTokenizer
 from dotenv import load_dotenv
 
-dense_model_id = "text-embedding-ada-002"
 sparse_model_id = "naver/splade-cocondenser-ensembledistil"
 
 load_dotenv("../.env")
@@ -11,7 +11,7 @@ load_dotenv("../.env")
 
 class Toolbox:
     def __init__(self):
-        print("Initializing Splade toolbox")
+        logger.info("Initializing Splade toolbox")
         self._sparse_model = Splade(sparse_model_id, agg='max')
         self._sparse_model.to('cpu')
         self._sparse_model.eval()
@@ -37,7 +37,7 @@ def create_sparse_embeddings(document_chunk) -> list:
         # Tokenize the document
         tokens = toolbox.tokenizer(document_text, return_tensors='pt')
 
-        with torch.no_grad():
+        with no_grad():
             # Create sparse embeddings
             sparse_embeddings = toolbox.sparse_model(
                 d_kwargs=tokens.to('cpu')

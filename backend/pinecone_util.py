@@ -1,3 +1,4 @@
+from app_setup import logger
 from sparse_embedding import create_sparse_embeddings
 from dense_embedding import create_dense_embeddings
 from sentiment import infer_sentiment
@@ -18,7 +19,7 @@ index = os.environ['PINECONE_INDEX']
 
 class Toolbox:
     def __init__(self):
-        print("Initializing semantic toolbox")
+        logger.info("Initializing semantic toolbox")
         init(
             api_key=os.environ['PINECONE_API_KEY'],
             environment=os.environ['PINECONE_ENVIRONMENT']

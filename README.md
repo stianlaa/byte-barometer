@@ -20,14 +20,15 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [x] Improve responsiveness - add websocket result streaming
 - [x] Improve responsiveness - speed up aspect based sentiment analyis and add streaming
 - [x] Change commentdisplay to show the comments as cards
-- [ ] Fix initial delay on first request, perhaps triggered by toolbox logic not called
-
-- one source appears to be flask, e.g request isn't registered immediately
-- gpu serialized inferance warning
-- Splade gpu evaluation
-
-- [ ] Populate an index with a larger amount of data
-- [ ] Add logging in python
+- [x] Fix initial delay on first request, perhaps triggered by toolbox logic not called
+- [x] Populate an index with a medium amount of data
+- [x] Add logging in python
+- [ ] Current setup doesn't reset between queries properly
+- [ ] Pep8, autoformat and cleanup
+- [ ] Dependencylist, perhaps docker
+- [ ] Update readmes
+- [ ] Test delete and manual query
+- [ ] Update portfolio
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
 - [ ] Improve comment sentiment display, by badge or similar
@@ -36,3 +37,4 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [ ] Display how many comments are being analyzed
 - [ ] Add icons for the various links, story, comments, author etc
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well
+- [ ] gpu serialized inferance warning, look into performance improvement

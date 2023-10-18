@@ -1,15 +1,21 @@
+from app_setup import logger
 from transformers import pipeline
 from dotenv import load_dotenv
+from warnings import filterwarnings
 
 sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
 
 # Should only be neccessary in initial model download, afterwards huggingface key should be obsolete.
 load_dotenv("../.env")
 
+# Suppress the warning from transformers, since it is not strictly relevant right now
+# This is to filter UserWarning: You seem to be using the pipelines sequentially on GPU.
+filterwarnings("ignore", category=UserWarning, module="transformers")
+
 
 class Toolbox:
     def __init__(self):
-        print("Initializing sentiment toolbox")
+        logger.info('Initializing sentiment toolbox')
         self._sentiment_pipeline = pipeline(
             "text-classification", model=sentiment_model_id, device=0)
 

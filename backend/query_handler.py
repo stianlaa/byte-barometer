@@ -1,7 +1,8 @@
 from flask_setup import socketio
 from pinecone_util import QueryResponse, run_query, run_sentiment_analysis
 
-BATCH_SIZE = 1
+
+BATCH_SIZE = 2
 
 
 class Query:
