@@ -18,24 +18,22 @@ type Query = {
 };
 
 export type QueryInputProps = {
-  onQuery: () => void;
   onReceiveResultBatch: (batch: CommentWithSentiment[]) => void;
 };
 
-function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
+function QueryInput({ onReceiveResultBatch }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const querySubject = async (queryString: string) => {
     setLoading(true);
-    onQuery();
 
     const query: Query = {
       queryString,
       queryCommentCount: 5,
     };
-
     socket.emit("query", query);
+
     setLoading(false);
   };
 

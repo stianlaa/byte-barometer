@@ -1,4 +1,4 @@
-import random
+from random import randint
 from flask_setup import socketio
 
 
@@ -12,7 +12,7 @@ def create_comment(query, label):
     comment = {
         'data': [
             {
-                'id': f'unique-id-${str(random.randint(0, 50000))}',
+                'id': f'unique-id-${str(randint(0, 50000))}',
                 'metadata': {
                     'author': query,
                     'storyId': "string;",
@@ -22,7 +22,7 @@ def create_comment(query, label):
                     'createdAt': "string;",
                 },
                 'sentiment': {
-                    'label': label,
+                    'label': 'Positive' if randint(0, 10) > 5 else 'Negative',
                     'score': 0,
                 }
             }
@@ -33,6 +33,7 @@ def create_comment(query, label):
 
 def process_query(query: Query, socket_session_id: str):
     # Fetch and process X queries
+
     comment = create_comment(query.query_string, 'Positive')
 
     socketio.emit("queryresponse", comment, to=socket_session_id)

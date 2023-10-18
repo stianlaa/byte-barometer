@@ -7,24 +7,39 @@ import { NEGATIVE, NEUTRAL, POSITIVE, VISIBLE_COMMENTS } from "./constants";
 import "./index.css";
 import QueryInput from "./QueryInput";
 
-const emptyMap = () => {
-  return new Map<string, CommentWithSentiment[]>([
-    [POSITIVE, []],
-    [NEUTRAL, []],
-    [NEGATIVE, []],
-  ]);
+export type StateType = {
+  positive: CommentWithSentiment[];
+  neutral: CommentWithSentiment[];
+  negative: CommentWithSentiment[];
 };
 
 function App() {
-  const [groupedComments, setGroupedComments] = useState(emptyMap());
+  const initialState: StateType = {
+    positive: [],
+    neutral: [],
+    negative: [],
+  };
 
-  const onQuery = () => setGroupedComments(emptyMap);
-  const onReceiveResultBatch = (comments: CommentWithSentiment[]) => {
-    const extendedMap = new Map(groupedComments);
-    comments.forEach((comment) => {
-      groupedComments.get(comment.sentiment.label)?.push(comment);
+  const [comments, setComments] = useState<StateType>(initialState);
+
+  const onReceiveResultBatch = (receivedComments: CommentWithSentiment[]) => {
+    const state: StateType = { ...comments };
+    receivedComments.forEach((comment) => {
+      switch (comment.sentiment.label) {
+        case POSITIVE:
+          state.positive.push(comment);
+          break;
+        case NEUTRAL:
+          state.neutral.push(comment);
+          break;
+        case NEGATIVE:
+          state.negative.push(comment);
+          break;
+        default:
+          break;
+      }
     });
-    setGroupedComments(extendedMap);
+    setComments(state);
   };
 
   return (
@@ -39,12 +54,12 @@ function App() {
           ml="auto"
           w="50%"
         />
-
-        <OpinionVisualizer groupedComments={groupedComments} />
-        <QueryInput
-          onQuery={onQuery}
-          onReceiveResultBatch={onReceiveResultBatch}
+        <OpinionVisualizer
+          positiveCount={comments.positive.length}
+          neutralCount={comments.neutral.length}
+          negativeCount={comments.negative.length}
         />
+        <QueryInput onReceiveResultBatch={onReceiveResultBatch} />
       </Box>
 
       <Divider borderColor="grey.500" mt={"0.25rem"} mb={"0.25rem"} />
@@ -54,8 +69,7 @@ function App() {
           <Heading size="xl" mt={"0.25rem"}>
             Positive
           </Heading>
-          {groupedComments
-            ?.get(POSITIVE)
+          {comments.positive
             ?.slice(0, VISIBLE_COMMENTS)
             .sort((a, b) => b.sentiment.score - a.sentiment.score)
             .map((comment) => (
@@ -66,8 +80,7 @@ function App() {
           <Heading size="xl" mt={"0.25rem"}>
             Negative
           </Heading>
-          {groupedComments
-            ?.get(NEGATIVE)
+          {comments.negative
             ?.slice(0, VISIBLE_COMMENTS)
             .sort((a, b) => b.sentiment.score - a.sentiment.score)
             .map((comment) => (
