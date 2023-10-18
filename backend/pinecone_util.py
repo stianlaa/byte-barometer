@@ -197,7 +197,7 @@ def run_sentiment_analysis(query_string: str, query_response_list: list[QueryRes
     start = time.time()
     sentiments = infer_sentiment(comment_texts, query_string)
     end = time.time()
-    print(f'time passed for inference {end - start}')
+    print(f'Inference time {end - start:.2f}')
 
     # Convert to Match objects
     result_objects: list[Match] = []

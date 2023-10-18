@@ -17,17 +17,15 @@ This project runs a semantic search for a subject and runs aspect based sentimen
       Time taken to infer sentiment: 14.4596 seconds for 30 documents
 - [x] Add an animation to the byte-barometer, when it receives new data.
 - [x] On query, introduce placeholder comments that are yet to be determined
-- [ ] Improve responsiveness - add websocket result streaming
-- [ ] Improve responsiveness - speed up aspect based sentiment analyis and add streaming
+- [x] Improve responsiveness - add websocket result streaming
+- [x] Improve responsiveness - speed up aspect based sentiment analyis and add streaming
+- [x] Change commentdisplay to show the comments as cards
+- [ ] Populate an index with a larger amount of data
 - [ ] Add logging in python
 
-- [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters, but keep original available too.
-- [ ] Populate an index with a larger amount of data
-- [ ] Change commentdisplay to show the comments as cards
+- [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
 - [ ] Improve comment sentiment display, by badge or similar
 - [ ] Improve comment styling
-- [ ] Investigate adding default set of results, of which one random result is shown immediately
-- [ ] Investigate performance improvement from Splade alternatives, or GPU use
 - [ ] Investigate if only relevant comments can be shown, and if so, how to do this, e.g filter by abs of comment match
 - [ ] Display how many comments are being analyzed
 - [ ] Add icons for the various links, story, comments, author etc

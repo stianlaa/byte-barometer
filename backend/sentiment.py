@@ -13,7 +13,7 @@ class Toolbox:
     def sentiment_pipeline(self):
         if self._sentiment_pipeline is None:
             self._sentiment_pipeline = pipeline(
-                "text-classification", model=sentiment_model_id)
+                "text-classification", model=sentiment_model_id, device=0)
         return self._sentiment_pipeline
 
 

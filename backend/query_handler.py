@@ -28,7 +28,6 @@ def process_query(query: Query, socket_session_id: str):
     for batch in batches:
         # Apply sentiment analysis
         matches = run_sentiment_analysis(query.query_string, batch)
-        print("Ran sentiment analysis")
 
         # Emit the mapped results
         data = [match.to_dict() for match in matches]
