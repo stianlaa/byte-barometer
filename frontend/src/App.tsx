@@ -7,14 +7,14 @@ import OpinionVisualizer from "./OpinionVisualizer";
 import { NEGATIVE, NEUTRAL, POSITIVE, VISIBLE_COMMENTS } from "./constants";
 import QueryInput from "./QueryInput";
 
-export type StateType = {
+export type GroupedComments = {
   positive: CommentWithSentiment[];
   neutral: CommentWithSentiment[];
   negative: CommentWithSentiment[];
 };
 
 function App() {
-  const [comments, setComments] = useState<StateType>({
+  const [comments, setComments] = useState<GroupedComments>({
     positive: [],
     neutral: [],
     negative: [],
@@ -28,27 +28,36 @@ function App() {
     });
 
   const onReceiveResultBatch = (receivedComments: CommentWithSentiment[]) => {
-    const state: StateType = { ...comments };
+    const groupedComments: GroupedComments = { ...comments };
     receivedComments.forEach((comment) => {
       switch (comment.sentiment.label) {
         case POSITIVE:
-          state.positive.push(comment);
+          groupedComments.positive.push(comment);
           break;
         case NEUTRAL:
-          state.neutral.push(comment);
+          groupedComments.neutral.push(comment);
           break;
         case NEGATIVE:
-          state.negative.push(comment);
+          groupedComments.negative.push(comment);
           break;
         default:
           break;
       }
     });
-    setComments(state);
+    setComments(groupedComments);
   };
 
   return (
-    <Box height="100vh" overflow="scroll">
+    <Box
+      height="100vh"
+      overflowY="scroll"
+      sx={{
+        "::-webkit-scrollbar": {
+          display: "none",
+        },
+        "scrollbar-width": "none",
+      }}
+    >
       <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
         <Divider

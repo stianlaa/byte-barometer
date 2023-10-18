@@ -15,9 +15,6 @@ def create_dense_embeddings(chunk) -> list:
 
     # Access the relevant embeddings in the structure
     data = response['data']
-
     embeddings = [entry['embedding'] for entry in data]
-
-    # float_list = [float(item) for item in lst]
 
     return list(embeddings)

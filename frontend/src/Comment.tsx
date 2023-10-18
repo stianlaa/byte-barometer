@@ -31,6 +31,7 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
       borderRadius="1rem"
       textAlign="left"
       p="1rem"
+      maxW={"100%"}
     >
       <HStack>
         <Heading size="sm">

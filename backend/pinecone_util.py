@@ -13,7 +13,7 @@ load_dotenv("../.env")
 path = 'documents.jsonl'
 chunk_size = 100
 
-pinecone_index = os.environ['PINECONE_INDEX']
+index = os.environ['PINECONE_INDEX']
 
 
 class Toolbox:
@@ -23,7 +23,7 @@ class Toolbox:
             api_key=os.environ['PINECONE_API_KEY'],
             environment=os.environ['PINECONE_ENVIRONMENT']
         )
-        self._index = GRPCIndex(pinecone_index)
+        self._index = GRPCIndex(index)
 
     @property
     def index(self):
@@ -49,13 +49,13 @@ def hybrid_scale(dense, sparse, alpha: float):
 def create_index_if_missing():
     toolbox.index  # Initialize index if not already done
     indices = list_indexes()
-    if any(map(lambda i: i == pinecone_index, indices)):
-        print(f'Index {pinecone_index} already exists')
+    if any(map(lambda i: i == index, indices)):
+        print(f'Index {index} already exists')
         return
     else:
-        print(f'Creating index: {pinecone_index}')
+        print(f'Creating index: {index}')
         create_index(
-            pinecone_index,
+            index,
             dimension=1536,
             metric="dotproduct",
             pod_type="s1"
@@ -65,11 +65,11 @@ def create_index_if_missing():
 def delete_if_exists():
     toolbox.index  # Initialize index if not already done
     indices = list_indexes()
-    if any(map(lambda i: i == pinecone_index, indices)):
-        print(f'Deleting {pinecone_index}')
-        delete_index(pinecone_index)
+    if any(map(lambda i: i == index, indices)):
+        print(f'Deleting {index}')
+        delete_index(index)
     else:
-        print(f'Index {pinecone_index} doesn\'t exist')
+        print(f'Index {index} doesn\'t exist')
 
 
 def populate():
@@ -94,40 +94,33 @@ def populate():
             parent_id_list = chunk["parentId"].values.tolist()
             created_at_list = chunk["createdAt"].values.tolist()
 
-            try:
-                dense = create_dense_embeddings(text_list)
-                sparse = create_sparse_embeddings(text_list)
-                for dense, sparse, id, storyId, text, author, story_url, parent_id, created_at in zip(dense, sparse, id_list, story_id_list, text_list, author_list, story_url_list, parent_id_list, created_at_list):
+            dense = create_dense_embeddings(text_list)
+            sparse = create_sparse_embeddings(text_list)
+            for dense, sparse, id, storyId, text, author, story_url, parent_id, created_at in zip(dense, sparse, id_list, story_id_list, text_list, author_list, story_url_list, parent_id_list, created_at_list):
 
-                    upsert_data = {
-                        'id': id,
-                        'values': dense,
-                        'sparse_values': sparse,
-                        'metadata': {
-                            'context': text,
-                            'author': author,
-                            'storyUrl': '' if story_url is None else story_url,
-                            'parentId': parent_id,
-                            'storyId': storyId,
-                            'createdAt': created_at,
-                        }
+                upsert_data = {
+                    'id': id,
+                    'values': dense,
+                    'sparse_values': sparse,
+                    'metadata': {
+                        'context': text,
+                        'author': author,
+                        'storyUrl': '' if story_url is None else story_url,
+                        'parentId': parent_id,
+                        'storyId': storyId,
+                        'createdAt': created_at,
                     }
+                }
 
-                    upserts.append(upsert_data)
+                upserts.append(upsert_data)
 
-                # Upsert data
-                chunk_end = time.time()
-                print(f'Upserting {len(upserts)}')
-                toolbox.index.upsert(upserts)
+            # Upsert data
+            chunk_end = time.time()
+            toolbox.index.upsert(upserts)
+            doc_rate = chunk_size/(chunk_end - chunk_start)
+            print(f'{i}/{len(upserts)}-{doc_rate:.2f} docs/sec')
 
-                print(
-                    f'Upserted {len(upserts)} documents, {round(chunk_size/(chunk_end - chunk_start), 2)} documents/second')
-            except Exception as error:
-                # An error occurred in one of the coroutines
-                print(error)
-
-        print(
-            f'Index {pinecone_index}:\n{toolbox.index.describe_index_stats()}')
+        print(f'Index {index}:\n{toolbox.index.describe_index_stats()}')
 
 
 class Metadata:
