@@ -8,13 +8,14 @@ import {
   InputRightElement,
   Spinner,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState, KeyboardEvent } from "react";
-import { io } from "socket.io-client";
+import { useState, useEffect, KeyboardEvent } from "react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
+import { socket, QueryResponseBatch } from "./socket-setup";
 
-const PATH = "localhost:3000";
-
-type QueryResponseBatch = { data: CommentWithSentiment[] };
+type Query = {
+  queryString: string;
+  queryCommentCount: number;
+};
 
 export type QueryInputProps = {
   onQuery: () => void;
@@ -24,12 +25,17 @@ export type QueryInputProps = {
 function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const socket = useRef(io(PATH));
 
   const querySubject = async (queryString: string) => {
     setLoading(true);
     onQuery();
-    socket.current.emit("query", { queryString });
+
+    const query: Query = {
+      queryString,
+      queryCommentCount: 5,
+    };
+
+    socket.emit("query", query);
     setLoading(false);
   };
 
@@ -38,13 +44,10 @@ function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
   };
 
   useEffect(() => {
-    if (!socket.current.hasListeners("queryresponse")) {
-      socket.current.on("queryresponse", (batch: QueryResponseBatch) => {
-        console.log("Result received", batch);
-        onReceiveResultBatch(batch.data);
-      });
-
-      console.log(socket.current);
+    if (!socket.hasListeners("queryresponse")) {
+      socket.on("queryresponse", (batch: QueryResponseBatch) =>
+        onReceiveResultBatch(batch.data)
+      );
     }
   }, []);
 
@@ -73,9 +76,7 @@ function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
         <Button
           size="s"
           bgColor="beige.500"
-          onClick={() => {
-            querySubject(queryString);
-          }}
+          onClick={() => querySubject(queryString)}
         >
           {loading ? (
             <Box bgColor="beige.500">

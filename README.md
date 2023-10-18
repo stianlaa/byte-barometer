@@ -16,8 +16,9 @@ This project runs a semantic search for a subject and runs aspect based sentimen
       Time taken to query index: 0.4001 seconds
       Time taken to infer sentiment: 14.4596 seconds for 30 documents
 - [x] Add an animation to the byte-barometer, when it receives new data.
-- [ ] On query, introduce placeholder comments that are yet to be determined
-- [ ] Improve responsiveness, current pipeline, but speed up aspect based sentiment analyis and add streaming
+- [x] On query, introduce placeholder comments that are yet to be determined
+- [ ] Improve responsiveness - add websocket result streaming
+- [ ] Improve responsiveness - speed up aspect based sentiment analyis and add streaming
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters, but keep original available too.
 - [ ] Populate an index with a larger amount of data

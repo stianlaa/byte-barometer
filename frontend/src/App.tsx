@@ -22,9 +22,7 @@ function App() {
   const onReceiveResultBatch = (comments: CommentWithSentiment[]) => {
     const extendedMap = new Map(groupedComments);
     comments.forEach((comment) => {
-      console.log("Pushing ", comment);
       groupedComments.get(comment.sentiment.label)?.push(comment);
-      console.log("Result ", groupedComments);
     });
     setGroupedComments(extendedMap);
   };
