@@ -16,23 +16,18 @@ def batchify(elements, batch_size):
 
 
 def process_query(query: Query, socket_session_id: str):
-    print("Running Query")
-
     # Query batch
     query_response_list = run_query(
         query.query_string, query.query_comment_count, 0.5)
 
     # Batch query responses
-    print('batchify')
     batches: list[QueryResponse] = batchify(query_response_list, BATCH_SIZE)
 
     for batch in batches:
         # Apply sentiment analysis
-        print('sentiment analysis')
         matches = run_sentiment_analysis(query.query_string, batch)
 
         # Emit the mapped results
-        print('mapping and emitting')
         data = [match.to_dict() for match in matches]
         socketio.emit("queryresponse", {'data': data}, to=socket_session_id)
 

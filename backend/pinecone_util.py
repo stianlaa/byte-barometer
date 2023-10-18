@@ -169,17 +169,13 @@ class Match:
 
 def run_query(query_text: str, top_k: int, alpha: float) -> list[QueryResponse]:
     # Create embeddings to be able to search vector database
-    print('Dense')
     dense = create_dense_embeddings([query_text])[0]
-    print('Sparse')
     sparse = create_sparse_embeddings([query_text])[0]
 
     # Create hybrid scale to weight between embeddings
-    print('Scale')
     scaled_dense, scaled_sparse = hybrid_scale(dense, sparse, alpha)
 
     # Query vector database for entries near embeddings
-    print('Query')
     query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
                                        top_k=top_k, include_metadata=True)
 
@@ -198,10 +194,7 @@ def run_sentiment_analysis(query_string: str, query_response_list: list[QueryRes
         map(lambda response: response.metadata["context"], query_response_list))
 
     # Perform aspect based sentiment analysis on batch, with query_text as aspect
-    start = time.time()
     sentiments = infer_sentiment(comment_texts, query_string)
-    end = time.time()
-    print(f'Inference time {end - start:.2f}')
 
     # Convert to Match objects
     result_objects: list[Match] = []
