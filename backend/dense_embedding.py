@@ -1,18 +1,23 @@
 import os
-import openai
+from openai import Embedding, api_key
 from dotenv import load_dotenv
 
 dense_model_id = "text-embedding-ada-002"
 
 load_dotenv("../.env")
 
-openai.api_key = os.environ['OPENAI_API_KEY']
+api_key = os.environ['OPENAI_API_KEY']
 
 
-def create_dense_embeddings(chunk):
+def create_dense_embeddings(chunk) -> list:
     # Create dense embeddings
-    response = openai.Embedding.create(input=chunk, model=dense_model_id)
+    response = Embedding.create(input=chunk, model=dense_model_id)
 
-    # Extract embeddings from response
-    embeddings = map(lambda entry: entry['embedding'], response['data'])
+    # Access the relevant embeddings in the structure
+    data = response['data']
+
+    embeddings = [entry['embedding'] for entry in data]
+
+    # float_list = [float(item) for item in lst]
+
     return list(embeddings)

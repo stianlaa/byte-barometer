@@ -1,10 +1,13 @@
 from sparse_embedding import create_sparse_embeddings
-from sentiment import infer_sentiment
 from dense_embedding import create_dense_embeddings
-from pinecone import init, GRPCIndex
+from sentiment import infer_sentiment
+from pinecone import init, GRPCIndex, list_indexes, delete_index, create_index
+from dotenv import load_dotenv
+
 import os
 import time
-from dotenv import load_dotenv
+import pandas as pd
+
 load_dotenv("../.env")
 
 path = 'documents.jsonl'
@@ -43,88 +46,88 @@ def hybrid_scale(dense, sparse, alpha: float):
     return hdense, hsparse
 
 
-# async def create_index_if_missing():
-#     toolbox.index  # Initialize index if not already done
-#     indices = list_indexes()
-#     if any(map(lambda i: i == pinecone_index, indices)):
-#         print(f'Index {pinecone_index} already exists')
-#         return
-#     else:
-#         print(f'Creating index: {pinecone_index}')
-#         create_index(
-#             pinecone_index,
-#             dimension=1536,
-#             metric="dotproduct",
-#             pod_type="s1"
-#         )
+def create_index_if_missing():
+    toolbox.index  # Initialize index if not already done
+    indices = list_indexes()
+    if any(map(lambda i: i == pinecone_index, indices)):
+        print(f'Index {pinecone_index} already exists')
+        return
+    else:
+        print(f'Creating index: {pinecone_index}')
+        create_index(
+            pinecone_index,
+            dimension=1536,
+            metric="dotproduct",
+            pod_type="s1"
+        )
 
 
-# async def delete_if_exists():
-#     toolbox.index  # Initialize index if not already done
-#     indices = list_indexes()
-#     if any(map(lambda i: i == pinecone_index, indices)):
-#         print(f'Deleting {pinecone_index}')
-#         delete_index(pinecone_index)
-#     else:
-#         print(f'Index {pinecone_index} doesn\'t exist')
+def delete_if_exists():
+    toolbox.index  # Initialize index if not already done
+    indices = list_indexes()
+    if any(map(lambda i: i == pinecone_index, indices)):
+        print(f'Deleting {pinecone_index}')
+        delete_index(pinecone_index)
+    else:
+        print(f'Index {pinecone_index} doesn\'t exist')
 
 
-# async def populate():
-#     await create_index_if_missing()
-#     # load comments.jsonl into a dataframe
-#     with open(f'{path}') as f:
-#         df = pd.read_json(f, lines=True)
-#         print(f'Embedding {df.shape[0]} documents')
-#         print(f'{df.head()}\n')
+def populate():
+    create_index_if_missing()
+    # load comments.jsonl into a dataframe
+    with open(f'{path}') as f:
+        df = pd.read_json(f, lines=True)
+        print(f'Embedding {df.shape[0]} documents')
+        print(f'{df.head()}\n')
 
-#         # Grab chunks of chunk_size documents
-#         for i in range(0, df.shape[0], chunk_size):
-#             chunk = df.iloc[i:i+chunk_size]
-#             chunk_start = time.time()
-#             upserts = []
+        # Grab chunks of chunk_size documents
+        for i in range(0, df.shape[0], chunk_size):
+            chunk = df.iloc[i:i+chunk_size]
+            chunk_start = time.time()
+            upserts = []
 
-#             idList = chunk["id"].values.tolist()
-#             storyIdList = chunk["storyId"].values.tolist()
-#             textList = chunk["text"].values.tolist()
-#             authorList = chunk["author"].values.tolist()
-#             storyUrlList = chunk["storyUrl"].values.tolist()
-#             parentIdList = chunk["parentId"].values.tolist()
-#             createdAtList = chunk["createdAt"].values.tolist()
-#             coroutines = [
-#                 create_dense_embeddings(textList),
-#                 create_sparse_embeddings(textList),
-#             ]
+            id_list = chunk["id"].values.tolist()
+            story_id_list = chunk["storyId"].values.tolist()
+            text_list = chunk["text"].values.tolist()
+            author_list = chunk["author"].values.tolist()
+            story_url_list = chunk["storyUrl"].values.tolist()
+            parent_id_list = chunk["parentId"].values.tolist()
+            created_at_list = chunk["createdAt"].values.tolist()
 
-#             try:
-#                 results = await asyncio.gather(*coroutines)
-#                 # All coroutines have been executed successfully
-#                 for dense, sparse, id, storyId, text, author, storyUrl, parentId, createdAt in zip(results[0], results[1], idList, storyIdList, textList, authorList, storyUrlList, parentIdList, createdAtList):
-#                     temp = {
-#                         'id': id,
-#                         'values': dense,
-#                         'sparse_values': sparse,
-#                         'metadata': {
-#                             'context': text,
-#                             'author': author,
-#                             'storyUrl': '' if storyUrl is None else storyUrl,
-#                             'parentId': parentId,
-#                             'storyId': storyId,
-#                             'createdAt': createdAt,
-#                         }
-#                     }
-#                     upserts.append(temp)
+            try:
+                dense = create_dense_embeddings(text_list)
+                sparse = create_sparse_embeddings(text_list)
+                for dense, sparse, id, storyId, text, author, story_url, parent_id, created_at in zip(dense, sparse, id_list, story_id_list, text_list, author_list, story_url_list, parent_id_list, created_at_list):
 
-#                 # Upsert data
-#                 chunk_end = time.time()
-#                 toolbox.index.upsert(upserts)
-#                 print(
-#                     f'Upserted {len(upserts)} documents, {round(chunk_size/(chunk_end - chunk_start), 2)} documents/second')
-#             except Exception as error:
-#                 # An error occurred in one of the coroutines
-#                 print(error)
+                    upsert_data = {
+                        'id': id,
+                        'values': dense,
+                        'sparse_values': sparse,
+                        'metadata': {
+                            'context': text,
+                            'author': author,
+                            'storyUrl': '' if story_url is None else story_url,
+                            'parentId': parent_id,
+                            'storyId': storyId,
+                            'createdAt': created_at,
+                        }
+                    }
 
-#         print(
-#             f'Index {pinecone_index}:\n{toolbox.index.describe_index_stats()}')
+                    upserts.append(upsert_data)
+
+                # Upsert data
+                chunk_end = time.time()
+                print(f'Upserting {len(upserts)}')
+                toolbox.index.upsert(upserts)
+
+                print(
+                    f'Upserted {len(upserts)} documents, {round(chunk_size/(chunk_end - chunk_start), 2)} documents/second')
+            except Exception as error:
+                # An error occurred in one of the coroutines
+                print(error)
+
+        print(
+            f'Index {pinecone_index}:\n{toolbox.index.describe_index_stats()}')
 
 
 class Metadata:

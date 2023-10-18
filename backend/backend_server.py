@@ -14,5 +14,5 @@ def handle_query(json: dict):
 
 
 if __name__ == "__main__":
+    print("Launching byte-barometer backend")
     socketio.run(app, port=3000)
-    print("SocketIO running")

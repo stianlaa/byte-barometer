@@ -11,7 +11,6 @@ load_dotenv("../.env")
 
 class Toolbox:
     def __init__(self):
-        # Initialize and set up the Splade model
         print("Initializing Splade toolbox")
         self._sparse_model = Splade(sparse_model_id, agg='max')
         self._sparse_model.to('cpu')
@@ -32,7 +31,7 @@ class Toolbox:
 toolbox = Toolbox()
 
 
-def create_sparse_embeddings(document_chunk):
+def create_sparse_embeddings(document_chunk) -> list:
     chunk_result = list([])
     for document_text in document_chunk:
         # Tokenize the document

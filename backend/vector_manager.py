@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from pinecone_util import delete_if_exists, populate, query
+from pinecone_util import delete_if_exists, populate, run_query
 
 
 def delete_action(args):
@@ -17,7 +17,7 @@ def query_action(args):
     subject = args.subject
     top_k = 1 if args.topK is None else args.topK
     alpha = 0.5 if args.alpha is None else args.alpha
-    result = query(subject, top_k, alpha)
+    result = run_query(subject, top_k, alpha)
     print([match.to_dict() for match in result])
 
 
@@ -28,7 +28,7 @@ options = {
 }
 
 
-async def main():
+def main():
     parser = ArgumentParser(prog='vector-manager',
                             description='Manages vector database data')
 
@@ -44,7 +44,7 @@ async def main():
 
     # get the function from options dictionary
     func = options.get(args.action)
-    await func(args)
+    func(args)
 
 
 if __name__ == '__main__':
