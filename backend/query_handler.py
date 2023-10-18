@@ -1,6 +1,5 @@
-from random import randint
 from flask_setup import socketio
-from pinecone_util import run_query
+from pinecone_util import run_query, run_sentiment_analysis
 
 BATCH_SIZE = 3
 
@@ -20,7 +19,13 @@ def process_query(query: Query, socket_session_id: str):
         batch_size = min(BATCH_SIZE, remaining_comments)
 
         # Query batch
-        matches = run_query(query.query_string, batch_size, 0.5)
+        query_response_list = run_query(query.query_string, batch_size, 0.5)
+        print("Ran query")
+
+        # Apply sentiment analysis
+        matches = run_sentiment_analysis(
+            query.query_string, query_response_list)
+        print("Ran sentiment analysis")
 
         # Emit the mapped results
         data = [match.to_dict() for match in matches]

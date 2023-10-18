@@ -137,11 +137,25 @@ class Metadata:
         }
 
 
-class Match:
-    def __init__(self, id: str, score: float, metadata: dict, sentiment: dict):
+class QueryResponse:
+    def __init__(self, id: str, score: float, metadata: dict):
         self.id = id
         self.score = score
         self.metadata = metadata
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "score": self.score,
+            "metadata": self.metadata,
+        }
+
+
+class Match:
+    def __init__(self, query_response: QueryResponse, sentiment: dict):
+        self.id = query_response.id
+        self.score = query_response.score
+        self.metadata = query_response.metadata
         self.sentiment = sentiment
 
     def to_dict(self):
@@ -153,36 +167,40 @@ class Match:
         }
 
 
-def run_query(query_text: str, top_k: int, alpha: float) -> list[Match]:
-    dense = create_dense_embeddings([query_text])
-    sparse = create_sparse_embeddings([query_text])
+def run_query(query_text: str, top_k: int, alpha: float) -> list[QueryResponse]:
+    # Create embeddings to be able to search vector database
+    dense = create_dense_embeddings([query_text])[0]
+    sparse = create_sparse_embeddings([query_text])[0]
 
-    try:
-        embedding_lists = [dense, sparse]
-        # Since the functions are made for batch
-        dense, sparse = embedding_lists[0][0], embedding_lists[1][0]
+    # Create hybrid scale to weight between embeddings
+    scaled_dense, scaled_sparse = hybrid_scale(dense, sparse, alpha)
 
-        scaled_dense, scaled_sparse = hybrid_scale(dense, sparse, alpha)
-        query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
-                                           top_k=top_k, include_metadata=True)
+    # Query vector database for entries near embeddings
+    query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
+                                       top_k=top_k, include_metadata=True)
 
-        matches = query_result['matches']
-        comment_texts = list(
-            map(lambda match: match['metadata']['context'], matches))
-        # TODO live sentiment inference is slow, either do in advance, swap to gpu, infer in batch, stream inference, or use a faster model
-        start = time.time()
-        sentiments = infer_sentiment(comment_texts, query_text)
-        end = time.time()
-        print(f'time passed for inference {end - start}')
+    # Map to QueryResponse objects
+    result_objects: list[QueryResponse] = []
+    for match in query_result['matches']:
+        id = match['id']
+        score = match['score']
+        metadata = match['metadata']
+        result_objects.append(QueryResponse(id, score, metadata))
+    return result_objects
 
-        # Convert to Match objects
-        result_objects: list[Match] = []
-        for match, sentiment in zip(matches, sentiments):
-            id = match['id']
-            score = match['score']
-            metadata = match['metadata']
-            result_objects.append(Match(id, score, metadata, sentiment))
-        return result_objects
-    except Exception as error:
-        # An error occurred in one of the coroutines
-        print(error)
+
+def run_sentiment_analysis(query_string: str, query_response_list: list[QueryResponse]) -> list[Match]:
+    comment_texts = list(
+        map(lambda response: response.metadata["context"], query_response_list))
+
+    # Perform aspect based sentiment analysis on batch, with query_text as aspect
+    start = time.time()
+    sentiments = infer_sentiment(comment_texts, query_string)
+    end = time.time()
+    print(f'time passed for inference {end - start}')
+
+    # Convert to Match objects
+    result_objects: list[Match] = []
+    for query_response, sentiment in zip(query_response_list, sentiments):
+        result_objects.append(Match(query_response, sentiment))
+    return result_objects
