@@ -10,21 +10,22 @@ load_dotenv("../.env")
 
 
 class Toolbox:
-    _sparse_model = None
-    _tokenizer = None
+    def __init__(self):
+        # Initialize and set up the Splade model
+        print("Initializing Splade toolbox")
+        self._sparse_model = Splade(sparse_model_id, agg='max')
+        self._sparse_model.to('cpu')
+        self._sparse_model.eval()
+
+        # Initialize the tokenizer
+        self._tokenizer = AutoTokenizer.from_pretrained(sparse_model_id)
 
     @property
     def sparse_model(self):
-        if self._sparse_model is None:
-            self._sparse_model = Splade(sparse_model_id, agg='max')
-            self._sparse_model.to('cpu')
-            self._sparse_model.eval()
         return self._sparse_model
 
     @property
     def tokenizer(self):
-        if self._tokenizer is None:
-            self._tokenizer = AutoTokenizer.from_pretrained(sparse_model_id)
         return self._tokenizer
 
 

@@ -14,16 +14,16 @@ pinecone_index = os.environ['PINECONE_INDEX']
 
 
 class Toolbox:
-    _index = None
+    def __init__(self):
+        print("Initializing semantic toolbox")
+        init(
+            api_key=os.environ['PINECONE_API_KEY'],
+            environment=os.environ['PINECONE_ENVIRONMENT']
+        )
+        self._index = GRPCIndex(pinecone_index)
 
     @property
     def index(self):
-        if self._index is None:
-            init(
-                api_key=os.environ['PINECONE_API_KEY'],
-                environment=os.environ['PINECONE_ENVIRONMENT']
-            )
-            self._index = GRPCIndex(pinecone_index)
         return self._index
 
 
@@ -169,13 +169,17 @@ class Match:
 
 def run_query(query_text: str, top_k: int, alpha: float) -> list[QueryResponse]:
     # Create embeddings to be able to search vector database
+    print('Dense')
     dense = create_dense_embeddings([query_text])[0]
+    print('Sparse')
     sparse = create_sparse_embeddings([query_text])[0]
 
     # Create hybrid scale to weight between embeddings
+    print('Scale')
     scaled_dense, scaled_sparse = hybrid_scale(dense, sparse, alpha)
 
     # Query vector database for entries near embeddings
+    print('Query')
     query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
                                        top_k=top_k, include_metadata=True)
 

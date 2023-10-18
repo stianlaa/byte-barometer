@@ -20,6 +20,12 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [x] Improve responsiveness - add websocket result streaming
 - [x] Improve responsiveness - speed up aspect based sentiment analyis and add streaming
 - [x] Change commentdisplay to show the comments as cards
+- [ ] Fix initial delay on first request, perhaps triggered by toolbox logic not called
+
+- one source appears to be flask, e.g request isn't registered immediately
+- gpu serialized inferance warning
+- Splade gpu evaluation
+
 - [ ] Populate an index with a larger amount of data
 - [ ] Add logging in python
 
