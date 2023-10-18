@@ -14,13 +14,18 @@ export type StateType = {
 };
 
 function App() {
-  const initialState: StateType = {
+  const [comments, setComments] = useState<StateType>({
     positive: [],
     neutral: [],
     negative: [],
-  };
+  });
 
-  const [comments, setComments] = useState<StateType>(initialState);
+  const onQuery = () =>
+    setComments({
+      positive: [],
+      neutral: [],
+      negative: [],
+    });
 
   const onReceiveResultBatch = (receivedComments: CommentWithSentiment[]) => {
     const state: StateType = { ...comments };
@@ -59,7 +64,10 @@ function App() {
           neutralCount={comments.neutral.length}
           negativeCount={comments.negative.length}
         />
-        <QueryInput onReceiveResultBatch={onReceiveResultBatch} />
+        <QueryInput
+          onQuery={onQuery}
+          onReceiveResultBatch={onReceiveResultBatch}
+        />
       </Box>
 
       <Divider borderColor="grey.500" mt={"0.25rem"} mb={"0.25rem"} />

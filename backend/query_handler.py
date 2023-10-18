@@ -1,7 +1,7 @@
 from flask_setup import socketio
-from pinecone_util import run_query, run_sentiment_analysis
+from pinecone_util import QueryResponse, run_query, run_sentiment_analysis
 
-BATCH_SIZE = 3
+BATCH_SIZE = 1
 
 
 class Query:
@@ -10,21 +10,24 @@ class Query:
         self.query_comment_count = query_comment_count
 
 
+def batchify(elements, batch_size):
+    # Convenient to split list into batches
+    return [elements[i:i + batch_size] for i in range(0, len(elements), batch_size)]
+
+
 def process_query(query: Query, socket_session_id: str):
     print("Running Query")
 
-    remaining_comments: int = query.query_comment_count
-    while remaining_comments > 0:
-        # Define batch size to request
-        batch_size = min(BATCH_SIZE, remaining_comments)
+    # Query batch
+    query_response_list = run_query(
+        query.query_string, query.query_comment_count, 0.5)
 
-        # Query batch
-        query_response_list = run_query(query.query_string, batch_size, 0.5)
-        print("Ran query")
+    # Batch query responses
+    batches: list[QueryResponse] = batchify(query_response_list, BATCH_SIZE)
 
+    for batch in batches:
         # Apply sentiment analysis
-        matches = run_sentiment_analysis(
-            query.query_string, query_response_list)
+        matches = run_sentiment_analysis(query.query_string, batch)
         print("Ran sentiment analysis")
 
         # Emit the mapped results
@@ -33,6 +36,3 @@ def process_query(query: Query, socket_session_id: str):
 
         # Yield control to send message immediately
         socketio.sleep(0)
-
-        # Determine remaining comments to fetch
-        remaining_comments -= batch_size

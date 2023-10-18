@@ -15,9 +15,9 @@ const mapInputData = ({
 }: OpinionVisualizerProps) => {
   return positiveCount + neutralCount + negativeCount === 0
     ? [
-        { x: POSITIVE, y: 0 },
-        { x: NEUTRAL, y: 0 },
-        { x: NEGATIVE, y: 0 },
+        { x: POSITIVE, y: 1 },
+        { x: NEUTRAL, y: 1 },
+        { x: NEGATIVE, y: 1 },
       ]
     : [
         { x: POSITIVE, y: positiveCount },

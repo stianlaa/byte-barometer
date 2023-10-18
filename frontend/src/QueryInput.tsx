@@ -15,28 +15,28 @@ import { socket, QueryResponseBatch } from "./socket-setup";
 const QUERY_COMMENT_COUNT = 20;
 
 type Query = {
-  queryString: string;
   queryCommentCount: number;
+  queryString: string;
 };
 
 export type QueryInputProps = {
+  onQuery: () => void;
   onReceiveResultBatch: (batch: CommentWithSentiment[]) => void;
 };
 
-function QueryInput({ onReceiveResultBatch }: QueryInputProps) {
+function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const querySubject = async (queryString: string) => {
     setLoading(true);
+    onQuery();
 
     const query: Query = {
       queryString,
       queryCommentCount: QUERY_COMMENT_COUNT,
     };
     socket.emit("query", query);
-
-    setLoading(false);
   };
 
   const handleCompletion = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -45,9 +45,10 @@ function QueryInput({ onReceiveResultBatch }: QueryInputProps) {
 
   useEffect(() => {
     if (!socket.hasListeners("queryresponse")) {
-      socket.on("queryresponse", (batch: QueryResponseBatch) =>
-        onReceiveResultBatch(batch.data)
-      );
+      socket.on("queryresponse", (batch: QueryResponseBatch) => {
+        onReceiveResultBatch(batch.data);
+        setLoading(false);
+      });
     }
   }, []);
 
