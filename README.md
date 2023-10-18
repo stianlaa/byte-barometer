@@ -19,6 +19,7 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [x] On query, introduce placeholder comments that are yet to be determined
 - [ ] Improve responsiveness - add websocket result streaming
 - [ ] Improve responsiveness - speed up aspect based sentiment analyis and add streaming
+- [ ] Add logging in python
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters, but keep original available too.
 - [ ] Populate an index with a larger amount of data

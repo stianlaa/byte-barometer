@@ -12,6 +12,8 @@ import { useState, useEffect, KeyboardEvent } from "react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
 import { socket, QueryResponseBatch } from "./socket-setup";
 
+const QUERY_COMMENT_COUNT = 20;
+
 type Query = {
   queryString: string;
   queryCommentCount: number;
@@ -30,7 +32,7 @@ function QueryInput({ onReceiveResultBatch }: QueryInputProps) {
 
     const query: Query = {
       queryString,
-      queryCommentCount: 5,
+      queryCommentCount: QUERY_COMMENT_COUNT,
     };
     socket.emit("query", query);
 

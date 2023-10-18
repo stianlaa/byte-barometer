@@ -1,7 +1,6 @@
 import { Center } from "@chakra-ui/react";
 import { VictoryPie } from "victory";
 import { NEGATIVE, NEUTRAL, POSITIVE } from "./constants";
-import { useEffect, useCallback } from "react";
 
 type OpinionVisualizerProps = {
   positiveCount: number;
@@ -28,10 +27,6 @@ const mapInputData = ({
 };
 
 function OpinionVisualizer(props: OpinionVisualizerProps) {
-  useEffect(() => {
-    console.log(`comments changed: ${JSON.stringify(props)}`);
-  }, [props]);
-
   return (
     <Center mr="auto" ml="auto" w="100%">
       <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>

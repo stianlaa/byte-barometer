@@ -31,7 +31,7 @@ class Toolbox:
 toolbox = Toolbox()
 
 
-async def create_sparse_embeddings(document_chunk):
+def create_sparse_embeddings(document_chunk):
     chunk_result = list([])
     for document_text in document_chunk:
         # Tokenize the document

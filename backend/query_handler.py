@@ -1,5 +1,8 @@
 from random import randint
 from flask_setup import socketio
+from pinecone_util import run_query
+
+BATCH_SIZE = 3
 
 
 class Query:
@@ -8,32 +11,23 @@ class Query:
         self.query_comment_count = query_comment_count
 
 
-def create_comment(query, label):
-    comment = {
-        'data': [
-            {
-                'id': f'unique-id-${str(randint(0, 50000))}',
-                'metadata': {
-                    'author': query,
-                    'storyId': "string;",
-                    'context': "string;",
-                    'parentId': "string;",
-                    'storyUrl': "string;",
-                    'createdAt': "string;",
-                },
-                'sentiment': {
-                    'label': 'Positive' if randint(0, 10) > 5 else 'Negative',
-                    'score': 0,
-                }
-            }
-        ]
-    }
-    return comment
-
-
 def process_query(query: Query, socket_session_id: str):
-    # Fetch and process X queries
+    print("Running Query")
 
-    comment = create_comment(query.query_string, 'Positive')
+    remaining_comments: int = query.query_comment_count
+    while remaining_comments > 0:
+        # Define batch size to request
+        batch_size = min(BATCH_SIZE, remaining_comments)
 
-    socketio.emit("queryresponse", comment, to=socket_session_id)
+        # Query batch
+        matches = run_query(query.query_string, batch_size, 0.5)
+
+        # Emit the mapped results
+        data = [match.to_dict() for match in matches]
+        socketio.emit("queryresponse", {'data': data}, to=socket_session_id)
+
+        # Yield control to send message immediately
+        socketio.sleep(0)
+
+        # Determine remaining comments to fetch
+        remaining_comments -= batch_size
