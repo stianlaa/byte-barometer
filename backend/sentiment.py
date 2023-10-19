@@ -15,10 +15,11 @@ filterwarnings("ignore", category=UserWarning, module="transformers")
 
 class Toolbox:
     def __init__(self):
-        logger.info('Initializing sentiment toolbox')
+        logger.info("Initializing sentiment toolbox")
         # CPU
         self._sentiment_pipeline = pipeline(
-            "text-classification", model=sentiment_model_id)
+            "text-classification", model=sentiment_model_id
+        )
         # GPU
         # self._sentiment_pipeline = pipeline(
         # "text-classification", model=sentiment_model_id, device=0)
@@ -34,7 +35,8 @@ toolbox = Toolbox()
 def infer_sentiment(chunktext, aspect):
     # Append aspect to each document
     masked_text = list(
-        map(lambda text: f"[CLS] {text} [SEP] {aspect} [SEP]", chunktext))
+        map(lambda text: f"[CLS] {text} [SEP] {aspect} [SEP]", chunktext)
+    )
 
     # Infer sentiment
     sentiment = toolbox.sentiment_pipeline(masked_text)

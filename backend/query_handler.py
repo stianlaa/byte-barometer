@@ -13,13 +13,12 @@ class Query:
 
 def batchify(elements, batch_size):
     # Convenient to split list into batches
-    return [elements[i:i + batch_size] for i in range(0, len(elements), batch_size)]
+    return [elements[i : i + batch_size] for i in range(0, len(elements), batch_size)]
 
 
 def process_query(query: Query, socket_session_id: str):
     # Query batch
-    query_response_list = run_query(
-        query.query_string, query.query_comment_count, 0.5)
+    query_response_list = run_query(query.query_string, query.query_comment_count, 0.5)
 
     # Batch query responses
     batches: list[QueryResponse] = batchify(query_response_list, BATCH_SIZE)
@@ -30,7 +29,7 @@ def process_query(query: Query, socket_session_id: str):
 
         # Emit the mapped results
         data = [match.to_dict() for match in matches]
-        socketio.emit("queryresponse", {'data': data}, to=socket_session_id)
+        socketio.emit("queryresponse", {"data": data}, to=socket_session_id)
 
         # Yield control to send message immediately
         socketio.sleep(0)

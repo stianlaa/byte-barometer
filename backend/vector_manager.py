@@ -3,17 +3,17 @@ from pinecone_util import delete_if_exists, populate, run_query
 
 
 def delete_action(args):
-    print('Deleting index')
+    print("Deleting index")
     delete_if_exists()
 
 
 def populate_action(args):
-    print('Populating index')
+    print("Populating index")
     populate()
 
 
 def query_action(args):
-    print('Querying index')
+    print("Querying index")
     subject = args.subject
     top_k = 1 if args.topK is None else args.topK
     alpha = 0.5 if args.alpha is None else args.alpha
@@ -29,16 +29,16 @@ options = {
 
 
 def main():
-    parser = ArgumentParser(prog='vector-manager',
-                            description='Manages vector database data')
+    parser = ArgumentParser(
+        prog="vector-manager", description="Manages vector database data"
+    )
 
-    parser.add_argument("action",
-                        choices=["populate", "delete", "query"],
-                        help="action to execute"
-                        )
-    parser.add_argument('-s', '--subject', type=str)
-    parser.add_argument('-k', '--topK', type=int)
-    parser.add_argument('-a', '--alpha', type=float)
+    parser.add_argument(
+        "action", choices=["populate", "delete", "query"], help="action to execute"
+    )
+    parser.add_argument("-s", "--subject", type=str)
+    parser.add_argument("-k", "--topK", type=int)
+    parser.add_argument("-a", "--alpha", type=float)
 
     args = parser.parse_args()
 
@@ -47,5 +47,5 @@ def main():
     func(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

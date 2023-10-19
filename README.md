@@ -10,7 +10,7 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 
 ## Future work
 
-- [ ] Pep8, autoformat and cleanup
+- [x] Pep8, autoformat and cleanup
 - [ ] Dependencylist, perhaps docker
 - [ ] Update readmes
 - [ ] Test delete and manual query

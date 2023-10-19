@@ -11,18 +11,18 @@ import pandas as pd
 
 load_dotenv("../.env")
 
-path = 'documents.jsonl'
+path = "../document-fetcher/documents.jsonl"
 chunk_size = 100
 
-index = os.environ['PINECONE_INDEX']
+index = os.environ["PINECONE_INDEX"]
 
 
 class Toolbox:
     def __init__(self):
         logger.info("Initializing semantic toolbox")
         init(
-            api_key=os.environ['PINECONE_API_KEY'],
-            environment=os.environ['PINECONE_ENVIRONMENT']
+            api_key=os.environ["PINECONE_API_KEY"],
+            environment=os.environ["PINECONE_ENVIRONMENT"],
         )
         self._index = GRPCIndex(index)
 
@@ -40,8 +40,8 @@ def hybrid_scale(dense, sparse, alpha: float):
         raise ValueError("Alpha must be between 0 and 1")
     # scale sparse and dense vectors to create hybrid search vecs
     hsparse = {
-        'indices': sparse['indices'],
-        'values':  [v * (1 - alpha) for v in sparse['values']]
+        "indices": sparse["indices"],
+        "values": [v * (1 - alpha) for v in sparse["values"]],
     }
     hdense = [v * alpha for v in dense]
     return hdense, hsparse
@@ -51,39 +51,34 @@ def create_index_if_missing():
     toolbox.index  # Initialize index if not already done
     indices = list_indexes()
     if any(map(lambda i: i == index, indices)):
-        print(f'Index {index} already exists')
+        print(f"Index {index} already exists")
         return
     else:
-        print(f'Creating index: {index}')
-        create_index(
-            index,
-            dimension=1536,
-            metric="dotproduct",
-            pod_type="s1"
-        )
+        print(f"Creating index: {index}")
+        create_index(index, dimension=1536, metric="dotproduct", pod_type="s1")
 
 
 def delete_if_exists():
     toolbox.index  # Initialize index if not already done
     indices = list_indexes()
     if any(map(lambda i: i == index, indices)):
-        print(f'Deleting {index}')
+        print(f"Deleting {index}")
         delete_index(index)
     else:
-        print(f'Index {index} doesn\'t exist')
+        print(f"Index {index} doesn't exist")
 
 
 def populate():
     create_index_if_missing()
     # load comments.jsonl into a dataframe
-    with open(f'{path}') as f:
+    with open(f"{path}") as f:
         df = pd.read_json(f, lines=True)
-        print(f'Embedding {df.shape[0]} documents')
-        print(f'{df.head()}\n')
+        print(f"Embedding {df.shape[0]} documents")
+        print(f"{df.head()}\n")
 
         # Grab chunks of chunk_size documents
         for i in range(0, df.shape[0], chunk_size):
-            chunk = df.iloc[i:i+chunk_size]
+            chunk = df.iloc[i : i + chunk_size]
             chunk_start = time.time()
             upserts = []
 
@@ -97,20 +92,39 @@ def populate():
 
             dense = create_dense_embeddings(text_list)
             sparse = create_sparse_embeddings(text_list)
-            for dense, sparse, id, storyId, text, author, story_url, parent_id, created_at in zip(dense, sparse, id_list, story_id_list, text_list, author_list, story_url_list, parent_id_list, created_at_list):
-
+            for (
+                dense,
+                sparse,
+                id,
+                storyId,
+                text,
+                author,
+                story_url,
+                parent_id,
+                created_at,
+            ) in zip(
+                dense,
+                sparse,
+                id_list,
+                story_id_list,
+                text_list,
+                author_list,
+                story_url_list,
+                parent_id_list,
+                created_at_list,
+            ):
                 upsert_data = {
-                    'id': id,
-                    'values': dense,
-                    'sparse_values': sparse,
-                    'metadata': {
-                        'context': text,
-                        'author': author,
-                        'storyUrl': '' if story_url is None else story_url,
-                        'parentId': parent_id,
-                        'storyId': storyId,
-                        'createdAt': created_at,
-                    }
+                    "id": id,
+                    "values": dense,
+                    "sparse_values": sparse,
+                    "metadata": {
+                        "context": text,
+                        "author": author,
+                        "storyUrl": "" if story_url is None else story_url,
+                        "parentId": parent_id,
+                        "storyId": storyId,
+                        "createdAt": created_at,
+                    },
                 }
 
                 upserts.append(upsert_data)
@@ -118,10 +132,10 @@ def populate():
             # Upsert data
             chunk_end = time.time()
             toolbox.index.upsert(upserts)
-            doc_rate = chunk_size/(chunk_end - chunk_start)
-            print(f'{i}/{len(upserts)}-{doc_rate:.2f} docs/sec')
+            doc_rate = chunk_size / (chunk_end - chunk_start)
+            print(f"{i}/{len(upserts)}-{doc_rate:.2f} docs/sec")
 
-        print(f'Index {index}:\n{toolbox.index.describe_index_stats()}')
+        print(f"Index {index}:\n{toolbox.index.describe_index_stats()}")
 
 
 class Metadata:
@@ -129,9 +143,7 @@ class Metadata:
         self.context = context
 
     def to_dict(self):
-        return {
-            "context": self.context
-        }
+        return {"context": self.context}
 
 
 class QueryResponse:
@@ -173,22 +185,29 @@ def run_query(query_text: str, top_k: int, alpha: float) -> list[QueryResponse]:
     scaled_dense, scaled_sparse = hybrid_scale(dense, sparse, alpha)
 
     # Query vector database for entries near embeddings
-    query_result = toolbox.index.query(vector=scaled_dense, sparse_vector=scaled_sparse,
-                                       top_k=top_k, include_metadata=True)
+    query_result = toolbox.index.query(
+        vector=scaled_dense,
+        sparse_vector=scaled_sparse,
+        top_k=top_k,
+        include_metadata=True,
+    )
 
     # Map to QueryResponse objects
     result_objects: list[QueryResponse] = []
-    for match in query_result['matches']:
-        id = match['id']
-        score = match['score']
-        metadata = match['metadata']
+    for match in query_result["matches"]:
+        id = match["id"]
+        score = match["score"]
+        metadata = match["metadata"]
         result_objects.append(QueryResponse(id, score, metadata))
     return result_objects
 
 
-def run_sentiment_analysis(query_string: str, query_response_list: list[QueryResponse]) -> list[Match]:
+def run_sentiment_analysis(
+    query_string: str, query_response_list: list[QueryResponse]
+) -> list[Match]:
     comment_texts = list(
-        map(lambda response: response.metadata["context"], query_response_list))
+        map(lambda response: response.metadata["context"], query_response_list)
+    )
 
     # Perform aspect based sentiment analysis on batch, with query_text as aspect
     sentiments = infer_sentiment(comment_texts, query_string)
