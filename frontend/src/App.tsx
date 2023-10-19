@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CommentWithSentiment } from "./Comment";
 import Comment from "./Comment";
 import OpinionVisualizer from "./OpinionVisualizer";
-import { NEGATIVE, NEUTRAL, POSITIVE, VISIBLE_COMMENTS } from "./constants";
+import { VISIBLE_COMMENTS } from "./constants";
 import QueryInput from "./QueryInput";
 
 export type GroupedComments = {
@@ -19,33 +19,6 @@ function App() {
     neutral: [],
     negative: [],
   });
-
-  const onQuery = () =>
-    setComments({
-      positive: [],
-      neutral: [],
-      negative: [],
-    });
-
-  const onReceiveResultBatch = (receivedComments: CommentWithSentiment[]) => {
-    const groupedComments: GroupedComments = { ...comments };
-    receivedComments.forEach((comment) => {
-      switch (comment.sentiment.label) {
-        case POSITIVE:
-          groupedComments.positive.push(comment);
-          break;
-        case NEUTRAL:
-          groupedComments.neutral.push(comment);
-          break;
-        case NEGATIVE:
-          groupedComments.negative.push(comment);
-          break;
-        default:
-          break;
-      }
-    });
-    setComments(groupedComments);
-  };
 
   return (
     <Box
@@ -68,15 +41,17 @@ function App() {
           ml="auto"
           w="50%"
         />
+        <Heading pt="1rem">
+          {comments.positive.length +
+            comments.neutral.length +
+            comments.negative.length}
+        </Heading>
         <OpinionVisualizer
           positiveCount={comments.positive.length}
           neutralCount={comments.neutral.length}
           negativeCount={comments.negative.length}
         />
-        <QueryInput
-          onQuery={onQuery}
-          onReceiveResultBatch={onReceiveResultBatch}
-        />
+        <QueryInput setComments={setComments} />
       </Box>
 
       <Divider borderColor="grey.500" mt={"0.25rem"} mb={"0.25rem"} />

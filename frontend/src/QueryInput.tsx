@@ -8,9 +8,17 @@ import {
   InputRightElement,
   Spinner,
 } from "@chakra-ui/react";
-import { useState, useEffect, KeyboardEvent } from "react";
+import {
+  useState,
+  useEffect,
+  KeyboardEvent,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
 import { socket, QueryResponseBatch } from "./socket-setup";
+import { GroupedComments } from "./App";
+import { NEGATIVE, NEUTRAL, POSITIVE } from "./constants";
 
 const QUERY_COMMENT_COUNT = 20;
 
@@ -20,18 +28,20 @@ type Query = {
 };
 
 export type QueryInputProps = {
-  onQuery: () => void;
-  onReceiveResultBatch: (batch: CommentWithSentiment[]) => void;
+  setComments: Dispatch<SetStateAction<GroupedComments>>;
 };
 
-function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
+function QueryInput({ setComments }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const querySubject = async (queryString: string) => {
     setLoading(true);
-    onQuery();
-
+    setComments({
+      positive: [],
+      neutral: [],
+      negative: [],
+    });
     const query: Query = {
       queryString,
       queryCommentCount: QUERY_COMMENT_COUNT,
@@ -44,13 +54,42 @@ function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
   };
 
   useEffect(() => {
+    const onReceiveResultBatch = (receivedComments: CommentWithSentiment[]) => {
+      setComments((prevComments: GroupedComments) => {
+        const newGroupedComments: GroupedComments = {
+          positive: [...prevComments.positive],
+          neutral: [...prevComments.neutral],
+          negative: [...prevComments.negative],
+        };
+
+        receivedComments.forEach((comment) => {
+          switch (comment.sentiment.label) {
+            case POSITIVE:
+              newGroupedComments.positive.push(comment);
+              break;
+            case NEUTRAL:
+              newGroupedComments.neutral.push(comment);
+              break;
+            case NEGATIVE:
+              newGroupedComments.negative.push(comment);
+              break;
+            default:
+              break;
+          }
+        });
+
+        return newGroupedComments;
+      });
+    };
+
     if (!socket.hasListeners("queryresponse")) {
       socket.on("queryresponse", (batch: QueryResponseBatch) => {
         onReceiveResultBatch(batch.data);
         setLoading(false);
       });
     }
-  }, []);
+    // Only setComments as dependency since we're now working with the latest state directly in setComments
+  }, [setComments]);
 
   return (
     <InputGroup
@@ -61,7 +100,6 @@ function QueryInput({ onQuery, onReceiveResultBatch }: QueryInputProps) {
       mb={5}
       // TODO Style with gradient border trick
       // background: linear-gradient(to right, red, purple);
-      // padding: 3px;
     >
       <Input
         fontSize={20}

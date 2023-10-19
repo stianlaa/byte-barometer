@@ -10,20 +10,6 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 
 ## Future work
 
-- [x] Investigate current responsetimes
-      Time taken to create dense embeddings: 0.3159 seconds
-      Time taken to create sparse embeddings: 0.0179 seconds
-      Time taken to query index: 0.4001 seconds
-      Time taken to infer sentiment: 14.4596 seconds for 30 documents
-- [x] Add an animation to the byte-barometer, when it receives new data.
-- [x] On query, introduce placeholder comments that are yet to be determined
-- [x] Improve responsiveness - add websocket result streaming
-- [x] Improve responsiveness - speed up aspect based sentiment analyis and add streaming
-- [x] Change commentdisplay to show the comments as cards
-- [x] Fix initial delay on first request, perhaps triggered by toolbox logic not called
-- [x] Populate an index with a medium amount of data
-- [x] Add logging in python
-- [ ] Current setup doesn't reset between queries properly
 - [ ] Pep8, autoformat and cleanup
 - [ ] Dependencylist, perhaps docker
 - [ ] Update readmes

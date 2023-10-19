@@ -16,8 +16,12 @@ filterwarnings("ignore", category=UserWarning, module="transformers")
 class Toolbox:
     def __init__(self):
         logger.info('Initializing sentiment toolbox')
+        # CPU
         self._sentiment_pipeline = pipeline(
-            "text-classification", model=sentiment_model_id, device=0)
+            "text-classification", model=sentiment_model_id)
+        # GPU
+        # self._sentiment_pipeline = pipeline(
+        # "text-classification", model=sentiment_model_id, device=0)
 
     @property
     def sentiment_pipeline(self):
