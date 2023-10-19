@@ -1,7 +1,7 @@
 from app_setup import logger
-from sparse_embedding import create_sparse_embeddings
-from dense_embedding import create_dense_embeddings
-from sentiment import infer_sentiment
+from processing.sparse_embedding import create_sparse_embeddings
+from processing.dense_embedding import create_dense_embeddings
+from processing.sentiment import infer_sentiment
 from pinecone import init, GRPCIndex, list_indexes, delete_index, create_index
 from dotenv import load_dotenv
 

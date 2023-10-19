@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from pinecone_util import delete_if_exists, populate, run_query
+from processing.pinecone_util import delete_if_exists, populate, run_query
 
 
 def delete_action(args):
