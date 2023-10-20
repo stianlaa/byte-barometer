@@ -6,7 +6,7 @@ This repository includes the backend implementation for the Byte-Barometer appli
 
 The backend offers a websocket endpoint where clients can query for a subject making use of the hybrid embedding search capabilities of some vector databases. In short a query works as follows:
 
-1. The query string is received
+1. The query string is received over websocket, and the sender client id is noted
 2. The query string is converted into a sparse and a dense embedding, using Splade and OpenAI
 3. A weighting factor is applied to the sparse and dense vector to prioritize between semantic and conventional search.
 
@@ -14,17 +14,28 @@ The backend offers a websocket endpoint where clients can query for a subject ma
 5. Sequentially aspect based sentiment analysis is performen on the entries, with the query string as the aspect.
 6. As results become available, they are emitted to the client who entered the query.
 
-# Getting started
-
-TODO containerize such that the installation and running is trivial
-
 ## Configuration
 
 Create an `.env` file in the root of the project and add your Pinecone API key and environment details:
 
 ```sh
+HUGGINGFACE_API_KEY=<api_key>
 OPENAI_API_KEY=<api-key>
 PINECONE_ENVIRONMENT=<environment>
 PINECONE_API_KEY=<api-key>
 PINECONE_INDEX=<index-name>
+```
+
+# Getting started
+
+Build the docker image if you haven't already
+
+```bash
+docker build -t byte-barometer .
+```
+
+Then run the backend using the docker compose file, keeping your working environment clean and separated. This assumes you've configured your .env file.
+
+```bash
+docker compose up
 ```

@@ -18,9 +18,7 @@ import {
 import { ArrowRightIcon } from "@chakra-ui/icons";
 import { socket, QueryResponseBatch } from "./socket-setup";
 import { GroupedComments } from "./App";
-import { NEGATIVE, NEUTRAL, POSITIVE } from "./constants";
-
-const QUERY_COMMENT_COUNT = 20;
+import { NEGATIVE, NEUTRAL, POSITIVE, QUERY_COMMENT_COUNT } from "./constants";
 
 type Query = {
   queryCommentCount: number;
@@ -34,6 +32,25 @@ export type QueryInputProps = {
 function QueryInput({ setComments }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const exampleSubjects = [
+    "Rust",
+    "commuting",
+    "work from home",
+    "C++",
+    "Linux",
+    "Brasil",
+    "rock music",
+    "classical music",
+    "meditation",
+    "embeddings",
+    "eigen",
+    "GNU",
+    "Google",
+    "Apple",
+  ];
+  const exampleSubject =
+    exampleSubjects[Math.floor(Math.random() * exampleSubjects.length)];
 
   const querySubject = async (queryString: string) => {
     setLoading(true);
@@ -92,15 +109,7 @@ function QueryInput({ setComments }: QueryInputProps) {
   }, [setComments]);
 
   return (
-    <InputGroup
-      size="lg"
-      width={"75%"}
-      mr="auto"
-      ml="auto"
-      mb={5}
-      // TODO Style with gradient border trick
-      // background: linear-gradient(to right, red, purple);
-    >
+    <InputGroup size="lg" width={"75%"} mr="auto" ml="auto" mb={5}>
       <Input
         fontSize={20}
         color="grey.900"
@@ -108,8 +117,13 @@ function QueryInput({ setComments }: QueryInputProps) {
         borderColor="grey.500"
         value={queryString}
         onChange={(e) => setQueryString(e.target.value)}
-        placeholder={`What does Hackernews think about.. Rust?`} // TODO: change to random subject
+        placeholder={`What does Hackernews think about.. ${exampleSubject}?`}
         onKeyDown={handleCompletion}
+        sx={{
+          "::placeholder": {
+            color: "black",
+          },
+        }}
       />
       <InputRightElement>
         <Button

@@ -10,16 +10,17 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 
 ## Future work
 
-- [ ] Dependencylist, perhaps docker
-- [ ] Update readmes
-- [ ] Test delete and manual query
-- [ ] Update portfolio
+- [ ] Fix sentiments.py numpy issue
+- [ ] Replace werkzeug
+- [ ] Test delete
+- [ ] Test populate index
+- [ ] Test query index
+- [ ] Update portfolio with gif of results
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
 - [ ] Improve comment sentiment display, by badge or similar
 - [ ] Improve comment styling
-- [ ] Investigate if only relevant comments can be shown, and if so, how to do this, e.g filter by abs of comment match
-- [ ] Display how many comments are being analyzed
+- [ ] Add relevancy filter
 - [ ] Add icons for the various links, story, comments, author etc
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well
-- [ ] gpu serialized inferance warning, look into performance improvement
+- [ ] Fix gpu serialized inferance warning, look into performance improvement

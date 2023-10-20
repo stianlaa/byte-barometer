@@ -3,13 +3,10 @@ from processing.sparse_embedding import create_sparse_embeddings
 from processing.dense_embedding import create_dense_embeddings
 from processing.sentiment import infer_sentiment
 from pinecone import init, GRPCIndex, list_indexes, delete_index, create_index
-from dotenv import load_dotenv
 
 import os
 import time
 import pandas as pd
-
-load_dotenv("../.env")
 
 path = "../document-fetcher/documents.jsonl"
 chunk_size = 100

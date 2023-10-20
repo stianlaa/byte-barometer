@@ -82,7 +82,7 @@ const getCommandLineArguments = () => {
   return { from, to, commentLimit };
 };
 
-const run = () => {
+const run = async () => {
   const { from, to, commentLimit } = getCommandLineArguments();
   console.log(
     "Fetching documents from:",

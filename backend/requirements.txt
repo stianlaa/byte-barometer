@@ -1,0 +1,30 @@
+# Flask hosting
+gunicorn==21.2.0
+Flask == 2.3.2
+Flask-Cors == 4.0.0 
+Flask-SocketIO == 5.3.5
+
+# Models and language utility
+torch == 2.1.0
+sentence-transformers==2.2.2
+transformers==4.18.0
+grpc-gateway-protoc-gen-openapiv2==0.1.0
+grpcio==1.56.0
+openai==0.27.8
+SPLADE @ git+https://github.com/naver/splade.git@06947de1da83e5443809f1b7e78937416d53c14b
+pyabsa==2.3.1
+
+
+# Vector database utility
+pinecone-text==0.5.2
+python-dotenv==1.0.0
+pinecone-client @ git+https://git@github.com/pinecone-io/pinecone-python-client.git@4640c4cf27b1ab935e76929c46d230dea9fe5506
+
+# Misc
+pandas==2.0.3
+numpy==1.23.5 # Older version to try to avoid deberta issue
+protobuf==3.20.3
+
+# Temporary exploration, test to remove
+scikit-learn==1.2.2
+scipy==1.10.1

@@ -1,12 +1,8 @@
 from app_setup import logger
 from transformers import pipeline
-from dotenv import load_dotenv
 from warnings import filterwarnings
 
 sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
-
-# Should only be neccessary in initial model download, afterwards huggingface key should be obsolete.
-load_dotenv("../.env")
 
 # Suppress the warning from transformers, since it is not strictly relevant right now
 # This is to filter UserWarning: You seem to be using the pipelines sequentially on GPU.
@@ -38,6 +34,18 @@ def infer_sentiment(chunktext, aspect):
         map(lambda text: f"[CLS] {text} [SEP] {aspect} [SEP]", chunktext)
     )
 
+    print("Request")
+
+    test = [
+        {
+            "label": "Positive",
+            "score": 0.5,
+        }
+        for c in chunktext
+    ]
+    print(test)
+    return test
+
     # Infer sentiment
-    sentiment = toolbox.sentiment_pipeline(masked_text)
-    return sentiment
+    # sentiment = toolbox.sentiment_pipeline(masked_text)
+    # return sentiment

@@ -1,10 +1,11 @@
 import os
 from openai import Embedding, api_key
+
 from dotenv import load_dotenv
 
-dense_model_id = "text-embedding-ada-002"
-
 load_dotenv("../.env")
+
+dense_model_id = "text-embedding-ada-002"
 
 api_key = os.environ["OPENAI_API_KEY"]
 

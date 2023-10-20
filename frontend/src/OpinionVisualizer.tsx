@@ -1,6 +1,6 @@
-import { Center } from "@chakra-ui/react";
+import { Center, Heading } from "@chakra-ui/react";
 import { VictoryPie } from "victory";
-import { NEGATIVE, NEUTRAL, POSITIVE } from "./constants";
+import { NEGATIVE, NEUTRAL, POSITIVE, QUERY_COMMENT_COUNT } from "./constants";
 
 type OpinionVisualizerProps = {
   positiveCount: number;
@@ -27,6 +27,9 @@ const mapInputData = ({
 };
 
 function OpinionVisualizer(props: OpinionVisualizerProps) {
+  const commentSum =
+    props.positiveCount + props.neutralCount + props.negativeCount;
+
   return (
     <Center mr="auto" ml="auto" w="100%">
       <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>
@@ -41,7 +44,12 @@ function OpinionVisualizer(props: OpinionVisualizerProps) {
           startAngle={-90}
           endAngle={90}
           data={mapInputData(props)}
-          labels={({ datum }) => (datum.y === 0 ? "" : datum.x)}
+          labels={({ datum }) => {
+            if (datum.x === POSITIVE) return "👍";
+            // else if (datum.x === NEUTRAL) return "";
+            else if (datum.x === NEGATIVE) return "👎";
+            else return "";
+          }}
           labelRadius={({ innerRadius, radius }) =>
             ((radius as number) - (innerRadius as number)) * 0.75
           }
@@ -57,6 +65,9 @@ function OpinionVisualizer(props: OpinionVisualizerProps) {
           }}
         />
       </svg>
+      <Heading position="absolute" pt="30%">
+        {commentSum > 0 ?? `${commentSum}/${QUERY_COMMENT_COUNT}`}
+      </Heading>
     </Center>
   );
 }

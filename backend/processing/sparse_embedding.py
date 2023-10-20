@@ -2,11 +2,8 @@ from app_setup import logger
 from torch import no_grad
 from splade.models.transformer_rep import Splade
 from transformers import AutoTokenizer
-from dotenv import load_dotenv
 
 sparse_model_id = "naver/splade-cocondenser-ensembledistil"
-
-load_dotenv("../.env")
 
 
 class Toolbox:

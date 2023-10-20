@@ -1,6 +1,6 @@
 export const PORT = 3000;
 export const VISIBLE_COMMENTS = 5;
-export const REQUEST_COMMENTS = 30;
+export const QUERY_COMMENT_COUNT = 20;
 
 export const POSITIVE = "Positive";
 export const NEGATIVE = "Negative";

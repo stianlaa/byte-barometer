@@ -28,24 +28,17 @@ function App() {
         "::-webkit-scrollbar": {
           display: "none",
         },
-        "scrollbar-width": "none",
+        scrollbarWidth: "none",
       }}
     >
       <Box>
         <Heading pt="1rem">Byte Barometer</Heading>
         <Divider
-          borderColor="grey.500"
-          pt="1rem"
-          mb="0.25rem"
-          mr="auto"
-          ml="auto"
-          w="50%"
+          borderColor="grey.300"
+          m="0.25rem  auto 0.25rem auto"
+          w="33%"
+          borderWidth="2px 0 0 0"
         />
-        <Heading pt="1rem">
-          {comments.positive.length +
-            comments.neutral.length +
-            comments.negative.length}
-        </Heading>
         <OpinionVisualizer
           positiveCount={comments.positive.length}
           neutralCount={comments.neutral.length}
