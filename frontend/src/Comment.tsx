@@ -19,11 +19,12 @@ type Metadata = {
 
 export type CommentWithSentiment = {
   id: string;
+  score: number;
   metadata: Metadata;
   sentiment: Sentiment;
 };
 
-function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
+function Comment({ id, score, metadata, sentiment }: CommentWithSentiment) {
   const documentId = parseId(id);
   return (
     <Box
@@ -41,6 +42,9 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
           >
             {metadata.author}
           </Link>
+        </Heading>
+        <Heading size="sm" mr="auto">
+          {score}
         </Heading>
         <SentimentTag sentiment={sentiment} />
       </HStack>

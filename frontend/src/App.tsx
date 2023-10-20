@@ -49,36 +49,36 @@ function App() {
 
       <Divider borderColor="grey.500" mt={"0.25rem"} mb={"0.25rem"} />
 
-      <SimpleGrid columns={3} spacing={10}>
+      <SimpleGrid columns={2} spacing={10}>
         <VStack h="auto" ml="1rem">
           <Heading size="xl" mt={"0.25rem"}>
             Positive
           </Heading>
           {comments.positive
             ?.slice(0, VISIBLE_COMMENTS)
-            .sort((a, b) => b.sentiment.score - a.sentiment.score)
+            .sort((a, b) => b.score - a.score)
             .map((comment) => (
               <Comment key={`positive-${comment.id}`} {...comment} />
             ))}
         </VStack>
-        <VStack h="auto" mr="1rem">
+        {/* <VStack h="auto" mr="1rem">
           <Heading size="xl" mt={"0.25rem"}>
             Neutral
           </Heading>
           {comments.neutral
             ?.slice(0, VISIBLE_COMMENTS)
-            .sort((a, b) => b.sentiment.score - a.sentiment.score)
+            .sort((a, b) => b.score - a.score)
             .map((comment) => (
               <Comment key={`neutral-${comment.id}`} {...comment} />
             ))}
-        </VStack>
+        </VStack> */}
         <VStack h="auto" mr="1rem">
           <Heading size="xl" mt={"0.25rem"}>
             Negative
           </Heading>
           {comments.negative
             ?.slice(0, VISIBLE_COMMENTS)
-            .sort((a, b) => b.sentiment.score - a.sentiment.score)
+            .sort((a, b) => b.score - a.score)
             .map((comment) => (
               <Comment key={`negative-${comment.id}`} {...comment} />
             ))}

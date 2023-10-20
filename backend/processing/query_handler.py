@@ -1,8 +1,11 @@
 from flask_setup import socketio
 from processing.pinecone_util import QueryResponse, run_query, run_sentiment_analysis
+from time import time
 
 
 BATCH_SIZE = 2
+# Minimal delay time between each batch, this is to give a consistent feeling of the streaming
+MIN_BATCH_DELAY_S = 0.1
 
 
 class Query:
@@ -23,6 +26,7 @@ def process_query(query: Query, socket_session_id: str):
     # Batch query responses
     batches: list[QueryResponse] = batchify(query_response_list, BATCH_SIZE)
 
+    prev_batch = time()
     for batch in batches:
         # Apply sentiment analysis
         matches = run_sentiment_analysis(query.query_string, batch)
@@ -32,4 +36,8 @@ def process_query(query: Query, socket_session_id: str):
         socketio.emit("queryresponse", {"data": data}, to=socket_session_id)
 
         # Yield control to send message immediately
-        socketio.sleep(0)
+        passed_seconds = time() - prev_batch
+        wait_seconds = min(passed_seconds, MIN_BATCH_DELAY_S)
+
+        print(f"Waiting {wait_seconds}")
+        socketio.sleep(wait_seconds)

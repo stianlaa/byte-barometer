@@ -1,4 +1,4 @@
-import { Center, Heading } from "@chakra-ui/react";
+import { VStack, Heading } from "@chakra-ui/react";
 import { VictoryPie } from "victory";
 import { NEGATIVE, NEUTRAL, POSITIVE, QUERY_COMMENT_COUNT } from "./constants";
 
@@ -31,7 +31,7 @@ function OpinionVisualizer(props: OpinionVisualizerProps) {
     props.positiveCount + props.neutralCount + props.negativeCount;
 
   return (
-    <Center mr="auto" ml="auto" w="100%">
+    <VStack mr="auto" ml="auto" w="100%">
       <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>
         <VictoryPie
           key="ByteBarometerOpinionVisualizer"
@@ -65,10 +65,10 @@ function OpinionVisualizer(props: OpinionVisualizerProps) {
           }}
         />
       </svg>
-      <Heading position="absolute" pt="30%">
-        {commentSum > 0 ?? `${commentSum}/${QUERY_COMMENT_COUNT}`}
+      <Heading mt="-5rem" mb="1rem">
+        {commentSum ? `${commentSum}/${QUERY_COMMENT_COUNT}` : "Ask!"}
       </Heading>
-    </Center>
+    </VStack>
   );
 }
 
