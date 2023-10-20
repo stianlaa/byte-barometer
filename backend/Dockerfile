@@ -1,6 +1,12 @@
-FROM python:3.10.13
+# Consider when enabling GPU
+FROM nvidia/cuda:12.0.0-runtime-ubuntu22.04
 
-WORKDIR /usr/src/app
+# SYSTEM
+RUN apt-get update &&  \
+    apt-get install --no-install-recommends -y git vim curl python3-pip python3-dev ffmpeg libsm6 libxext6 nvidia-utils-525 gcc g++ && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
 
 # Copy only the requirements.txt first to leverage Docker cache
 COPY requirements.txt ./
@@ -11,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Now copy the rest of the application
 COPY . .
 
-CMD [ "python", "backend_server.py" ]
+CMD [ "python3", "backend_server.py" ]

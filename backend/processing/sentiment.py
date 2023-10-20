@@ -1,6 +1,7 @@
 from app_setup import logger
 from transformers import pipeline
 from warnings import filterwarnings
+from os import environ
 
 # Ugly hack that should be removed
 # Numpy 1.23.x deprecated np.int, and apparently one of the underlying deberta snetiment analysis models
@@ -18,14 +19,18 @@ filterwarnings("ignore", category=UserWarning, module="transformers")
 
 class Toolbox:
     def __init__(self):
-        logger.info("Initializing sentiment toolbox")
-        # CPU
+        # print(f' the magic value is: {environ.get("ENABLE_GPU", "False")}')
+        # if environ.get("ENABLE_GPU", "False") == "True":
+        logger.info("Initializing sentiment toolbox with GPU")
         self._sentiment_pipeline = pipeline(
-            "text-classification", model=sentiment_model_id
+            "text-classification", model=sentiment_model_id, device=0
         )
-        # GPU
-        # self._sentiment_pipeline = pipeline(
-        # "text-classification", model=sentiment_model_id, device=0)
+
+    # else:
+    #     logger.info("Initializing sentiment toolbox with CPU")
+    #     self._sentiment_pipeline = pipeline(
+    #         "text-classification", model=sentiment_model_id
+    #     )
 
     @property
     def sentiment_pipeline(self):

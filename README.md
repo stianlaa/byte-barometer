@@ -10,11 +10,11 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 
 ## Future work
 
-- [ ] Fix sentiments.py numpy issue
 - [ ] Replace werkzeug
 - [ ] Test delete
 - [ ] Test populate index
 - [ ] Test query index
+- [ ] Enable gpu use for sentiment analysis
 - [ ] Update portfolio with gif of results
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
@@ -24,3 +24,4 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [ ] Add icons for the various links, story, comments, author etc
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well
 - [ ] Fix gpu serialized inferance warning, look into performance improvement
+- [ ] Fix sentiments.py numpy issue

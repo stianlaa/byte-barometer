@@ -1,9 +1,9 @@
 version: '3'
 
-
 services:
   byte-barometer-backend-app:
-    image: byte-barometer
+    # image: byte-barometer
+    image: 45b89e6457a5
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,9 +11,22 @@ services:
     env_file:
       - ../.env
     environment:
-      - ENV_VAR1=value1  # Add more environment variables as needed
+      - ENABLE_GPU="True"
     volumes:
-      - .:/usr/src/app
-      - ~/.cache/huggingface/transformers:/usr/src/app/.cache/huggingface/transformers
+      - .:/app
+      - ~/.cache/huggingface/transformers:/app/.cache/huggingface/transformers
     ports:
       - "3000:3000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              # capabilities: [gpu]
+              capabilities:
+                - gpu
+                - utility # nvidia-smi
+                - compute # CUDA
+                - video   # NVDEC/NVENC/NVCUVID. For instance to use a hardware accelerated ffmpeg. Skip it if you don't need it
+    

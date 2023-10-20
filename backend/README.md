@@ -14,6 +14,10 @@ The backend offers a websocket endpoint where clients can query for a subject ma
 5. Sequentially aspect based sentiment analysis is performen on the entries, with the query string as the aspect.
 6. As results become available, they are emitted to the client who entered the query.
 
+## System setup
+
+The backend has been containerized, but in order to make use of the GPU acceleration it is neccessary to install the nvidia-container-toolkit on the host system [NVIDIA container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/1.14.3/install-guide.html). Ensure that `nvidia-smi` corresponds as expected in the host and container system.
+
 ## Configuration
 
 Create an `.env` file in the root of the project and add your Pinecone API key and environment details:
