@@ -18,15 +18,15 @@ type TagProps = {
 function findTagProps({ score, label }: Sentiment): TagProps {
   if (label === POSITIVE) {
     if (score <= UPPER_LIMIT && score > MIDDLE_LIMIT) {
-      return { text: "Great", color: "green" };
+      return { text: "Great", color: "tealgreen" };
     } else if (score <= MIDDLE_LIMIT && score > LOWER_LIMIT) {
-      return { text: "Good", color: "teagreen" };
+      return { text: "Good", color: "tealgreen" };
     }
   } else if (label === NEGATIVE) {
     if (score <= UPPER_LIMIT && score > MIDDLE_LIMIT) {
       return { text: "Terrible", color: "red" };
     } else if (score <= MIDDLE_LIMIT && score > LOWER_LIMIT) {
-      return { text: "Bad", color: "carmine" };
+      return { text: "Bad", color: "red" };
     }
   }
   return { text: "OK", color: "grey" };

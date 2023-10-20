@@ -2,8 +2,8 @@ version: '3'
 
 services:
   byte-barometer-backend-app:
-    # image: byte-barometer
-    image: 45b89e6457a5
+    image: byte-barometer
+    # image: 45b89e6457a5
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,7 +11,7 @@ services:
     env_file:
       - ../.env
     environment:
-      - ENABLE_GPU="True"
+      - ENABLE_GPU=True
     volumes:
       - .:/app
       - ~/.cache/huggingface/transformers:/app/.cache/huggingface/transformers
@@ -23,7 +23,6 @@ services:
           devices:
             - driver: nvidia
               count: all
-              # capabilities: [gpu]
               capabilities:
                 - gpu
                 - utility # nvidia-smi

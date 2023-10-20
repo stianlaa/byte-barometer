@@ -19,18 +19,17 @@ filterwarnings("ignore", category=UserWarning, module="transformers")
 
 class Toolbox:
     def __init__(self):
-        # print(f' the magic value is: {environ.get("ENABLE_GPU", "False")}')
-        # if environ.get("ENABLE_GPU", "False") == "True":
-        logger.info("Initializing sentiment toolbox with GPU")
-        self._sentiment_pipeline = pipeline(
-            "text-classification", model=sentiment_model_id, device=0
-        )
-
-    # else:
-    #     logger.info("Initializing sentiment toolbox with CPU")
-    #     self._sentiment_pipeline = pipeline(
-    #         "text-classification", model=sentiment_model_id
-    #     )
+        print(f' the magic value is: {environ.get("ENABLE_GPU", "False")}')
+        if environ.get("ENABLE_GPU", "False") == "True":
+            logger.info("Initializing sentiment toolbox with GPU")
+            self._sentiment_pipeline = pipeline(
+                "text-classification", model=sentiment_model_id, device=0
+            )
+        else:
+            logger.info("Initializing sentiment toolbox with CPU")
+            self._sentiment_pipeline = pipeline(
+                "text-classification", model=sentiment_model_id
+            )
 
     @property
     def sentiment_pipeline(self):

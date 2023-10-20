@@ -2,7 +2,7 @@
 
 Poll HackerNews for sentiment on a specific subject.
 
-![Current frontend of the byte barometer](/bytebarometer.png?raw=true "From an arbitrary subject chosen by the user a general poll is created using natural language processing.")
+![Current frontend of the byte barometer](/bytebarometer.gif?raw=true "From an arbitrary subject chosen by the user a general poll is created using natural language processing.")
 
 ## Application structure
 
@@ -14,8 +14,7 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [ ] Test delete
 - [ ] Test populate index
 - [ ] Test query index
-- [ ] Enable gpu use for sentiment analysis
-- [ ] Update portfolio with gif of results
+- [ ] Update cuda in use to 12.2.2 on host platform and locally, perhaps hindered by outdated nvidia driver
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
 - [ ] Improve comment sentiment display, by badge or similar
