@@ -2,6 +2,13 @@ from app_setup import logger
 from transformers import pipeline
 from warnings import filterwarnings
 
+# Ugly hack that should be removed
+# Numpy 1.23.x deprecated np.int, and apparently one of the underlying deberta snetiment analysis models
+# use this deprecated feature. Can likely be resolved somehow by improving current dependencies
+import numpy as np
+
+np.int = np.int_
+
 sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
 
 # Suppress the warning from transformers, since it is not strictly relevant right now
@@ -34,18 +41,5 @@ def infer_sentiment(chunktext, aspect):
         map(lambda text: f"[CLS] {text} [SEP] {aspect} [SEP]", chunktext)
     )
 
-    print("Request")
-
-    test = [
-        {
-            "label": "Positive",
-            "score": 0.5,
-        }
-        for c in chunktext
-    ]
-    print(test)
-    return test
-
     # Infer sentiment
-    # sentiment = toolbox.sentiment_pipeline(masked_text)
-    # return sentiment
+    return toolbox.sentiment_pipeline(masked_text)
