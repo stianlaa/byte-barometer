@@ -125,6 +125,9 @@ function QueryInput({ setComments }: QueryInputProps) {
         }}
       />
       <InputRightElement>
+        {/* TODO use, dedicated spinner function */}
+        {/* https://chakra-ui.com/docs/components/icon-button/props */}
+
         <Button
           size="s"
           bgColor="beige.500"

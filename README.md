@@ -14,9 +14,18 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [ ] Test delete index
 - [ ] Test populate index
 - [ ] Test query index
+- [ ] Extend current display field to a Summary field. How many are relevant, what is the overall score, do you want to change display of things, might be collapsible.
+
+```
+-----
+                               | positive (eye) , relevance filter
+Great! 25/30 relevant comments | neutral (eye) , other?
+                               | negative (eye)
+-----
+```
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
-- [ ] Improve comment styling, and sentiment display, by badge or similar
+- [ ] Improve comment styling, and sentiment display
 - [ ] Add relevancy filter, e.g don't show results under match score 2.0
 - [ ] Add singleword summary of opinion when the system reaches 20/20 comments
 

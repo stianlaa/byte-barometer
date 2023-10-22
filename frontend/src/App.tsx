@@ -1,10 +1,11 @@
 import "./index.css";
-import { Box, Divider, Heading, SimpleGrid } from "@chakra-ui/react";
+import { Box, Divider, Heading } from "@chakra-ui/react";
 import { useState } from "react";
 import { CommentWithSentiment } from "./Comment";
 import OpinionVisualizer from "./OpinionVisualizer";
 import QueryInput from "./QueryInput";
-import CommentStack from "./CommentStack";
+
+import CommentDisplay from "./CommentDisplay";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -52,11 +53,7 @@ function App() {
         w="80%"
         borderWidth="2px 0 0 0"
       />
-      <SimpleGrid columns={3} spacing={10}>
-        <CommentStack headingText="Positive" comments={comments.positive} />
-        <CommentStack headingText="Neutral" comments={comments.neutral} />
-        <CommentStack headingText="Negative" comments={comments.negative} />
-      </SimpleGrid>
+      <CommentDisplay comments={comments} />
     </Box>
   );
 }

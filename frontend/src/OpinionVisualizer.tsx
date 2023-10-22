@@ -1,6 +1,6 @@
-import { VStack, Heading } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { VictoryPie } from "victory";
-import { NEGATIVE, NEUTRAL, POSITIVE, QUERY_COMMENT_COUNT } from "./constants";
+import { NEGATIVE, NEUTRAL, POSITIVE } from "./constants";
 
 type OpinionVisualizerProps = {
   positiveCount: number;
@@ -27,9 +27,6 @@ const mapInputData = ({
 };
 
 function OpinionVisualizer(props: OpinionVisualizerProps) {
-  const commentSum =
-    props.positiveCount + props.neutralCount + props.negativeCount;
-
   return (
     <VStack mr="auto" ml="auto" w="100%">
       <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>
@@ -65,9 +62,6 @@ function OpinionVisualizer(props: OpinionVisualizerProps) {
           }}
         />
       </svg>
-      <Heading mt="-5rem" mb="1rem">
-        {commentSum ? `${commentSum}/${QUERY_COMMENT_COUNT}` : "Ask!"}
-      </Heading>
     </VStack>
   );
 }
