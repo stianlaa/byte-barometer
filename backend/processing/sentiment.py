@@ -19,7 +19,6 @@ filterwarnings("ignore", category=UserWarning, module="transformers")
 
 class Toolbox:
     def __init__(self):
-        print(f' the magic value is: {environ.get("ENABLE_GPU", "False")}')
         if environ.get("ENABLE_GPU", "False") == "True":
             logger.info("Initializing sentiment toolbox with GPU")
             self._sentiment_pipeline = pipeline(

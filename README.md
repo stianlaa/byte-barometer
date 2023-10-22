@@ -11,16 +11,17 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 ## Future work
 
 - [ ] Replace werkzeug
-- [ ] Test delete
+- [ ] Test delete index
 - [ ] Test populate index
 - [ ] Test query index
-- [ ] Update cuda in use to 12.2.2 on host platform and locally, perhaps hindered by outdated nvidia driver
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
-- [ ] Improve comment sentiment display, by badge or similar
-- [ ] Improve comment styling
-- [ ] Add relevancy filter
-- [ ] Add icons for the various links, story, comments, author etc
+- [ ] Improve comment styling, and sentiment display, by badge or similar
+- [ ] Add relevancy filter, e.g don't show results under match score 2.0
+- [ ] Add singleword summary of opinion when the system reaches 20/20 comments
+
+- [ ] Improve documentfetcher so that it may be run continiously from whatever is the current starting point
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well
+- [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
 - [ ] Fix gpu serialized inferance warning, look into performance improvement
 - [ ] Fix sentiments.py numpy issue
