@@ -94,7 +94,6 @@ function QueryInput({ setComments }: QueryInputProps) {
               break;
           }
         });
-
         return newGroupedComments;
       });
     };

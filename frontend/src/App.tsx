@@ -1,11 +1,10 @@
 import "./index.css";
-import { Box, Divider, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box, Divider, Heading, SimpleGrid } from "@chakra-ui/react";
 import { useState } from "react";
 import { CommentWithSentiment } from "./Comment";
-import Comment from "./Comment";
 import OpinionVisualizer from "./OpinionVisualizer";
-import { VISIBLE_COMMENTS } from "./constants";
 import QueryInput from "./QueryInput";
+import CommentStack from "./CommentStack";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -47,42 +46,16 @@ function App() {
         <QueryInput setComments={setComments} />
       </Box>
 
-      <Divider borderColor="grey.500" mt={"0.25rem"} mb={"0.25rem"} />
-
-      <SimpleGrid columns={2} spacing={10}>
-        <VStack h="auto" ml="1rem">
-          <Heading size="xl" mt={"0.25rem"}>
-            Positive
-          </Heading>
-          {comments.positive
-            ?.slice(0, VISIBLE_COMMENTS)
-            .sort((a, b) => b.score - a.score)
-            .map((comment) => (
-              <Comment key={`positive-${comment.id}`} {...comment} />
-            ))}
-        </VStack>
-        {/* <VStack h="auto" mr="1rem">
-          <Heading size="xl" mt={"0.25rem"}>
-            Neutral
-          </Heading>
-          {comments.neutral
-            ?.slice(0, VISIBLE_COMMENTS)
-            .sort((a, b) => b.score - a.score)
-            .map((comment) => (
-              <Comment key={`neutral-${comment.id}`} {...comment} />
-            ))}
-        </VStack> */}
-        <VStack h="auto" mr="1rem">
-          <Heading size="xl" mt={"0.25rem"}>
-            Negative
-          </Heading>
-          {comments.negative
-            ?.slice(0, VISIBLE_COMMENTS)
-            .sort((a, b) => b.score - a.score)
-            .map((comment) => (
-              <Comment key={`negative-${comment.id}`} {...comment} />
-            ))}
-        </VStack>
+      <Divider
+        borderColor="grey.300"
+        m="0.25rem auto 0.25rem auto"
+        w="80%"
+        borderWidth="2px 0 0 0"
+      />
+      <SimpleGrid columns={3} spacing={10}>
+        <CommentStack headingText="Positive" comments={comments.positive} />
+        <CommentStack headingText="Neutral" comments={comments.neutral} />
+        <CommentStack headingText="Negative" comments={comments.negative} />
       </SimpleGrid>
     </Box>
   );
