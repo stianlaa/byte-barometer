@@ -45,9 +45,9 @@ function App() {
           borderWidth="2px 0 0 0"
         />
         <OpinionVisualizer
-          positiveCount={comments.positive.length}
-          neutralCount={comments.neutral.length}
-          negativeCount={comments.negative.length}
+          positiveCount={relevantComments.positive.length}
+          neutralCount={relevantComments.neutral.length}
+          negativeCount={relevantComments.negative.length}
         />
         <QueryInput setComments={setComments} />
       </Box>

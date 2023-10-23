@@ -1,11 +1,11 @@
 import { useState } from "react";
 import {
   SimpleGrid,
-  HStack,
   Box,
   Button,
   Heading,
   Flex,
+  Center,
 } from "@chakra-ui/react";
 import { GroupedComments } from "./App";
 import CommentStack from "./CommentStack";
@@ -74,32 +74,26 @@ function CommentDisplay({ comments, relevantComments }: CommentDisplayProps) {
         .reduce((partialSum, entry) => partialSum + entry, 0) / comments.length;
 
     if (averageSentiment > 0.15) {
-      return "Good " + averageSentiment.toFixed(2);
+      return "Good";
     } else if (averageSentiment < -0.15) {
-      return "Bad " + averageSentiment.toFixed(2);
+      return "Bad";
     }
-    return "Neutral " + averageSentiment.toFixed(2);
+    return "Neutral";
   };
 
   return (
     <>
-      <HStack>
-        {allComments.length > 0 ? (
-          <>
-            <Box w="40%">
-              <Heading>{summarizeSentiment(allComments)}</Heading>
-            </Box>
-            <Flex w="30%" direction="column" alignItems="flex-start">
-              <p>{allRelevantComments.length} Relevant comments, of which</p>
-              <p>{relevantComments.positive.length} are positive</p>
-              <p>{relevantComments.negative.length} are negative</p>
-            </Flex>
-          </>
-        ) : (
-          <Box w="70%">Awaiting results</Box>
-        )}
+      <Center w="80%" ml="auto" mr="auto">
+        <Flex w="30%" direction="column" alignItems="flex-start">
+          <p>{allRelevantComments.length} Relevant comments</p>
+          <p>{relevantComments.positive.length} are positive</p>
+          <p>{relevantComments.negative.length} are negative</p>
+        </Flex>
+        <Box ml="auto" mr="auto">
+          <Heading>{summarizeSentiment(allComments)}</Heading>
+        </Box>
 
-        <Flex direction="column" alignItems="flex-start">
+        <Flex w="30%" direction="column" alignItems="flex-end">
           <ToggleViewButton
             text="Positive"
             enabled={showPositive}
@@ -116,7 +110,7 @@ function CommentDisplay({ comments, relevantComments }: CommentDisplayProps) {
             onClick={() => setShowNegative(!showNegative)}
           />
         </Flex>
-      </HStack>
+      </Center>
 
       <SimpleGrid columns={columnCount} spacing={10}>
         {showPositive && (
