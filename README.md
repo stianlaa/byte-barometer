@@ -13,7 +13,6 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 - [ ] Replace werkzeug
 - [ ] Connect relevancy filter to panel, e.g don't show results under match score 2.0
 - [ ] Adjust piechart to show relevant comments
-- [ ] Make summary symmetrical around center, main summary work in middle, stats on left and settings on right
 - [ ] Add onClick of piechart to show specific segment
 - [ ] Show only relevant comments in piechart
 - [ ] Add singleword summary of opinion when the system reaches 20/20 comments
