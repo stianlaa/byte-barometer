@@ -1,4 +1,4 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import Comment, { CommentWithSentiment } from "./Comment";
 import { VISIBLE_COMMENTS } from "./constants";
 
@@ -7,12 +7,9 @@ type CommentStackProps = {
   comments: CommentWithSentiment[];
 };
 
-function CommentStack({ headingText, comments }: CommentStackProps) {
+function CommentStack({ comments }: CommentStackProps) {
   return (
     <VStack>
-      <Heading size="xl" mt={"0.25rem"}>
-        {headingText}
-      </Heading>
       {comments
         ?.slice(0, VISIBLE_COMMENTS)
         .sort((a, b) => b.score - a.score)

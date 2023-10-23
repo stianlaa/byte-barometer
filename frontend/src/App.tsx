@@ -4,8 +4,8 @@ import { useState } from "react";
 import { CommentWithSentiment } from "./Comment";
 import OpinionVisualizer from "./OpinionVisualizer";
 import QueryInput from "./QueryInput";
-
 import CommentDisplay from "./CommentDisplay";
+import { RELEVANCE_LIMIT } from "./constants";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -19,6 +19,11 @@ function App() {
     neutral: [],
     negative: [],
   });
+  const relevantComments: GroupedComments = {
+    positive: comments.positive.filter((c) => c.score > RELEVANCE_LIMIT),
+    neutral: comments.neutral.filter((c) => c.score > RELEVANCE_LIMIT),
+    negative: comments.negative.filter((c) => c.score > RELEVANCE_LIMIT),
+  };
 
   return (
     <Box
@@ -53,7 +58,7 @@ function App() {
         w="80%"
         borderWidth="2px 0 0 0"
       />
-      <CommentDisplay comments={comments} />
+      <CommentDisplay comments={comments} relevantComments={relevantComments} />
     </Box>
   );
 }

@@ -34,8 +34,8 @@ function Comment({ id, score, metadata, sentiment }: CommentWithSentiment) {
       p="1rem"
       maxW={"100%"}
     >
-      <HStack>
-        <Heading size="sm" mr="auto">
+      <HStack spacing="1rem">
+        <Heading size="sm">
           <Link
             href={`https://news.ycombinator.com/user?id=${metadata.author}`}
             isExternal
@@ -43,9 +43,19 @@ function Comment({ id, score, metadata, sentiment }: CommentWithSentiment) {
             {metadata.author}
           </Link>
         </Heading>
-        <Heading size="sm" mr="auto">
-          {score}
-        </Heading>
+        <Link
+          href={`https://news.ycombinator.com/item?id=${metadata.storyId}`}
+          isExternal
+        >
+          Story
+        </Link>
+        <Link
+          href={`https://news.ycombinator.com/item?id=${documentId.id}`}
+          isExternal
+          mr="auto"
+        >
+          Comment 💬
+        </Link>
         <SentimentTag sentiment={sentiment} />
       </HStack>
       <Text
@@ -57,23 +67,6 @@ function Comment({ id, score, metadata, sentiment }: CommentWithSentiment) {
       >
         {metadata.context}
       </Text>
-      <HStack justify="space-between">
-        <Link
-          href={`https://news.ycombinator.com/item?id=${metadata.storyId}`}
-          isExternal
-        >
-          Story
-        </Link>
-        <Link
-          href={`https://news.ycombinator.com/item?id=${documentId.id}`}
-          isExternal
-        >
-          Comment 💬
-        </Link>
-        <Link href={metadata.storyUrl} isExternal>
-          Source 🔗
-        </Link>
-      </HStack>
     </Box>
   );
 }
