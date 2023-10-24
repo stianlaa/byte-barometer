@@ -9,6 +9,7 @@
     "npm": ">= 9.0.0"
   },
   "scripts": {
+    "collect": "ts-node --esm src/collect-documents.ts",
     "populate": "ts-node --esm src/populate-documents.ts"
   },
   "dependencies": {

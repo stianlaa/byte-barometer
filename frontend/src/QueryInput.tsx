@@ -18,7 +18,13 @@ import {
 import { ArrowRightIcon } from "@chakra-ui/icons";
 import { socket, QueryResponseBatch } from "./socket-setup";
 import { GroupedComments } from "./App";
-import { NEGATIVE, NEUTRAL, POSITIVE, QUERY_COMMENT_COUNT } from "./constants";
+import {
+  EXAMPLE_SUBJECTS,
+  NEGATIVE,
+  NEUTRAL,
+  POSITIVE,
+  QUERY_COMMENT_COUNT,
+} from "./constants";
 
 type Query = {
   queryCommentCount: number;
@@ -33,24 +39,8 @@ function QueryInput({ setComments }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const exampleSubjects = [
-    "Rust",
-    "commuting",
-    "work from home",
-    "C++",
-    "Linux",
-    "Brasil",
-    "rock music",
-    "classical music",
-    "meditation",
-    "embeddings",
-    "eigen",
-    "GNU",
-    "Google",
-    "Apple",
-  ];
   const exampleSubject =
-    exampleSubjects[Math.floor(Math.random() * exampleSubjects.length)];
+    EXAMPLE_SUBJECTS[Math.floor(Math.random() * EXAMPLE_SUBJECTS.length)];
 
   const querySubject = async (queryString: string) => {
     setLoading(true);

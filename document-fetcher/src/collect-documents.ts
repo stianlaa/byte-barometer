@@ -4,7 +4,7 @@ import { getComments } from "./comment-fetcher.js";
 import { Document, createDocuments } from "./document-generator.js";
 import yargs from "yargs";
 
-const STEP_SIZE = 3600; // 1 hours
+const STEP_SIZE = 3600; // 1 hour
 const CHUNK_SIZE = 100;
 const FILE_NAME = "documents.jsonl";
 
@@ -15,10 +15,16 @@ const step = (current: number, to: number, stepSize: number) => {
   return current + stepSize;
 };
 
-const writeToFile = (documents: Document[], fileName: string) => {
+const writeToFile = (
+  documents: Document[],
+  fileName: string,
+  lastLine: boolean = false
+) => {
   // Append stringified documents to file
   const file = fs.createWriteStream(fileName, { flags: "a" });
-  file.write(documents.map((d) => JSON.stringify(d)).join("\n") + "\n");
+  file.write(
+    documents.map((d) => JSON.stringify(d)).join("\n") + lastLine ? "" : "\n"
+  );
   file.end();
 };
 
@@ -48,16 +54,16 @@ const getCommandLineArguments = () => {
       description: "sets 'from' to (now - last) and 'to' to now",
       demandOption: false,
     })
-    .option("commentLimit", {
-      alias: "c",
+    .option("documentLimit", {
+      alias: "d",
       type: "number",
-      description: "limit the number of comments to fetch",
+      description: "limit the number of documents to fetch",
       default: 100,
       demandOption: false,
     })
     .parseSync();
 
-  const { from, to, last, commentLimit } = argv;
+  const { from, to, last, documentLimit } = argv;
 
   if (last) {
     if (from || to) {
@@ -71,7 +77,7 @@ const getCommandLineArguments = () => {
 
     // Get now seconds since epoch
     const now = Math.floor(Date.now() / 1000);
-    return { from: now - Math.floor(last), to: now, commentLimit };
+    return { from: now - Math.floor(last), to: now, documentLimit };
   }
 
   if (!from || !to) {
@@ -79,13 +85,13 @@ const getCommandLineArguments = () => {
     process.exit(1);
   }
 
-  return { from, to, commentLimit };
+  return { from, to, documentLimit };
 };
 
 const run = async () => {
-  const { from, to, commentLimit } = getCommandLineArguments();
+  const { from, to, documentLimit } = getCommandLineArguments();
   console.log(
-    "Fetching documents from:",
+    "Fetching " + documentLimit + " documents from:",
     new Date(from * 1000),
     "to",
     new Date(to * 1000)
@@ -93,14 +99,12 @@ const run = async () => {
 
   // Fetch comments
   let queryFrom = from;
-  let commentCount = 0;
+  let documentCount = 0;
   while (queryFrom < to) {
     let queryTo = step(queryFrom, to, STEP_SIZE);
     console.log("\nStep from", new Date(queryFrom * 1000));
 
-    const commentBatch = await getComments(queryFrom, queryTo);
-    commentCount += commentBatch.length;
-    // TODO current commentLimit should be changed to use slice and break after whatever remains has been processed
+    let commentBatch = await getComments(queryFrom, queryTo);
 
     // Slice into chunks of 100 or less
     for (const commentChunk of sliceIntoChunks(commentBatch, CHUNK_SIZE)) {
@@ -109,14 +113,22 @@ const run = async () => {
       // Split into documents
       const documents = createDocuments(commentChunk);
 
-      // Write to file
-      console.log("  Writing to file");
-      await writeToFile(documents, FILE_NAME);
-    }
+      // Update current document count
+      documentCount += documents.length;
 
-    if (commentCount >= commentLimit) {
-      console.log("Reached comment limit");
-      break;
+      if (documentCount > documentLimit) {
+        // We've reached the limit, slice off excess and store remainder
+        const documentBatch = documents.slice(documentCount - documentLimit);
+
+        // Write last part of batch to file
+        writeToFile(documentBatch, FILE_NAME, true);
+        console.log(`Reached document limit: ${documentLimit}`);
+        return;
+      } else {
+        // Add entire batch of doucments, write to file
+        console.log(`  Writing ${documents.length} documents to file`);
+        writeToFile(documents, FILE_NAME);
+      }
     }
 
     queryFrom = step(queryFrom, to, STEP_SIZE);
