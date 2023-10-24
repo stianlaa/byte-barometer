@@ -11,13 +11,7 @@ This project runs a semantic search for a subject and runs aspect based sentimen
 ## Future work
 
 - [ ] Replace werkzeug
-- [ ] Connect relevancy filter to panel, e.g don't show results under match score 2.0
-- [ ] Adjust piechart to show relevant comments
-- [ ] Add onClick of piechart to show specific segment
-- [ ] Show only relevant comments in piechart
-- [ ] Add singleword summary of opinion when the system reaches 20/20 comments
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
-- [ ] Improve comment styling, and sentiment display
 
 - [ ] Improve documentfetcher so that it may be run continiously from whatever is the current starting point
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   SimpleGrid,
   Box,
@@ -7,7 +6,7 @@ import {
   Flex,
   Center,
 } from "@chakra-ui/react";
-import { GroupedComments } from "./App";
+import { GroupedComments, Settings } from "./App";
 import CommentStack from "./CommentStack";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { CommentWithSentiment } from "./Comment";
@@ -16,6 +15,8 @@ import { NEGATIVE, POSITIVE } from "./constants";
 type CommentDisplayProps = {
   comments: GroupedComments;
   relevantComments: GroupedComments;
+  settings: Settings;
+  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 };
 
 type ToggleViewButtonProps = {
@@ -46,11 +47,12 @@ function ToggleViewButton({ text, enabled, onClick }: ToggleViewButtonProps) {
   );
 }
 
-function CommentDisplay({ comments, relevantComments }: CommentDisplayProps) {
-  const [showPositive, setShowPositive] = useState<boolean>(true);
-  const [showNeutral, setShowNeutral] = useState<boolean>(false);
-  const [showNegative, setShowNegative] = useState<boolean>(true);
-
+function CommentDisplay({
+  comments,
+  relevantComments,
+  settings,
+  setSettings,
+}: CommentDisplayProps) {
   const allComments = comments.positive.concat(
     comments.neutral,
     comments.negative
@@ -61,7 +63,9 @@ function CommentDisplay({ comments, relevantComments }: CommentDisplayProps) {
   );
 
   const columnCount =
-    (showPositive ? 1 : 0) + (showNeutral ? 1 : 0) + (showNegative ? 1 : 0);
+    (settings.showPositive ? 1 : 0) +
+    (settings.showNeutral ? 1 : 0) +
+    (settings.showNegative ? 1 : 0);
 
   const summarizeSentiment = (comments: CommentWithSentiment[]) => {
     const averageSentiment =
@@ -96,36 +100,57 @@ function CommentDisplay({ comments, relevantComments }: CommentDisplayProps) {
         <Flex w="30%" direction="column" alignItems="flex-end">
           <ToggleViewButton
             text="Positive"
-            enabled={showPositive}
-            onClick={() => setShowPositive(!showPositive)}
+            enabled={settings.showPositive}
+            onClick={() =>
+              setSettings((prevSettings) => {
+                return {
+                  ...prevSettings,
+                  showPositive: !prevSettings.showPositive,
+                };
+              })
+            }
           />
           <ToggleViewButton
             text="Neutral"
-            enabled={showNeutral}
-            onClick={() => setShowNeutral(!showNeutral)}
+            enabled={settings.showNeutral}
+            onClick={() =>
+              setSettings((prevSettings) => {
+                return {
+                  ...prevSettings,
+                  showNeutral: !prevSettings.showNeutral,
+                };
+              })
+            }
           />
           <ToggleViewButton
             text="Negative"
-            enabled={showNegative}
-            onClick={() => setShowNegative(!showNegative)}
+            enabled={settings.showNegative}
+            onClick={() =>
+              setSettings((prevSettings) => {
+                return {
+                  ...prevSettings,
+                  showNegative: !prevSettings.showNegative,
+                };
+              })
+            }
           />
         </Flex>
       </Center>
 
       <SimpleGrid columns={columnCount} spacing={10}>
-        {showPositive && (
+        {settings.showPositive && (
           <CommentStack
             headingText="Positive"
             comments={relevantComments.positive}
           />
         )}
-        {showNeutral && (
+        {settings.showNeutral && (
           <CommentStack
             headingText="Neutral"
             comments={relevantComments.neutral}
           />
         )}
-        {showNegative && (
+        {settings.showNegative && (
           <CommentStack
             headingText="Negative"
             comments={relevantComments.negative}

@@ -13,6 +13,12 @@ export type GroupedComments = {
   negative: CommentWithSentiment[];
 };
 
+export type Settings = {
+  showPositive: boolean;
+  showNeutral: boolean;
+  showNegative: boolean;
+};
+
 function App() {
   const [comments, setComments] = useState<GroupedComments>({
     positive: [],
@@ -25,6 +31,12 @@ function App() {
     negative: comments.negative.filter((c) => c.score > RELEVANCE_LIMIT),
   };
 
+  const [settings, setSettings] = useState<Settings>({
+    showPositive: true,
+    showNeutral: false,
+    showNegative: true,
+  });
+
   return (
     <Box
       height="100vh"
@@ -36,21 +48,20 @@ function App() {
         scrollbarWidth: "none",
       }}
     >
-      <Box>
-        <Heading pt="1rem">Byte Barometer</Heading>
-        <Divider
-          borderColor="grey.300"
-          m="0.25rem  auto 0.25rem auto"
-          w="33%"
-          borderWidth="2px 0 0 0"
-        />
-        <OpinionVisualizer
-          positiveCount={relevantComments.positive.length}
-          neutralCount={relevantComments.neutral.length}
-          negativeCount={relevantComments.negative.length}
-        />
-        <QueryInput setComments={setComments} />
-      </Box>
+      <Heading pt="1rem">Byte Barometer</Heading>
+      <Divider
+        borderColor="grey.300"
+        m="0.25rem  auto 0.25rem auto"
+        w="33%"
+        borderWidth="2px 0 0 0"
+      />
+      <OpinionVisualizer
+        positiveCount={relevantComments.positive.length}
+        neutralCount={relevantComments.neutral.length}
+        negativeCount={relevantComments.negative.length}
+        setSettings={setSettings}
+      />
+      <QueryInput setComments={setComments} />
 
       <Divider
         borderColor="grey.300"
@@ -58,7 +69,12 @@ function App() {
         w="80%"
         borderWidth="2px 0 0 0"
       />
-      <CommentDisplay comments={comments} relevantComments={relevantComments} />
+      <CommentDisplay
+        comments={comments}
+        relevantComments={relevantComments}
+        settings={settings}
+        setSettings={setSettings}
+      />
     </Box>
   );
 }
