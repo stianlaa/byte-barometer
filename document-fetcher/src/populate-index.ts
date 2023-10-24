@@ -1,27 +1,12 @@
 import { config } from "dotenv";
-import fs from "fs";
 import { getComments } from "./comment-fetcher.js";
-import { Document, createDocuments } from "./document-generator.js";
+import { createDocuments } from "./document-generator.js";
 import { getCommandLineArguments, sliceIntoChunks, step } from "./util.js";
 
 const STEP_SIZE = 3600; // 1 hour
 const CHUNK_SIZE = 100;
-const FILE_NAME = "documents.jsonl";
 
 config();
-
-const writeToFile = (
-  documents: Document[],
-  fileName: string,
-  lastLine: boolean = false
-) => {
-  // Append stringified documents to file
-  const file = fs.createWriteStream(fileName, { flags: "a" });
-  file.write(
-    documents.map((d) => JSON.stringify(d)).join("\n") + lastLine ? "" : "\n"
-  );
-  file.end();
-};
 
 const main = async () => {
   const { from, to, documentLimit } = getCommandLineArguments();
@@ -56,13 +41,15 @@ const main = async () => {
         const documentBatch = documents.slice(documentCount - documentLimit);
 
         // Write last part of batch to file
-        writeToFile(documentBatch, FILE_NAME, true);
+        // TODO upsert
+        // writeToFile(documentBatch, FILE_NAME, true);
         console.log(`Reached document limit: ${documentLimit}`);
         return;
       } else {
         // Add entire batch of doucments, write to file
         console.log(`  Writing ${documents.length} documents to file`);
-        writeToFile(documents, FILE_NAME);
+        // TODO upsert
+        // writeToFile(documents, FILE_NAME);
       }
     }
 

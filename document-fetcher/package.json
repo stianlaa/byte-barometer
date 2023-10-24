@@ -10,7 +10,7 @@
   },
   "scripts": {
     "collect": "ts-node --esm src/collect-documents.ts",
-    "populate": "ts-node --esm src/populate-documents.ts"
+    "populate": "ts-node --esm src/populate-index.ts"
   },
   "dependencies": {
     "@types/node": "^18.15.10",
