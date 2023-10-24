@@ -6,6 +6,7 @@ type OpinionVisualizerProps = {
   positiveCount: number;
   neutralCount: number;
   negativeCount: number;
+  settings: Settings;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 };
 
@@ -31,6 +32,7 @@ function OpinionVisualizer({
   positiveCount,
   neutralCount,
   negativeCount,
+  settings,
   setSettings,
 }: OpinionVisualizerProps) {
   return (
@@ -45,6 +47,7 @@ function OpinionVisualizer({
         cornerRadius={15}
         startAngle={-90}
         endAngle={90}
+        padAngle={2}
         data={mapInputData(positiveCount, neutralCount, negativeCount)}
         labels={({ datum }) => {
           if (datum.x === POSITIVE) return "👍";
@@ -64,22 +67,34 @@ function OpinionVisualizer({
             fontWeight: "bold",
             textAnchor: "middle",
           },
+          data: {
+            strokeWidth: 2,
+            stroke: ({ datum }) => {
+              if (datum.x === POSITIVE) {
+                return settings.showPositive ? "#849896" : "#749189";
+              } else if (datum.x === NEUTRAL) {
+                return settings.showNeutral ? "#828282" : "#6B6B6B";
+              } else {
+                return settings.showNegative ? "#9F6E6E" : "#945d5d";
+              }
+            },
+          },
         }}
         events={[
           {
             target: "data",
             eventHandlers: {
               onClick: (_a, clickTarget) => {
-                setSettings((prevSettings) => {
-                  const returnSettings: Settings = { ...prevSettings };
+                setSettings((prev) => {
+                  const s: Settings = { ...prev };
                   if (clickTarget.index === 0) {
-                    returnSettings.showPositive = !prevSettings.showPositive;
+                    s.showPositive = !prev.showPositive;
                   } else if (clickTarget.index === 1) {
-                    returnSettings.showNeutral = !prevSettings.showNeutral;
+                    s.showNeutral = !prev.showNeutral;
                   } else {
-                    returnSettings.showNegative = !prevSettings.showNegative;
+                    s.showNegative = !prev.showNegative;
                   }
-                  return returnSettings;
+                  return s;
                 });
                 return [{ target: "data" }, { target: "labels" }];
               },

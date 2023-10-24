@@ -59,6 +59,7 @@ function App() {
         positiveCount={relevantComments.positive.length}
         neutralCount={relevantComments.neutral.length}
         negativeCount={relevantComments.negative.length}
+        settings={settings}
         setSettings={setSettings}
       />
       <QueryInput setComments={setComments} />
