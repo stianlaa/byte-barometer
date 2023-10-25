@@ -16,8 +16,8 @@ The third is the document-fetcher, this creates embeddings from recent comments 
 
 ## Path to production
 
-- [ ] Move document-fetcher to python
-- [ ] Clean up previous implementation
+- [ ] Add types to received responses
+- [ ] Organize implementation, extract utility properly etc
 - [ ] In document fetcher util, use annotation instead
 - [ ] Create variant that writes to file instead of upsert
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters

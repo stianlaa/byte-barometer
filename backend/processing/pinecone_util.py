@@ -1,4 +1,4 @@
-from backend.processing.dataclasses import Document
+from processing.dataclasses import Document
 from logger_setup import logger
 from processing.sparse_embedding import create_sparse_embeddings
 from processing.dense_embedding import create_dense_embeddings
@@ -84,19 +84,14 @@ def upsert_document_chunk(documents: list[Document]):
                 "createdAt": document.created_at,
             },
         }
-        print(f"Document: {str(document)}")
         upsert_chunk.append(upsert_data)
 
-        # Upsert data
-        chunk_end = time.time()
-        print(f"Would have upserted {upsert_chunk}")
-        # toolbox.index.upsert(upsert_chunk)
-        doc_rate = chunk_size / (chunk_end - chunk_start)
-        logger.info(
-            f"Upserted {len(upsert_chunk)} documents - at {doc_rate:.2f} docs/sec"
-        )
-
-        logger.info(f"Index {index}:\n{toolbox.index.describe_index_stats()}")
+    # Upsert data
+    toolbox.index.upsert(upsert_chunk)
+    chunk_end = time.time()
+    doc_rate = chunk_size / (chunk_end - chunk_start)
+    logger.info(f"Upserted {len(upsert_chunk)} documents - at {doc_rate:.2f} docs/sec")
+    logger.info(f"Index {index}:\n{toolbox.index.describe_index_stats()}")
 
 
 class Metadata:

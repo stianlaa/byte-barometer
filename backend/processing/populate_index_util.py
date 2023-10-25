@@ -1,5 +1,5 @@
 from logger_setup import logger
-from backend.processing.dataclasses import Comment
+from processing.dataclasses import Comment
 from processing.document_fetcher_util import create_documents, get_comments
 from processing.pinecone_util import (
     create_index_if_missing,
@@ -33,18 +33,20 @@ def populate(last: int, document_limit: int):
     populate_from = time.time() - last
     populate_to = time.time()
 
+    logger.info(
+        f'Populate index with comments from {datetime.fromtimestamp(populate_from).strftime("%B %d, %Y %I:%M:%S")} to {datetime.fromtimestamp(populate_to).strftime("%B %d, %Y %I:%M:%S")}'
+    )
+
     query_from = populate_from
     document_count = 0
-    while populate_from < populate_to:
+    while query_from < populate_to:
         query_to = step(query_from, populate_to, STEP_SIZE)
 
         logger.info(
-            f'Step from {datetime.fromtimestamp(query_from).strftime("%B %d, %Y %I:%M:%S")}'
+            f'Fetching from {datetime.fromtimestamp(query_from).strftime("%B %d, %Y %I:%M:%S")} to {datetime.fromtimestamp(query_to).strftime("%B %d, %Y %I:%M:%S")}'
         )
 
         comments = get_comments(query_from, query_to)
-
-        logger.info(f"Processing ${len(comments)} comments")
 
         # Slice into chunks
         comment_chunks: List[List[Comment]] = slice_into_chunks(comments, CHUNK_SIZE)
@@ -60,15 +62,13 @@ def populate(last: int, document_limit: int):
                 document_batch = documents[0, (document_count - document_limit)]
 
                 # Write last part of batch to file
-                # upsert_document_chunk(document_batch)
+                logger.info(f"Upserting {len(document_batch)} documents")
+                upsert_document_chunk(document_batch)
                 logger.info(f"Reached document limit: ${document_limit}")
-                logger.info(
-                    f"Upserting {len(document_batch)} documents, {document_count}"
-                )
                 return
             else:
                 # Add entire batch of doucments, write to file
-                logger.info(f"Upserting {len(documents)} documents, {document_count}")
-                # upsert_document_chunk(documents)
+                logger.info(f"Upserting {len(documents)} documents")
+                upsert_document_chunk(documents)
 
         query_from = step(query_from, populate_to, STEP_SIZE)
