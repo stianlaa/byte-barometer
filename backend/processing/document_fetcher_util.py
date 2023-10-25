@@ -1,9 +1,7 @@
 from processing.dataclasses import Document, Comment
-from logger_setup import logger
 from typing import List
-
-import requests
 from html import unescape
+import requests
 
 from processing.split_util import sentence_split_text
 

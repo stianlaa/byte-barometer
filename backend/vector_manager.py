@@ -1,12 +1,20 @@
 from logger_setup import logger
 from argparse import ArgumentParser
 from processing.populate_index_util import populate
-from processing.pinecone_util import delete_if_exists, run_query
+from processing.pinecone_util import (
+    create_index_if_missing,
+    delete_if_exists,
+    run_query,
+)
 
 
 def delete_action():
     logger.info("Deleting index")
     delete_if_exists()
+
+
+def create_action():
+    create_index_if_missing()
 
 
 def populate_action(args):
@@ -46,6 +54,8 @@ def main():
         populate_action(args)
     elif args.action == "delete":
         delete_action()
+    elif args.action == "create":
+        create_action()
     elif args.action == "query":
         query_action(args)
     else:

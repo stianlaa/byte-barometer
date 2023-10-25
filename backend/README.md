@@ -32,7 +32,9 @@ PINECONE_INDEX=<index-name>
 
 # Getting started
 
-Build the docker image if you haven't already
+The backend application will regularly fetch, process and store new comments from hackernews so that they may be queried. However this will just happen to new comments, to populate the index with an initial set of data the `vector_manager.py` script should be used.
+
+After initial setup, build the docker image if you haven't already
 
 ```bash
 docker build -t byte-barometer .
@@ -43,3 +45,5 @@ Then run the backend using the docker compose file, keeping your working environ
 ```bash
 docker compose up
 ```
+
+With the docker container running the backend should serve and maintain the stored data.

@@ -5,9 +5,8 @@ from processing.dense_embedding import create_dense_embeddings
 from processing.sentiment import infer_sentiment
 from pinecone import init, GRPCIndex, list_indexes, delete_index, create_index
 import os
-import time
 
-chunk_size = 100
+CHUNK_SIZE = 100
 
 index = os.environ["PINECONE_INDEX"]
 
@@ -49,7 +48,7 @@ def create_index_if_missing():
         logger.info(f"Index {index} already exists")
         return
     else:
-        logger.info(f"Creating index: {index}")
+        logger.info(f"Creating index: {index} - This may take a while..")
         create_index(index, dimension=1536, metric="dotproduct", pod_type="s1")
 
 
@@ -65,9 +64,12 @@ def delete_if_exists():
 
 def upsert_document_chunk(documents: list[Document]):
     upsert_chunk = list()
+    if len(documents) == 0:
+        logger.info("Skipping empty documents list")
+        return
+
     text_list = [document.text for document in documents]
 
-    chunk_start = time.time()
     dense = create_dense_embeddings(text_list)
     sparse = create_sparse_embeddings(text_list)
     for document, dense_embedding, sparse_embedding in zip(documents, dense, sparse):
@@ -88,10 +90,6 @@ def upsert_document_chunk(documents: list[Document]):
 
     # Upsert data
     toolbox.index.upsert(upsert_chunk)
-    chunk_end = time.time()
-    doc_rate = chunk_size / (chunk_end - chunk_start)
-    logger.info(f"Upserted {len(upsert_chunk)} documents - at {doc_rate:.2f} docs/sec")
-    logger.info(f"Index {index}:\n{toolbox.index.describe_index_stats()}")
 
 
 class Metadata:

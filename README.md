@@ -16,10 +16,10 @@ The third is the document-fetcher, this creates embeddings from recent comments 
 
 ## Path to production
 
-- [ ] Add types to received responses
 - [ ] Organize implementation, extract utility properly etc
 - [ ] In document fetcher util, use annotation instead
 - [ ] Create variant that writes to file instead of upsert
+- [ ] Add routine update and process most recent
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
 - [ ] Improve documentfetcher so that it may be run continiously from whatever is the current starting point
 - [ ] Investigate if there are better alternatives, e.g somewhere to just deploy the docker file, and give it access to a GPU

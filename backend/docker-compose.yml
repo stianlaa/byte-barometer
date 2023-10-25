@@ -11,7 +11,7 @@ services:
     env_file:
       - ../.env
     environment:
-      - ENABLE_GPU=True
+      - ENABLE_GPU=False
     volumes:
       - .:/app
       - ~/.cache/huggingface/transformers:/app/.cache/huggingface/transformers

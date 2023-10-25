@@ -1,22 +1,16 @@
 from logger_setup import logger
 from processing.dataclasses import Comment
 from processing.document_fetcher_util import create_documents, get_comments
-from processing.pinecone_util import (
-    create_index_if_missing,
-    upsert_document_chunk,
-)
-import os
-import time
+from processing.pinecone_util import upsert_document_chunk
 from datetime import datetime
 from typing import List
+import time
 
 CHUNK_SIZE = 100
 STEP_SIZE = 3600
 
-index = os.environ["PINECONE_INDEX"]
 
-
-def step(current: float, to: float, step_size: float) -> float:
+def step(current: int, to: int, step_size: int) -> int:
     if current + step_size > to:
         return to
     return current + step_size
@@ -27,19 +21,15 @@ def slice_into_chunks(arr: list, chunk_size: int) -> list:
 
 
 def populate(last: int, document_limit: int):
-    create_index_if_missing()
-
-    # Fetch comments
+    # Define outer bounds of data to populate using
     populate_from = time.time() - last
     populate_to = time.time()
 
-    logger.info(
-        f'Populate index with comments from {datetime.fromtimestamp(populate_from).strftime("%B %d, %Y %I:%M:%S")} to {datetime.fromtimestamp(populate_to).strftime("%B %d, %Y %I:%M:%S")}'
-    )
-
+    # Fetch comments
     query_from = populate_from
     document_count = 0
     while query_from < populate_to:
+        chunk_start = time.time()
         query_to = step(query_from, populate_to, STEP_SIZE)
 
         logger.info(
@@ -57,18 +47,29 @@ def populate(last: int, document_limit: int):
             # Update current document count
             document_count += len(documents)
 
-            if document_count > document_limit:
+            if document_count >= document_limit:
                 # We've reached the limit, slice off excess and store remainder
-                document_batch = documents[0, (document_count - document_limit)]
+                document_batch = documents[0 : (document_count - document_limit)]
 
                 # Write last part of batch to file
-                logger.info(f"Upserting {len(document_batch)} documents")
+                logger.info(f"Processing {len(document_batch)} documents")
                 upsert_document_chunk(document_batch)
-                logger.info(f"Reached document limit: ${document_limit}")
-                return
+                break
             else:
                 # Add entire batch of doucments, write to file
-                logger.info(f"Upserting {len(documents)} documents")
+                logger.info(f"Processing {len(documents)} documents")
                 upsert_document_chunk(documents)
 
-        query_from = step(query_from, populate_to, STEP_SIZE)
+        # Check if we have reached the document limit
+        if document_count >= document_limit:
+            logger.info(f"Document limit {document_limit} reached")
+            break
+        else:
+            # Report progress and speed
+            chunk_end = time.time()
+            doc_rate = len(comments) / (chunk_end - chunk_start)
+            logger.info(
+                f"Processed and stored {len(comments)} comments at {doc_rate:.2f} comments per/sec"
+            )
+            # Update query window
+            query_from = step(query_from, populate_to, STEP_SIZE)
