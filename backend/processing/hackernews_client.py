@@ -1,10 +1,8 @@
 from logger_setup import logger
-from processing.dataclasses import Document, Comment
+from processing.dataclasses import Comment
 from typing import List
 from html import unescape
 import requests
-
-from processing.split_util import sentence_split_text
 
 ALGOLIA_API_URL = "http://hn.algolia.com/api/v1/"
 page_limit = 100
@@ -39,24 +37,3 @@ def get_comments(from_time: int, to_time: int) -> List[Comment]:
                 )
             )
     return comments
-
-
-def create_documents(comments: List[Comment]) -> List[Document]:
-    documents: List[Document] = []
-
-    for comment in comments:
-        chunks = sentence_split_text(comment.comment_text)
-        for chunk_index, chunk in enumerate(chunks):
-            documents.append(
-                Document(
-                    id=f"{comment.id}-{chunk_index}",
-                    story_id=comment.story_id,
-                    text=chunk.strip(),
-                    author=comment.author,
-                    story_url=comment.story_url,
-                    created_at=comment.created_at,
-                    parent_id=comment.parent_id,
-                )
-            )
-
-    return documents

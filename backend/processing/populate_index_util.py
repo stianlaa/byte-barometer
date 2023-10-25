@@ -1,6 +1,7 @@
+from processing.split_util import sentence_split_text
 from logger_setup import logger
-from processing.dataclasses import Comment
-from processing.document_fetcher_util import create_documents, get_comments
+from processing.dataclasses import Comment, Document
+from processing.hackernews_client import get_comments
 from processing.pinecone_util import upsert_document_chunk
 from datetime import datetime
 from typing import List
@@ -18,6 +19,27 @@ def step(current: int, to: int, step_size: int) -> int:
 
 def slice_into_chunks(arr: list, chunk_size: int) -> list:
     return [arr[i : i + chunk_size] for i in range(0, len(arr), chunk_size)]
+
+
+def create_documents(comments: List[Comment]) -> List[Document]:
+    documents: List[Document] = []
+
+    for comment in comments:
+        chunks = sentence_split_text(comment.comment_text)
+        for chunk_index, chunk in enumerate(chunks):
+            documents.append(
+                Document(
+                    id=f"{comment.id}-{chunk_index}",
+                    story_id=comment.story_id,
+                    text=chunk.strip(),
+                    author=comment.author,
+                    story_url=comment.story_url,
+                    created_at=comment.created_at,
+                    parent_id=comment.parent_id,
+                )
+            )
+
+    return documents
 
 
 def populate(last: int, document_limit: int):
