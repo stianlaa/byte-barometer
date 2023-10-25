@@ -14,7 +14,7 @@ sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
 
 # Suppress the warning from transformers, since it is not strictly relevant right now
 # This is to filter UserWarning: You seem to be using the pipelines sequentially on GPU.
-filterwarnings("ignore", category=UserWarning, module="transformers")
+# filterwarnings("ignore", category=UserWarning, module="transformers")
 
 
 class Toolbox:

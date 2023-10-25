@@ -69,7 +69,7 @@ def populate(last: int, document_limit: int):
             chunk_end = time.time()
             doc_rate = len(comments) / (chunk_end - chunk_start)
             logger.info(
-                f"Processed and stored {len(comments)} comments at {doc_rate:.2f} comments per/sec"
+                f"Processed and stored {len(comments)} comments at {doc_rate:.2f} comments/second"
             )
             # Update query window
             query_from = step(query_from, populate_to, STEP_SIZE)

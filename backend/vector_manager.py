@@ -39,7 +39,9 @@ def main():
     )
 
     parser.add_argument(
-        "action", choices=["populate", "delete", "query"], help="action to execute"
+        "action",
+        choices=["populate", "delete", "create", "query"],
+        help="action to execute",
     )
     parser.add_argument("-s", "--subject", type=str)
     parser.add_argument("-k", "--topK", type=int)

@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  byte-barometer-backend-app:
-    image: byte-barometer
-    # image: 45b89e6457a5
+  byte-barometer:
+    image: byte-barometer 
+    # entrypoint: python3 vector_manager.py populate -l 72000 -d 10000
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,7 +11,7 @@ services:
     env_file:
       - ../.env
     environment:
-      - ENABLE_GPU=False
+      - ENABLE_GPU=True
     volumes:
       - .:/app
       - ~/.cache/huggingface/transformers:/app/.cache/huggingface/transformers
@@ -27,5 +27,5 @@ services:
                 - gpu
                 - utility # nvidia-smi
                 - compute # CUDA
-                - video   # NVDEC/NVENC/NVCUVID. For instance to use a hardware accelerated ffmpeg. Skip it if you don't need it
+                - video   # NVDEC/NVENC/NVCUVID
     

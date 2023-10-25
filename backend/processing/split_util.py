@@ -6,10 +6,10 @@ chunk_max_token_limit = 200
 
 encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
-separators = ["\\.", "\\!", "\\?", "\\n"]
+separators = [r"\.", r"\!", r"\?", r"\n"]
 
 
-def token_split_text(text: str) -> list:
+def token_split_text(text: str, prev_chunk_length: int) -> list:
     """
     Sentence split strategy:
     Goal: Take arbitrary text, and split it into chunks, each below N tokens.
@@ -31,9 +31,10 @@ def token_split_text(text: str) -> list:
         encoded_candidate_text = encoding.encode(candidate_chunk)
         token_length = len(encoded_candidate_text)
 
-        if token_length > chunk_max_token_limit:
+        # Split, given that the chunk exceeds the limit and is shorter than the previous chunk
+        if token_length > chunk_max_token_limit and token_length < prev_chunk_length:
             print(f"Warning: Chunk too large: {candidate_chunk}")
-            split_chunks = token_split_text(candidate_chunk)
+            split_chunks = token_split_text(candidate_chunk, token_length)
             chunks.extend(split_chunks)
             chunk_aggregate = ""
         elif token_length > chunk_min_token_limit:
@@ -64,7 +65,7 @@ def sentence_split_text(text: str) -> list[str]:
 
         if token_length > chunk_max_token_limit:
             print(f"Warning: Chunk too large: {candidate_chunk}")
-            split_chunks = token_split_text(candidate_chunk)
+            split_chunks = token_split_text(candidate_chunk, token_length)
             chunks.extend(split_chunks)
             chunk_aggregate = ""
         elif token_length > chunk_min_token_limit:
