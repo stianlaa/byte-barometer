@@ -38,6 +38,8 @@ def populate(last: int, document_limit: int):
 
         comments = get_comments(query_from, query_to)
 
+        logger.info(f"Processing {len(comments)} comments")
+
         # Slice into chunks
         comment_chunks: List[List[Comment]] = slice_into_chunks(comments, CHUNK_SIZE)
         for comment_chunk in comment_chunks:

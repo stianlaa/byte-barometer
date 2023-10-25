@@ -15,6 +15,5 @@ def handle_query(json: dict):
     )
 
 
-if __name__ == "__main__":
-    logger.info("Launching backend")
+def serve():
     socketio.run(app, port=3000, allow_unsafe_werkzeug=True, host="0.0.0.0")

@@ -2,13 +2,22 @@ from logger_setup import logger
 from torch import no_grad
 from splade.models.transformer_rep import Splade
 from transformers import AutoTokenizer
+from os import environ
 
 sparse_model_id = "naver/splade-cocondenser-ensembledistil"
 
 
 class Toolbox:
     def __init__(self):
+        self._tokenizer = None
+        self._lazy = environ.get("LAZY_INIT_MODELS", "False") == "True"
+
+        if not self._lazy:
+            self._initialize_tokenizer()
+
+    def _initialize_tokenizer(self):
         logger.info("Initializing Splade toolbox")
+        self._lazy = environ.get("LAZY_INIT_MODELS", "False") == "True"
         self._sparse_model = Splade(sparse_model_id, agg="max")
         self._sparse_model.to("cpu")
         self._sparse_model.eval()
@@ -22,6 +31,12 @@ class Toolbox:
 
     @property
     def tokenizer(self):
+        return self._tokenizer
+
+    @property
+    def tokenizer(self):
+        if self._lazy and self._tokenizer is None:
+            self._initialize_tokenizer()
         return self._tokenizer
 
 

@@ -2,8 +2,10 @@ version: '3'
 
 services:
   byte-barometer:
-    image: byte-barometer 
-    # entrypoint: python3 vector_manager.py populate -l 72000 -d 10000
+    image: a9692965a3bf
+    # image: byte-barometer:latest
+    # Used for initial population 
+    # entrypoint: python3 app.py populate -l 72000 -d 10000
     build:
       context: .
       dockerfile: Dockerfile

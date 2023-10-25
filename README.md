@@ -17,6 +17,7 @@ The third is the document-fetcher, this creates embeddings from recent comments 
 ## Path to production
 
 - [ ] Make app.py starting point from vector_manager run in Container
+- [ ] Fix sentiments.py numpy issue
 - [ ] Organize implementation, extract utility properly etc, clean up segments
 - [ ] Add entire comment to metadata, so that this doesn't have to be fetched, and the entire comment can be formatted properly using i, href, a etc.
 - [ ] In document fetcher util, use annotation instead
@@ -37,4 +38,3 @@ The third is the document-fetcher, this creates embeddings from recent comments 
 - [ ] Add expand button to comments, to show full comment, where it needs to get fetched as well
 - [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
 - [ ] Fix gpu serialized inferance warning, look into performance improvement
-- [ ] Fix sentiments.py numpy issue

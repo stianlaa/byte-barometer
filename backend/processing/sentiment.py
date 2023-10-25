@@ -19,6 +19,13 @@ sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
 
 class Toolbox:
     def __init__(self):
+        self._sentiment_pipeline = None
+        self._lazy = environ.get("LAZY_INIT_MODELS", "False") == "True"
+
+        if not self._lazy:
+            self._initialize_pipeline()
+
+    def _initialize_pipeline(self):
         if environ.get("ENABLE_GPU", "False") == "True":
             logger.info("Initializing sentiment toolbox with GPU")
             self._sentiment_pipeline = pipeline(
@@ -32,6 +39,8 @@ class Toolbox:
 
     @property
     def sentiment_pipeline(self):
+        if self._lazy and self._sentiment_pipeline is None:
+            self._initialize_pipeline()
         return self._sentiment_pipeline
 
 

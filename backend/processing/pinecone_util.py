@@ -4,24 +4,37 @@ from processing.sparse_embedding import create_sparse_embeddings
 from processing.dense_embedding import create_dense_embeddings
 from processing.sentiment import infer_sentiment
 from pinecone import init, GRPCIndex, list_indexes, delete_index, create_index
-import os
+from os import environ
 
 CHUNK_SIZE = 100
 
-index = os.environ["PINECONE_INDEX"]
+index = environ["PINECONE_INDEX"]
 
 
 class Toolbox:
     def __init__(self):
+        self._index = None
+        self._lazy = environ.get("LAZY_INIT_MODELS", "False") == "True"
+
+        if not self._lazy:
+            self._initialize_index()
+
+    def _initialize_index(self):
         logger.info("Initializing semantic toolbox")
         init(
-            api_key=os.environ["PINECONE_API_KEY"],
-            environment=os.environ["PINECONE_ENVIRONMENT"],
+            api_key=environ["PINECONE_API_KEY"],
+            environment=environ["PINECONE_ENVIRONMENT"],
         )
         self._index = GRPCIndex(index)
 
     @property
     def index(self):
+        return self._index
+
+    @property
+    def index(self):
+        if self._lazy and self._index is None:
+            self._initialize_index()
         return self._index
 
 

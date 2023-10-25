@@ -6,6 +6,19 @@ from processing.pinecone_util import (
     delete_if_exists,
     run_query,
 )
+from backend_server import serve
+
+
+def serve_action():
+    logger.info("Launching backend")
+    serve()
+
+
+def populate_action(args):
+    logger.info("Populating index")
+    last = 3600 if args.last is None else args.last
+    documentLimit = 100 if args.documentLimit is None else args.documentLimit
+    populate(last, documentLimit)
 
 
 def delete_action():
@@ -15,13 +28,6 @@ def delete_action():
 
 def create_action():
     create_index_if_missing()
-
-
-def populate_action(args):
-    logger.info("Populating index")
-    last = 3600 if args.last is None else args.last
-    documentLimit = 100 if args.documentLimit is None else args.documentLimit
-    populate(last, documentLimit)
 
 
 def query_action(args):
@@ -40,7 +46,7 @@ def main():
 
     parser.add_argument(
         "action",
-        choices=["populate", "delete", "create", "query"],
+        choices=["serve", "populate", "delete", "create", "query"],
         help="action to execute",
     )
     parser.add_argument("-s", "--subject", type=str)
@@ -52,7 +58,9 @@ def main():
     args = parser.parse_args()
 
     # get the function from options dictionary
-    if args.action == "populate":
+    if args.action == "serve":
+        serve_action()
+    elif args.action == "populate":
         populate_action(args)
     elif args.action == "delete":
         delete_action()

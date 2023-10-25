@@ -17,4 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Now copy the rest of the application
 COPY . .
 
-CMD [ "python3", "backend_server.py" ]
+# Define default cache location TODO move up if works
+ENV TRANSFORMERS_CACHE=/app/.cache
+
+CMD [ "python3", "app.py", "serve" ]
