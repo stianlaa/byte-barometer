@@ -13,6 +13,7 @@ grpcio==1.56.0
 openai==0.27.8
 SPLADE @ git+https://github.com/naver/splade.git@06947de1da83e5443809f1b7e78937416d53c14b
 pyabsa==2.3.1
+tiktoken==0.5.1
 
 
 # Vector database utility

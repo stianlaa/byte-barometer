@@ -1,4 +1,4 @@
-from app_setup import logger
+from logger_setup import logger
 from transformers import pipeline
 from warnings import filterwarnings
 from os import environ

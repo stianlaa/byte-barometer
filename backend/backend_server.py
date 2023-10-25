@@ -1,5 +1,5 @@
 from flask import request
-from app_setup import logger
+from logger_setup import logger
 from flask_setup import socketio, app
 from processing.query_handler import Query, process_query
 

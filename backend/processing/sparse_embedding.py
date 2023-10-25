@@ -1,4 +1,4 @@
-from app_setup import logger
+from logger_setup import logger
 from torch import no_grad
 from splade.models.transformer_rep import Splade
 from transformers import AutoTokenizer

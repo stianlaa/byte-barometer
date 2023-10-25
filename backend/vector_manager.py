@@ -1,31 +1,28 @@
+from logger_setup import logger
 from argparse import ArgumentParser
-from processing.pinecone_util import delete_if_exists, populate, run_query
+from processing.populate_index_util import populate
+from processing.pinecone_util import delete_if_exists, run_query
 
 
-def delete_action(args):
-    print("Deleting index")
+def delete_action():
+    logger.info("Deleting index")
     delete_if_exists()
 
 
 def populate_action(args):
-    print("Populating index")
-    populate()
+    logger.info("Populating index")
+    last = 3600 if args.last is None else args.last
+    documentLimit = 100 if args.documentLimit is None else args.documentLimit
+    populate(last, documentLimit)
 
 
 def query_action(args):
-    print("Querying index")
+    logger.info("Querying index")
     subject = args.subject
     top_k = 1 if args.topK is None else args.topK
     alpha = 0.5 if args.alpha is None else args.alpha
     result = run_query(subject, top_k, alpha)
-    print([match.to_dict() for match in result])
-
-
-options = {
-    "populate": populate_action,
-    "delete": delete_action,
-    "query": query_action,
-}
+    logger.info([match.to_dict() for match in result])
 
 
 def main():
@@ -39,12 +36,20 @@ def main():
     parser.add_argument("-s", "--subject", type=str)
     parser.add_argument("-k", "--topK", type=int)
     parser.add_argument("-a", "--alpha", type=float)
+    parser.add_argument("-l", "--last", type=int)
+    parser.add_argument("-d", "--documentLimit", type=int)
 
     args = parser.parse_args()
 
     # get the function from options dictionary
-    func = options.get(args.action)
-    func(args)
+    if args.action == "populate":
+        populate_action(args)
+    elif args.action == "delete":
+        delete_action()
+    elif args.action == "query":
+        query_action(args)
+    else:
+        raise Exception(f"Unknown action {args.action}")
 
 
 if __name__ == "__main__":
