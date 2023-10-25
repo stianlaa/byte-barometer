@@ -1,9 +1,9 @@
+from backend.processing.dataclasses import Document
 from logger_setup import logger
 from processing.sparse_embedding import create_sparse_embeddings
 from processing.dense_embedding import create_dense_embeddings
 from processing.sentiment import infer_sentiment
 from pinecone import init, GRPCIndex, list_indexes, delete_index, create_index
-from processing.document_fetcher_util import Document
 import os
 import time
 

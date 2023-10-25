@@ -1,5 +1,6 @@
 from logger_setup import logger
-from processing.document_fetcher_util import create_documents, get_comments, Comment
+from backend.processing.dataclasses import Comment
+from processing.document_fetcher_util import create_documents, get_comments
 from processing.pinecone_util import (
     create_index_if_missing,
     upsert_document_chunk,
