@@ -1,4 +1,3 @@
-import { config } from "dotenv";
 import fs from "fs";
 import { getComments } from "./comment-fetcher.js";
 import { Document, createDocuments } from "./document-generator.js";
@@ -7,8 +6,6 @@ import { getCommandLineArguments, sliceIntoChunks, step } from "./util.js";
 const STEP_SIZE = 3600; // 1 hour
 const CHUNK_SIZE = 100;
 const FILE_NAME = "documents.jsonl";
-
-config();
 
 const writeToFile = (
   documents: Document[],
@@ -62,6 +59,7 @@ const main = async () => {
       } else {
         // Add entire batch of doucments, write to file
         console.log(`  Writing ${documents.length} documents to file`);
+        console.log(documents);
         writeToFile(documents, FILE_NAME);
       }
     }

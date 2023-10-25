@@ -1,12 +1,9 @@
-import { config } from "dotenv";
 import { getComments } from "./comment-fetcher.js";
 import { createDocuments } from "./document-generator.js";
 import { getCommandLineArguments, sliceIntoChunks, step } from "./util.js";
 
 const STEP_SIZE = 3600; // 1 hour
 const CHUNK_SIZE = 100;
-
-config();
 
 const main = async () => {
   const { from, to, documentLimit } = getCommandLineArguments();
