@@ -16,11 +16,9 @@ The third is the document-fetcher, this creates embeddings from recent comments 
 
 ## Path to production
 
-- [ ] Make app.py starting point from vector_manager run in Container
 - [ ] Fix sentiments.py numpy issue
 - [ ] Organize implementation, extract utility properly etc, clean up segments
 - [ ] Add entire comment to metadata, so that this doesn't have to be fetched, and the entire comment can be formatted properly using i, href, a etc.
-- [ ] In document fetcher util, use annotation instead
 - [ ] Create variant that writes to file instead of upsert
 - [ ] Add routine update and process most recent
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters

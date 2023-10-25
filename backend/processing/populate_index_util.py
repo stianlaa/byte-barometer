@@ -1,8 +1,8 @@
 from processing.split_util import sentence_split_text
 from logger_setup import logger
 from processing.dataclasses import Comment, Document
-from processing.hackernews_client import get_comments
-from processing.pinecone_util import upsert_document_chunk
+from service.hackernews_client import get_comments
+from service.pinecone_client import upsert_document_chunk
 from datetime import datetime
 from typing import List
 import time
@@ -64,7 +64,7 @@ def populate(last: int, document_limit: int):
 
         # Slice into chunks
         comment_chunks: List[List[Comment]] = slice_into_chunks(comments, CHUNK_SIZE)
-        for comment_chunk in comment_chunks:
+        for i, comment_chunk in enumerate(comment_chunks):
             # Split into documents
             documents = create_documents(comment_chunk)
 
@@ -76,12 +76,14 @@ def populate(last: int, document_limit: int):
                 document_batch = documents[0 : (document_count - document_limit)]
 
                 # Write last part of batch to file
-                logger.info(f"Processing {len(document_batch)} documents")
+                logger.info(
+                    f"Processing last chunk {i} of {len(document_batch)} documents"
+                )
                 upsert_document_chunk(document_batch)
                 break
             else:
                 # Add entire batch of doucments, write to file
-                logger.info(f"Processing {len(documents)} documents")
+                logger.info(f"Processing chunk {i} of {len(documents)} documents")
                 upsert_document_chunk(documents)
 
         # Check if we have reached the document limit

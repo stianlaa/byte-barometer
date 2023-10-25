@@ -9,9 +9,9 @@ dense_model_id = "text-embedding-ada-002"
 openai.api_key = environ["OPENAI_API_KEY"]
 
 
-def create_dense_embeddings(chunk) -> list:
+def create_dense_embeddings(text_list: list[str]) -> list:
     # Create dense embeddings
-    response = openai.Embedding.create(input=chunk, model=dense_model_id)
+    response = openai.Embedding.create(input=text_list, model=dense_model_id)
 
     # Access the relevant embeddings in the structure
     data = response["data"]

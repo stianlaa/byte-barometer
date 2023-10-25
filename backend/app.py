@@ -1,7 +1,7 @@
 from logger_setup import logger
 from argparse import ArgumentParser
 from processing.populate_index_util import populate
-from processing.pinecone_util import (
+from service.pinecone_client import (
     create_index_if_missing,
     delete_if_exists,
     run_query,
