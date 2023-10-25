@@ -102,3 +102,4 @@ out/
 
 #Python
 __pycache__/
+.venv
