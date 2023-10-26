@@ -19,7 +19,7 @@ def run_continuously(interval=1):
     return cease_continuous_run
 
 
-def schedule_populate_job(populate_interval: int = 60):
+def schedule_populate_job(populate_interval: int = 1800):
     # Sensible limit to prevent
     document_limit = populate_interval * 5
     schedule.every(populate_interval).seconds.do(

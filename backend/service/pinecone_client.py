@@ -5,9 +5,11 @@ from os import environ
 
 from service.pinecone_dto import QueryResponse
 from util.document_util import Document
+import json
 
 index = environ["PINECONE_INDEX"]
 write_to_file = environ.get("WRITE_TO_FILE", "False") == "True"
+file_path = "upsert_data.jsonl"
 
 
 class Toolbox:
@@ -88,9 +90,15 @@ def upsert_document_chunk(documents: list[Document]):
             },
         }
         upsert_chunk.append(upsert_data)
+        with open(file_path, "a") as file:
+            tidy = upsert_data
+            tidy["values"] = []
+            tidy["sparse_values"] = []
+            file.write(json.dumps(tidy) + "\n")
 
-    # Upsert data
-    toolbox.index.upsert(upsert_chunk)
+    # Upsert or persist data
+    if not write_to_file:
+        toolbox.index.upsert(upsert_chunk)
 
 
 def run_query(query_text: str, top_k: int, alpha: float) -> list[QueryResponse]:

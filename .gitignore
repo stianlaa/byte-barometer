@@ -103,3 +103,6 @@ out/
 #Python
 __pycache__/
 .venv
+
+#Temporary files
+upsert_data.jsonl

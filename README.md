@@ -17,7 +17,7 @@ The third is the document-fetcher, this creates embeddings from recent comments 
 ## Path to production
 
 - [ ] Create variant that writes to file instead of upsert
-- [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
+- [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
 - [ ] Investigate if there are better alternatives, e.g somewhere to just deploy the docker file, and give it access to a GPU
 - [ ] Replace werkzeug
 - [ ] Add validation on requests, to prevent explosive queries

@@ -31,7 +31,6 @@ def run_sentiment_analysis(
         metadata = response.metadata
         comment_text = metadata["commentText"]
         relevant = comment_text[int(metadata["textStart"]) : int(metadata["textEnd"])]
-        logger.info(f"relevant {relevant}")
         relevant_texts.append(relevant)
     print(relevant_texts)
 
