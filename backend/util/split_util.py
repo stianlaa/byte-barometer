@@ -1,3 +1,4 @@
+from logger_setup import logger
 import re
 import tiktoken
 
@@ -33,7 +34,7 @@ def token_split_text(text: str, prev_chunk_length: int) -> list:
 
         # Split, given that the chunk exceeds the limit and is shorter than the previous chunk
         if token_length > chunk_max_token_limit and token_length < prev_chunk_length:
-            print(f"Warning: Chunk too large: {candidate_chunk}")
+            logger.info(f"Warning: Chunk too large: {candidate_chunk}")
             split_chunks = token_split_text(candidate_chunk, token_length)
             chunks.extend(split_chunks)
             chunk_aggregate = ""
@@ -64,7 +65,7 @@ def sentence_split_text(text: str) -> list[str]:
         token_length = len(encoded_candidate_text)
 
         if token_length > chunk_max_token_limit:
-            print(f"Warning: Chunk too large: {candidate_chunk}")
+            logger.info(f"Warning: Chunk too large: {candidate_chunk}")
             split_chunks = token_split_text(candidate_chunk, token_length)
             chunks.extend(split_chunks)
             chunk_aggregate = ""

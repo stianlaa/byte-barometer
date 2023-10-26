@@ -4,7 +4,7 @@ from splade.models.transformer_rep import Splade
 from transformers import AutoTokenizer
 from os import environ
 
-sparse_model_id = "naver/splade-cocondenser-ensembledistil"
+SPARSE_MODEL_ID = "naver/splade-cocondenser-ensembledistil"
 
 
 class Toolbox:
@@ -18,12 +18,12 @@ class Toolbox:
     def _initialize_tokenizer(self):
         logger.info("Initializing Splade toolbox")
         self._lazy = environ.get("LAZY_INIT_MODELS", "False") == "True"
-        self._sparse_model = Splade(sparse_model_id, agg="max")
+        self._sparse_model = Splade(SPARSE_MODEL_ID, agg="max")
         self._sparse_model.to("cpu")
         self._sparse_model.eval()
 
         # Initialize the tokenizer
-        self._tokenizer = AutoTokenizer.from_pretrained(sparse_model_id)
+        self._tokenizer = AutoTokenizer.from_pretrained(SPARSE_MODEL_ID)
 
     @property
     def sparse_model(self):

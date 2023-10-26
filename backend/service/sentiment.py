@@ -1,20 +1,13 @@
 from logger_setup import logger
 from transformers import pipeline
-from warnings import filterwarnings
 from os import environ
-
-# Ugly hack that should be removed
-# Numpy 1.23.x deprecated np.int, and apparently one of the underlying deberta snetiment analysis models
-# use this deprecated feature. Can likely be resolved somehow by improving current dependencies
-import numpy as np
-
-np.int = np.int_
-
-sentiment_model_id = "yangheng/deberta-v3-large-absa-v1.1"
 
 # Suppress the warning from transformers, since it is not strictly relevant right now
 # This is to filter UserWarning: You seem to be using the pipelines sequentially on GPU.
+# from warnings import filterwarnings
 # filterwarnings("ignore", category=UserWarning, module="transformers")
+
+SENTIMENT_MODEL_ID = "yangheng/deberta-v3-large-absa-v1.1"
 
 
 class Toolbox:
@@ -29,12 +22,12 @@ class Toolbox:
         if environ.get("ENABLE_GPU", "False") == "True":
             logger.info("Initializing sentiment toolbox with GPU")
             self._sentiment_pipeline = pipeline(
-                "text-classification", model=sentiment_model_id, device=0
+                "text-classification", model=SENTIMENT_MODEL_ID, device=0
             )
         else:
             logger.info("Initializing sentiment toolbox with CPU")
             self._sentiment_pipeline = pipeline(
-                "text-classification", model=sentiment_model_id
+                "text-classification", model=SENTIMENT_MODEL_ID
             )
 
     @property

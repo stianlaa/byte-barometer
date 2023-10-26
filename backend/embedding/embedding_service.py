@@ -2,9 +2,6 @@ from embedding.dense_embedding import create_dense_embeddings
 from embedding.sparse_embedding import create_sparse_embeddings
 
 
-CHUNK_SIZE = 100
-
-
 def hybrid_scale(
     dense, sparse, alpha: float
 ) -> tuple[list[float], list[dict[str, dict]]]:
@@ -27,4 +24,4 @@ def create_embeddings(text_list: list[str], alpha: float = None):
     if alpha is None:
         return (dense, sparse)
     else:
-        return hybrid_scale(dense, sparse, alpha)
+        return [hybrid_scale(d, s, alpha) for d, s in zip(dense, sparse)]

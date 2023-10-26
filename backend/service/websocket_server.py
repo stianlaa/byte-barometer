@@ -1,7 +1,7 @@
 from flask import request
 from logger_setup import logger
 from flask_setup import socketio, app
-from processing.query_handler import Query, process_query
+from action.query_index import Query, process_query
 
 
 @socketio.on("query")

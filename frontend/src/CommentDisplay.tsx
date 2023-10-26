@@ -5,6 +5,7 @@ import {
   Heading,
   Flex,
   Center,
+  Divider,
 } from "@chakra-ui/react";
 import { GroupedComments, Settings } from "./App";
 import CommentStack from "./CommentStack";
@@ -136,8 +137,13 @@ function CommentDisplay({
           />
         </Flex>
       </Center>
-
-      <SimpleGrid columns={columnCount} spacing={10}>
+      <Divider
+        borderColor="grey.300"
+        m="0.25rem  auto 0.25rem auto"
+        w="90%"
+        borderWidth="2px 0 0 0"
+      />
+      <SimpleGrid columns={columnCount} spacing={10} mt="1rem">
         {settings.showPositive && (
           <CommentStack
             headingText="Positive"

@@ -1,12 +1,13 @@
-from processing.dataclasses import Document
 from logger_setup import logger
 from embedding.embedding_service import create_embeddings
 from pinecone import init, GRPCIndex, list_indexes, delete_index, create_index
 from os import environ
 
-from service.pinecone_classes import QueryResponse
+from service.pinecone_dto import QueryResponse
+from util.document_util import Document
 
 index = environ["PINECONE_INDEX"]
+write_to_file = environ.get("WRITE_TO_FILE", "False") == "True"
 
 
 class Toolbox:

@@ -1,12 +1,12 @@
 from logger_setup import logger
 from argparse import ArgumentParser
-from processing.populate_index_util import populate
+from action.populate_index import populate
 from service.pinecone_client import (
     create_index_if_missing,
     delete_if_exists,
     run_query,
 )
-from backend_server import serve
+from service.websocket_server import serve
 
 
 def serve_action():
@@ -40,15 +40,13 @@ def query_action(args):
 
 
 def main():
-    parser = ArgumentParser(
-        prog="vector-manager", description="Manages vector database data"
-    )
-
+    parser = ArgumentParser(prog="byte-barometer", description="Backend and utility")
     parser.add_argument(
         "action",
         choices=["serve", "populate", "delete", "create", "query"],
         help="action to execute",
     )
+
     parser.add_argument("-s", "--subject", type=str)
     parser.add_argument("-k", "--topK", type=int)
     parser.add_argument("-a", "--alpha", type=float)

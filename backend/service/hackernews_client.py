@@ -1,19 +1,17 @@
-from logger_setup import logger
-from processing.dataclasses import Comment
-from typing import List
+from service.hackernews_dto import Comment
 from html import unescape
 import requests
 
 ALGOLIA_API_URL = "http://hn.algolia.com/api/v1/"
-page_limit = 100
-hits_per_page = 200
+PAGE_LIMIT = 100
+HITS_PER_PAGE = 200
 
 
-def get_comments(from_time: int, to_time: int) -> List[Comment]:
+def get_comments(from_time: int, to_time: int) -> list[Comment]:
     comments = []
-    for comment_page in range(page_limit):
+    for comment_page in range(PAGE_LIMIT):
         comment_response = requests.get(
-            f"{ALGOLIA_API_URL}search_by_date?tags=comment&page={comment_page}&hitsPerPage={hits_per_page}&numericFilters=created_at_i>{from_time},created_at_i<{to_time}"
+            f"{ALGOLIA_API_URL}search_by_date?tags=comment&page={comment_page}&hitsPerPage={HITS_PER_PAGE}&numericFilters=created_at_i>{from_time},created_at_i<{to_time}"
         )
 
         comment_data = comment_response.json()

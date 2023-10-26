@@ -1,10 +1,9 @@
-from processing.split_util import sentence_split_text
+from util.document_util import create_documents
 from logger_setup import logger
-from processing.dataclasses import Comment, Document
+from service.hackernews_dto import Comment
 from service.hackernews_client import get_comments
 from service.pinecone_client import upsert_document_chunk
 from datetime import datetime
-from typing import List
 import time
 
 CHUNK_SIZE = 100
@@ -21,35 +20,14 @@ def slice_into_chunks(arr: list, chunk_size: int) -> list:
     return [arr[i : i + chunk_size] for i in range(0, len(arr), chunk_size)]
 
 
-def create_documents(comments: List[Comment]) -> List[Document]:
-    documents: List[Document] = []
-
-    for comment in comments:
-        chunks = sentence_split_text(comment.comment_text)
-        for chunk_index, chunk in enumerate(chunks):
-            documents.append(
-                Document(
-                    id=f"{comment.id}-{chunk_index}",
-                    story_id=comment.story_id,
-                    text=chunk.strip(),
-                    author=comment.author,
-                    story_url=comment.story_url,
-                    created_at=comment.created_at,
-                    parent_id=comment.parent_id,
-                )
-            )
-
-    return documents
-
-
-def populate(last: int, document_limit: int):
+def populate(last: int, document_limit: int) -> None:
     # Define outer bounds of data to populate using
     populate_from = time.time() - last
     populate_to = time.time()
 
     # Fetch comments
     query_from = populate_from
-    document_count = 0
+    doc_count = 0
     while query_from < populate_to:
         chunk_start = time.time()
         query_to = step(query_from, populate_to, STEP_SIZE)
@@ -63,31 +41,29 @@ def populate(last: int, document_limit: int):
         logger.info(f"Processing {len(comments)} comments")
 
         # Slice into chunks
-        comment_chunks: List[List[Comment]] = slice_into_chunks(comments, CHUNK_SIZE)
+        comment_chunks: list[list[Comment]] = slice_into_chunks(comments, CHUNK_SIZE)
         for i, comment_chunk in enumerate(comment_chunks):
             # Split into documents
-            documents = create_documents(comment_chunk)
+            docs = create_documents(comment_chunk)
 
             # Update current document count
-            document_count += len(documents)
+            doc_count += len(docs)
 
-            if document_count >= document_limit:
+            if doc_count >= document_limit:
                 # We've reached the limit, slice off excess and store remainder
-                document_batch = documents[0 : (document_count - document_limit)]
+                doc_batch = docs[0 : (doc_count - document_limit)]
 
                 # Write last part of batch to file
-                logger.info(
-                    f"Processing last chunk {i} of {len(document_batch)} documents"
-                )
-                upsert_document_chunk(document_batch)
+                logger.info(f"Chunk {i}/{len(comment_chunks)} of {len(doc_batch)} docs")
+                upsert_document_chunk(doc_batch)
                 break
             else:
                 # Add entire batch of doucments, write to file
-                logger.info(f"Processing chunk {i} of {len(documents)} documents")
-                upsert_document_chunk(documents)
+                logger.info(f"Chunk {i}/{len(comment_chunks)} of {len(docs)} docs")
+                upsert_document_chunk(docs)
 
         # Check if we have reached the document limit
-        if document_count >= document_limit:
+        if doc_count >= document_limit:
             logger.info(f"Document limit {document_limit} reached")
             break
         else:
