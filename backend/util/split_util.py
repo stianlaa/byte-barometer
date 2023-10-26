@@ -34,8 +34,10 @@ def token_split_text(text: str, prev_chunk_length: int) -> list:
 
         # Split, given that the chunk exceeds the limit and is shorter than the previous chunk
         if token_length > chunk_max_token_limit and token_length < prev_chunk_length:
-            logger.info(f"Warning: Chunk too large: {candidate_chunk}")
+            logger.info(f"Chunk too large: {len(candidate_chunk)}")
             split_chunks = token_split_text(candidate_chunk, token_length)
+            for i, c in enumerate(split_chunks):
+                logger.info(f"Chunk {i} size: {len(candidate_chunk)}")
             chunks.extend(split_chunks)
             chunk_aggregate = ""
         elif token_length > chunk_min_token_limit:

@@ -83,6 +83,8 @@ def upsert_document_chunk(documents: list[Document]):
                 "parentId": document.parent_id,
                 "storyId": document.story_id,
                 "createdAt": document.created_at,
+                "textLocation": document.text_location,
+                "commentText:": document.comment_text,
             },
         }
         upsert_chunk.append(upsert_data)

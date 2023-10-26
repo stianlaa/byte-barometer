@@ -6,10 +6,18 @@ from service.pinecone_client import (
     delete_if_exists,
     run_query,
 )
+from service.populate_service import schedule_populate_job
 from service.websocket_server import serve
+from os import environ
+
+enable_population_job = environ.get("ENABLE_POPULATION_JOB", "False") == "True"
 
 
 def serve_action():
+    if enable_population_job:
+        logger.info("Starting population job")
+        schedule_populate_job()
+
     logger.info("Launching backend")
     serve()
 

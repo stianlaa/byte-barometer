@@ -16,9 +16,9 @@ The third is the document-fetcher, this creates embeddings from recent comments 
 
 ## Path to production
 
-- [ ] Add entire comment to metadata, so that this doesn't have to be fetched, and the entire comment can be formatted properly using i, href, a etc.
-- [ ] Create variant that writes to file instead of upsert
+- [ ] Add expand comment button
 - [ ] Add routine update and process most recent
+- [ ] Create variant that writes to file instead of upsert
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii characters
 - [ ] Improve documentfetcher so that it may be run continiously from whatever is the current starting point
 - [ ] Investigate if there are better alternatives, e.g somewhere to just deploy the docker file, and give it access to a GPU

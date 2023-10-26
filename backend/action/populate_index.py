@@ -44,23 +44,27 @@ def populate(last: int, document_limit: int) -> None:
         comment_chunks: list[list[Comment]] = slice_into_chunks(comments, CHUNK_SIZE)
         for i, comment_chunk in enumerate(comment_chunks):
             # Split into documents
-            docs = create_documents(comment_chunk)
+            documents = create_documents(comment_chunk)
 
             # Update current document count
-            doc_count += len(docs)
+            doc_count += len(documents)
 
             if doc_count >= document_limit:
                 # We've reached the limit, slice off excess and store remainder
-                doc_batch = docs[0 : (doc_count - document_limit)]
+                doc_batch = documents[0 : (doc_count - document_limit)]
 
                 # Write last part of batch to file
-                logger.info(f"Chunk {i}/{len(comment_chunks)} of {len(doc_batch)} docs")
+                logger.info(
+                    f"Chunk {i+1}/{len(comment_chunks)} of {len(doc_batch)} documents"
+                )
                 upsert_document_chunk(doc_batch)
                 break
             else:
                 # Add entire batch of doucments, write to file
-                logger.info(f"Chunk {i}/{len(comment_chunks)} of {len(docs)} docs")
-                upsert_document_chunk(docs)
+                logger.info(
+                    f"Chunk {i+1}/{len(comment_chunks)} of {len(documents)} documents"
+                )
+                upsert_document_chunk(documents)
 
         # Check if we have reached the document limit
         if doc_count >= document_limit:
