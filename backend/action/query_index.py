@@ -26,12 +26,17 @@ def batchify(elements, batch_size) -> list[list]:
 def run_sentiment_analysis(
     query_string: str, query_response_list: list[QueryResponse]
 ) -> list[Match]:
-    comment_texts = list(
-        map(lambda response: response.metadata["context"], query_response_list)
-    )
+    relevant_texts = list()
+    for response in query_response_list:
+        metadata = response.metadata
+        comment_text = metadata["commentText"]
+        relevant = comment_text[int(metadata["textStart"]) : int(metadata["textEnd"])]
+        logger.info(f"relevant {relevant}")
+        relevant_texts.append(relevant)
+    print(relevant_texts)
 
     # Perform aspect based sentiment analysis on batch, with query_text as aspect
-    sentiments = infer_sentiment(comment_texts, query_string)
+    sentiments = infer_sentiment(relevant_texts, query_string)
 
     # Convert to Match objects
     result_objects: list[Match] = []

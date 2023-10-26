@@ -77,14 +77,14 @@ def upsert_document_chunk(documents: list[Document]):
             "values": dense_embedding,
             "sparse_values": sparse_embedding,
             "metadata": {
-                "context": document.text,
                 "author": document.author,
                 "storyUrl": ("" if document.story_url is None else document.story_url),
                 "parentId": document.parent_id,
                 "storyId": document.story_id,
                 "createdAt": document.created_at,
-                "textLocation": document.text_location,
-                "commentText:": document.comment_text,
+                "textStart": document.text_start,
+                "textEnd": document.text_end,
+                "commentText": document.comment_text,
             },
         }
         upsert_chunk.append(upsert_data)

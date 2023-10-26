@@ -78,7 +78,9 @@ function CommentDisplay({
         })
         .reduce((partialSum, entry) => partialSum + entry, 0) / comments.length;
 
-    if (averageSentiment > 0.15) {
+    if (comments.length === 0) {
+      return false;
+    } else if (averageSentiment > 0.15) {
       return "Good";
     } else if (averageSentiment < -0.15) {
       return "Bad";

@@ -1,7 +1,16 @@
-import { Text, Box, Heading, HStack, Link } from "@chakra-ui/react";
+import {
+  Text,
+  Box,
+  Heading,
+  HStack,
+  Link,
+  Center,
+  Button,
+} from "@chakra-ui/react";
 import "./index.css";
 import { parseId } from "./document-util";
 import SentimentTag from "./SentimentTag";
+import { useState } from "react";
 
 export type Sentiment = {
   label: string;
@@ -15,6 +24,9 @@ type Metadata = {
   parentId: string;
   storyUrl: string;
   createdAt: string;
+  textStart: number;
+  textEnd: number;
+  commentText: string;
 };
 
 export type CommentWithSentiment = {
@@ -24,15 +36,16 @@ export type CommentWithSentiment = {
   sentiment: Sentiment;
 };
 
-function Comment({ id, score, metadata, sentiment }: CommentWithSentiment) {
+function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
+  const [expanded, setExpanded] = useState(false);
   const documentId = parseId(id);
   return (
     <Box
       backgroundColor="rgba(255, 255, 255, 0.15)"
       borderRadius="1rem"
       textAlign="left"
-      p="1rem"
-      maxW={"100%"}
+      p="1rem 1rem 0 1rem"
+      maxW="100%"
     >
       <HStack spacing="1rem">
         <Heading size="sm">
@@ -60,13 +73,33 @@ function Comment({ id, score, metadata, sentiment }: CommentWithSentiment) {
       </HStack>
       <Text
         borderColor="grey.300"
-        m="0.25rem  auto 0.25rem auto"
+        m="0.25rem  auto 0 auto"
         borderWidth="0 0 0 2px"
         pl="0.25rem"
-        pb="0.25rem"
       >
-        {metadata.context}
+        {expanded
+          ? `${metadata.commentText}`
+          : `${metadata.commentText.substring(
+              metadata.textStart,
+              metadata.textEnd
+            )}`}
       </Text>
+      <Center>
+        <Button
+          mt="0.5rem"
+          mb="0.5rem"
+          w="40%"
+          height="1rem"
+          bg="transparent"
+          _hover={{ bg: "grey.300" }}
+          color="beige.700"
+          fontWeight={500}
+          aria-label={`${id}-expand-comment`}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "collapse" : "expand"}
+        </Button>
+      </Center>
     </Box>
   );
 }

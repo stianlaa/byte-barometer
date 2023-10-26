@@ -55,14 +55,14 @@ def populate(last: int, document_limit: int) -> None:
 
                 # Write last part of batch to file
                 logger.info(
-                    f"Chunk {i+1}/{len(comment_chunks)} of {len(doc_batch)} documents"
+                    f"Chunk {i+1}/{len(comment_chunks)} containing {len(doc_batch)} documents"
                 )
                 upsert_document_chunk(doc_batch)
                 break
             else:
                 # Add entire batch of doucments, write to file
                 logger.info(
-                    f"Chunk {i+1}/{len(comment_chunks)} of {len(documents)} documents"
+                    f"Chunk {i+1}/{len(comment_chunks)} containing {len(documents)} documents"
                 )
                 upsert_document_chunk(documents)
 
