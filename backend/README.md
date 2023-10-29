@@ -1,18 +1,16 @@
 # Byte-Barometer Backend
 
-This repository includes the backend implementation for the Byte-Barometer application, and subsequent utility for populating and managing the relevant vector database indices.
+This directory defines the backend for the Byte-Barometer application. It also provides subsequent utility for populating and managing the relevant vector database indices, through actions such as `create`, `delete` and `populate`.
 
 # Quick summary
 
-The backend offers a websocket endpoint where clients can query for a subject making use of the hybrid embedding search capabilities of some vector databases. In short a query works as follows:
+The backend application offers a websocket endpoint where clients can query for a subject making use of the hybrid embedding search capabilities of some vector databases. In short a query involves the following steps:
 
-1. The query string is received over websocket, and the sender client id is noted
-2. The query string is converted into a sparse and a dense embedding, using Splade and OpenAI
-3. A weighting factor is applied to the sparse and dense vector to prioritize between semantic and conventional search.
+1. The query string is received over websocket, and the sender client id is noted.
+2. The query string is converted into a [sparse embedding](https://www.pinecone.io/learn/splade/) and a [dense embedding](https://platform.openai.com/docs/guides/embeddings), using Splade and OpenAI respectively. These are weighted to prioritize between semantic and conventional search.
 
-4. A vector database query is performed to find the N closest entries sorted by relevancy.
-5. Sequentially aspect based sentiment analysis is performen on the entries, with the query string as the aspect.
-6. As results become available, they are emitted to the client who entered the query.
+3. A vector database query is performed to find the N closest entries sorted by relevancy.
+4. Aspect based sentiment analysis is applied on the entries, with the query string as the aspect, and as results become available they are published back to the client.
 
 ## System setup
 
@@ -45,10 +43,10 @@ After initial setup, build the docker image if you haven't already
 docker build -t byte-barometer .
 ```
 
-Then run the backend using the docker compose file, keeping your working environment clean and separated. This assumes you've configured your .env file.
+Then run the backend using the docker compose file, keeping your working environment clean and separated. This assumes you've configured your .env file already.
 
 ```bash
 docker compose up
 ```
 
-With the docker container running the backend should serve and maintain the stored data.
+With the docker container running the backend should serve and maintain the vector database data.
