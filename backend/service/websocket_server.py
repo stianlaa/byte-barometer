@@ -2,11 +2,19 @@ from flask import request
 from flask_setup import socketio, app
 from action.query_index import Query, process_query
 
+COMMENT_COUNT_LIMIT = 100
+MESSAGE_LENGTH_LIMIT = 150
+
 
 @socketio.on("query")
 def handle_query(json: dict):
     # Parse query and add request session identifier
     query = Query(json["queryString"], json["queryCommentCount"])
+
+    if query.query_comment_count > COMMENT_COUNT_LIMIT:
+        raise Exception("Invalid comment count")
+    if len(query.query_string) > MESSAGE_LENGTH_LIMIT:
+        raise Exception("Query string exceeded limit")
 
     # Process query in background task as this may be long running
     socketio.start_background_task(
@@ -15,4 +23,4 @@ def handle_query(json: dict):
 
 
 def serve():
-    socketio.run(app, port=3000, host="0.0.0.0")
+    socketio.run(app)

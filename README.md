@@ -23,7 +23,6 @@ The project is almost mature enough for first release, what remains is:
 
 - [ ] Investigate hosting alternatives and GPU alternatives with short warmup
 - [ ] Create initial CI/CD pipeline to build, test and deploy application
-- [ ] Add validation on requests, to prevent explosively costly queries
 - [ ] Move to wss instead of ws to make application more secure
 
 ## Future work
@@ -31,3 +30,4 @@ The project is almost mature enough for first release, what remains is:
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
 - [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
 - [ ] Fix gpu serialized inferance warning, look into performance improvement
+- [ ] Add endpoint where describe byte barometer
