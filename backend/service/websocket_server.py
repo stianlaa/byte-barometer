@@ -15,4 +15,4 @@ def handle_query(json: dict):
 
 
 def serve():
-    socketio.run(app, port=3000, allow_unsafe_werkzeug=True, host="0.0.0.0")
+    socketio.run(app, port=3000, host="0.0.0.0")

@@ -31,10 +31,10 @@ ENABLE_GPU=True
 
 # Getting started
 
-The backend application will regularly fetch, process and store new comments from hackernews so that they may be queried. However this will just happen to new comments, to populate the index with an initial set of data the `populate` action should be used.
+The backend application will regularly fetch, process and store new comments from hackernews so that they may be queried. However this will just happen to new comments, to populate the index with an initial set of data the `populate` action should be used through the tool script.
 
 ```bash
-docker run --gpus all -v .:/app -it --env-file ../.env --entrypoint python3 byte-barometer app.py populate -l 72000 -d 10000
+docker run --gpus all -v .:/app -it --env-file ../.env --entrypoint python3 byte-barometer tool.py populate -l 72000 -d 10000
 ```
 
 After initial setup, build the docker image if you haven't already

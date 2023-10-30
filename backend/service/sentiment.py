@@ -4,8 +4,9 @@ from os import environ
 
 # Suppress the warning from transformers, since it is not strictly relevant right now
 # This is to filter UserWarning: You seem to be using the pipelines sequentially on GPU.
-# from warnings import filterwarnings
-# filterwarnings("ignore", category=UserWarning, module="transformers")
+from warnings import filterwarnings
+
+filterwarnings("ignore", category=UserWarning, module="transformers")
 
 SENTIMENT_MODEL_ID = "yangheng/deberta-v3-large-absa-v1.1"
 

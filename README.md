@@ -23,7 +23,6 @@ The project is almost mature enough for first release, what remains is:
 
 - [ ] Investigate hosting alternatives and GPU alternatives with short warmup
 - [ ] Create initial CI/CD pipeline to build, test and deploy application
-- [ ] Replace werkzeug, the current and default development web server
 - [ ] Add validation on requests, to prevent explosively costly queries
 - [ ] Move to wss instead of ws to make application more secure
 

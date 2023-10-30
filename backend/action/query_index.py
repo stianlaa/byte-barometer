@@ -1,4 +1,3 @@
-from logger_setup import logger
 from flask_setup import socketio
 from service.pinecone_dto import Match
 from service.pinecone_client import QueryResponse, run_query
@@ -32,7 +31,6 @@ def run_sentiment_analysis(
         comment_text = metadata["commentText"]
         relevant = comment_text[int(metadata["textStart"]) : int(metadata["textEnd"])]
         relevant_texts.append(relevant)
-    print(relevant_texts)
 
     # Perform aspect based sentiment analysis on batch, with query_text as aspect
     sentiments = infer_sentiment(relevant_texts, query_string)
