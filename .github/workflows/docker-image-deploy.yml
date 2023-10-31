@@ -1,0 +1,29 @@
+name: Build and deploy byte-barometer
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: stianlaa/byte-barometer:latest
+      - name: Deploy Container
+        uses: paperspace/deploy-action@v1.2
+        with:
+          apiKey: ${{ secrets.PAPERSPACE_API_KEY }}
+          image: stianlaa/byte-barometer:latest
+          projectId: tszdixclcn
