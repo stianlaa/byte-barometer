@@ -21,7 +21,7 @@ If you do happen to find it interesting and want to throw in a PR you are very w
 
 The project is almost mature enough for first release, what remains is:
 
-- [ ] Investigate hosting alternatives and GPU alternatives with short warmup
+- [ ] Set up deployment of backend to paperspace
 - [ ] Create initial CI/CD pipeline to build, test and deploy application
 - [ ] Move to wss instead of ws to make application more secure
 
