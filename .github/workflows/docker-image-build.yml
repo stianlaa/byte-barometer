@@ -1,8 +1,13 @@
 name: Build and test byte-barometer
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
+
+# temporarily swapped to test deploy
+# on:
+#   pull_request:
+#     branches: ["main"]
 
 jobs:
   build:
