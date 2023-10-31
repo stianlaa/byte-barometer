@@ -27,7 +27,7 @@ jobs:
           push: true
           tags: stianlaa/byte-barometer:latest
       - name: Deploy Container
-        uses: paperspace/deploy-action@v1.2
+        uses: paperspace/deploy-action@v1.3
         with:
           apiKey: ${{ secrets.PAPERSPACE_API_KEY }}
           image: stianlaa/byte-barometer:latest
