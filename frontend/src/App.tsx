@@ -1,27 +1,11 @@
 import "./index.css";
-import {
-  Box,
-  Divider,
-  Heading,
-  IconButton,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  VStack,
-  Text,
-  Link,
-} from "@chakra-ui/react";
+import { Box, Divider, Heading } from "@chakra-ui/react";
 import { useState } from "react";
 import { CommentWithSentiment } from "./Comment";
 import OpinionVisualizer from "./OpinionVisualizer";
 import QueryInput from "./QueryInput";
 import CommentDisplay from "./CommentDisplay";
 import { RELEVANCE_LIMIT } from "./constants";
-import { ExternalLinkIcon, QuestionIcon, SearchIcon } from "@chakra-ui/icons";
 import About from "./About";
 
 export type GroupedComments = {
