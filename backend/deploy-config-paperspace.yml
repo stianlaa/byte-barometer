@@ -1,4 +1,4 @@
-enabled: false
+enabled: true
 name: byte-barometer
 image: stianlaa/byte-barometer:latest
 port: 3000
