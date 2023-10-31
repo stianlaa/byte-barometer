@@ -3,9 +3,6 @@ version: '3'
 services:
   byte-barometer:
     image: byte-barometer:latest
-    # Used for initial population 
-    # entrypoint: python3 tool.py populate -l 72000 -d 10000
-    entrypoint: gunicorn -k eventlet -w 1 -b 0.0.0.0:3000 app:app
     build:
       context: .
       dockerfile: Dockerfile

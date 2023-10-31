@@ -21,8 +21,12 @@ If you do happen to find it interesting and want to throw in a PR you are very w
 
 The project is almost mature enough for first release, what remains is:
 
-- [ ] Investigate hosting alternatives and GPU alternatives with short warmup
-- [ ] Create initial CI/CD pipeline to build, test and deploy application
+- [ ] Make pipeline to build and deploy application to paperspace
+- [ ] Make pipeline publish most recent frontend to digital ocean
+- [ ] Find way to dynamically get route to backend
+- [ ] Make solution scale down to zero containers when unused for a while
+- [ ] Test smallest available instance
+- [ ] Investigate cost limitation
 - [ ] Move to wss instead of ws to make application more secure
 
 ## Future work
@@ -31,3 +35,4 @@ The project is almost mature enough for first release, what remains is:
 - [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
 - [ ] Fix gpu serialized inferance warning, look into performance improvement
 - [ ] Add endpoint where describe byte barometer
+- [ ] Test lower gunicorn timeout, 30 is default, 300 is current

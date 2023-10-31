@@ -36,6 +36,27 @@ export type CommentWithSentiment = {
   sentiment: Sentiment;
 };
 
+const createCommentText = (
+  expanded: boolean,
+  { commentText, textStart, textEnd }: Metadata
+) => {
+  if (expanded) {
+    return (
+      <>
+        <Text>
+          {commentText.substring(0, textStart)}
+          <Text as="span" fontWeight="bold">
+            {commentText.substring(textStart, textEnd)}
+          </Text>
+          {commentText.substring(textEnd)}
+        </Text>
+      </>
+    );
+  } else {
+    return <Text>{commentText.substring(textStart, textEnd)}</Text>;
+  }
+};
+
 function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
   const [expanded, setExpanded] = useState(false);
   const documentId = parseId(id);
@@ -45,7 +66,7 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
       borderRadius="1rem"
       textAlign="left"
       p="1rem 1rem 0 1rem"
-      maxW="100%"
+      w="100%"
     >
       <HStack spacing="1rem">
         <Heading size="sm">
@@ -71,19 +92,14 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
         </Link>
         <SentimentTag sentiment={sentiment} />
       </HStack>
-      <Text
+      <Box
         borderColor="grey.300"
-        m="0.25rem  auto 0 auto"
         borderWidth="0 0 0 2px"
+        m="0.25rem  auto 0 auto"
         pl="0.25rem"
       >
-        {expanded
-          ? `${metadata.commentText}`
-          : `${metadata.commentText.substring(
-              metadata.textStart,
-              metadata.textEnd
-            )}`}
-      </Text>
+        {createCommentText(expanded, metadata)}
+      </Box>
       <Center>
         <Button
           mt="0.5rem"
@@ -97,7 +113,7 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
           aria-label={`${id}-expand-comment`}
           onClick={() => setExpanded(!expanded)}
         >
-          {expanded ? "collapse" : "expand"}
+          {expanded ? "Collapse" : "Expand"}
         </Button>
       </Center>
     </Box>
