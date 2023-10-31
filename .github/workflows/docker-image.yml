@@ -21,6 +21,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          # push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          push: True
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: stianlaa/byte-barometer:latest
