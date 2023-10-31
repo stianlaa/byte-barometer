@@ -20,4 +20,4 @@ COPY . .
 # Define default cache location TODO move up if works
 ENV TRANSFORMERS_CACHE=/app/.cache
 
-CMD ["gunicorn", "-k", "eventlet", "-b", "0.0.0.0:3000", "app:app"]
+CMD ["gunicorn", "-k", "eventlet", "-b", "0.0.0.0:3000", "-t", "300", "app:app"]
