@@ -31,4 +31,5 @@ jobs:
         with:
           apiKey: ${{ secrets.PAPERSPACE_API_KEY }}
           image: stianlaa/byte-barometer:latest
+          configPath: ./paperspace.yaml
           projectId: tszdixclcn
