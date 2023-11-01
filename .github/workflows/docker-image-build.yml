@@ -2,7 +2,7 @@ name: Build and test byte-barometer
 
 on:
   pull_request:
-    branches: ["main-temporary-disable"]
+    branches: ["main"]
 
 jobs:
   build:
