@@ -21,6 +21,8 @@ If you do happen to find it interesting and want to throw in a PR you are very w
 
 The project is almost mature enough for first release, what remains is:
 
+- [ ] Fix frontend dockerfile so that it serves successfully
+- [ ] Test publish to digital ocean
 - [ ] Make pipeline to build and deploy application to paperspace
 - [ ] Make pipeline publish most recent frontend to digital ocean
 - [ ] Find way to dynamically get route to backend
