@@ -21,6 +21,7 @@ export type Settings = {
 };
 
 function App() {
+  console.log("Testing automatic deploy");
   const [comments, setComments] = useState<GroupedComments>({
     positive: [],
     neutral: [],
