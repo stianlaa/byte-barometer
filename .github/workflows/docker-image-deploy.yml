@@ -32,7 +32,7 @@ jobs:
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:frontend"
+          context: ./frontend
           push: true
           tags: |
             stianlaa/frontend-byte-barometer:latest
