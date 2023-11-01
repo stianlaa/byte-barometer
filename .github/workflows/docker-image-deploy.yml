@@ -1,7 +1,7 @@
 name: Build and deploy byte-barometer
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
 
 jobs:
