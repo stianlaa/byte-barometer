@@ -1,0 +1,37 @@
+{
+  "apiVersion": "v0alpha0",
+  "enabled": false,
+  "env": [
+    {
+      "name": "HUGGINGFACE_API_KEY",
+      "value": "secret:HUGGINGFACE_API_KEY"
+    },
+    {
+      "name": "OPENAI_API_KEY",
+      "value": "secret:OPENAI_API_KEY"
+    },
+    {
+      "name": "PINECONE_API_KEY",
+      "value": "secret:PINECONE_API_KEY"
+    },
+    {
+      "name": "PINECONE_ENVIRONMENT",
+      "value": "northamerica-northeast1-gcp"
+    },
+    {
+      "name": "PINECONE_INDEX",
+      "value": "hackernews-embeddings"
+    },
+    {
+      "name": "ENABLE_GPU",
+      "value": "True"
+    }
+  ],
+  "image": "stianlaa/byte-barometer:latest",
+  "name": "byte-barometer",
+  "port": 3000,
+  "resources": {
+    "instanceType": "P4000",
+    "replicas": 1
+  }
+}
