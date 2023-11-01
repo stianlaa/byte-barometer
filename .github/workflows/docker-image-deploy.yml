@@ -22,12 +22,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Get deployment configuration
-        id: json_properties
-        uses: ActionsTools/read-json-action@main
-        with:
-          file_path: "frontend/paperspace.json"
-
       - name: Deploy backend
         uses: fjogeleit/http-request-action@v1
         with:
@@ -35,4 +29,4 @@ jobs:
           method: "POST"
           bearerToken: ${{ secrets.PAPERSPACE_API_KEY}}
           customHeaders: '{"Content-Type": "application/json"}'
-          data: ${{ steps.json_properties.outputs }}
+          data: '{ "apiVersion": "v0alpha0",  "enabled": false,  "env": [{"name": "HUGGINGFACE_API_KEY","value": "secret:HUGGINGFACE_API_KEY"},{"name": "OPENAI_API_KEY","value": "secret:OPENAI_API_KEY"},{"name": "PINECONE_API_KEY","value": "secret:PINECONE_API_KEY"},{"name": "PINECONE_ENVIRONMENT","value": "northamerica-northeast1-gcp"},{"name": "PINECONE_INDEX","value": "hackernews-embeddings"},{"name": "ENABLE_GPU","value": "True"}],"image": "stianlaa/byte-barometer:latest","name": "byte-barometer","port": 3000,"resources": {"instanceType": "P4000","replicas": 1}}'
