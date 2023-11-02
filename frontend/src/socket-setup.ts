@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { CommentWithSentiment } from "./Comment";
+import { CommentWithSentiment } from "./components/comments/Comment";
 
 const ENV = process.env.NODE_ENV;
 

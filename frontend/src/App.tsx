@@ -1,12 +1,12 @@
 import "./index.css";
 import { Box, Divider, Heading } from "@chakra-ui/react";
 import { useState } from "react";
-import { CommentWithSentiment } from "./Comment";
-import OpinionVisualizer from "./OpinionVisualizer";
-import QueryInput from "./QueryInput";
-import CommentDisplay from "./CommentDisplay";
+import { CommentWithSentiment } from "./components/comments/Comment";
+import OpinionVisualizer from "./components/visualization/OpinionVisualizer";
+import QueryInput from "./components/query/QueryInput";
+import CommentDisplay from "./components/comments/CommentDisplay";
 import { RELEVANCE_LIMIT } from "./constants";
-import About from "./About";
+import About from "./components/infobar/About";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -21,7 +21,6 @@ export type Settings = {
 };
 
 function App() {
-  console.log("Testing automatic deploy");
   const [comments, setComments] = useState<GroupedComments>({
     positive: [],
     neutral: [],

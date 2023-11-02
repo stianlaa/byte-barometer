@@ -1,6 +1,6 @@
 import { Tag } from "@chakra-ui/react";
 import { Sentiment } from "./Comment";
-import { NEGATIVE, POSITIVE } from "./constants";
+import { NEGATIVE, POSITIVE } from "../../constants";
 
 const UPPER_LIMIT = 1.0;
 const MIDDLE_LIMIT = 0.9;

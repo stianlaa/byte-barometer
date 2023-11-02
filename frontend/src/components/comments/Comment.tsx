@@ -7,8 +7,7 @@ import {
   Center,
   Button,
 } from "@chakra-ui/react";
-import "./index.css";
-import { parseId } from "./document-util";
+import { parseId } from "../../document-util";
 import SentimentTag from "./SentimentTag";
 import { useState } from "react";
 
