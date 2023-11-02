@@ -2,6 +2,8 @@
 
 > Gauge the sentiment of HackerNews on any topic.
 
+## Try it out [here!](https://byte-barometer.com)
+
 ![Current UI of the Byte Barometer](/bytebarometer.gif?raw=true)
 _From a subject chosen by the user a sentiment poll is done using natural language processing and aspect based sentiment analysis._
 
@@ -21,15 +23,21 @@ This is one of my side projects, so there might be a bug or two hiding around. T
 
 The project is almost mature enough for first release, what remains is:
 
+- [ ] Make simple indicator to show if backend is available
 - [ ] Make watchdog scale down to zero containers when unused for a while
 - [ ] Test smallest available instance
 - [ ] Move to wss instead of ws to make application more secure
 
 ## Future work
 
+- [ ] Prevent redownload of models on upstart, improve warmup startup time
+- [ ] Adjust and test with mobile
 - [ ] Replace build pipeline with less hardcoded config, perhaps terraform
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
+- [ ] Process and upsert much larger dataset
+- [ ] Make watchdog kick off upsert every 6 hours, to reduce overhead for startup
 - [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
-- [ ] Fix gpu serialized inferance warning, look into performance improvement
+- [ ] Fix gpu serialized inferance warning,
+- [ ] Look into performance improvement
 - [ ] Add endpoint where describe byte barometer
 - [ ] Test lower gunicorn timeout, 30 is default, 300 is current
