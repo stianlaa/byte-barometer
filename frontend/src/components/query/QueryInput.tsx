@@ -34,12 +34,12 @@ export type QueryInputProps = {
   setComments: Dispatch<SetStateAction<GroupedComments>>;
 };
 
+const exampleSubject =
+  EXAMPLE_SUBJECTS[Math.floor(Math.random() * EXAMPLE_SUBJECTS.length)];
+
 function QueryInput({ setComments }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
-  const exampleSubject =
-    EXAMPLE_SUBJECTS[Math.floor(Math.random() * EXAMPLE_SUBJECTS.length)];
 
   const querySubject = async (queryString: string) => {
     setLoading(true);
