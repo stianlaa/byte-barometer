@@ -2,7 +2,6 @@ import {
   Heading,
   IconButton,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
@@ -26,7 +25,6 @@ function About() {
         />
       </PopoverTrigger>
       <PopoverContent p={4} bg="grey.500" w="60%" borderColor="grey.300">
-        <PopoverArrow />
         <PopoverCloseButton size="md" m="0.5rem" p="0.5rem" />
         <PopoverBody>
           <VStack spacing={2}>

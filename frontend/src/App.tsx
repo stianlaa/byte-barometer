@@ -6,7 +6,7 @@ import OpinionVisualizer from "./components/visualization/OpinionVisualizer";
 import QueryInput from "./components/query/QueryInput";
 import CommentDisplay from "./components/comments/CommentDisplay";
 import { RELEVANCE_LIMIT } from "./constants";
-import About from "./components/infobar/About";
+import InfoBar from "./components/infobar/InfoBar";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -78,9 +78,7 @@ function App() {
         setSettings={setSettings}
       />
 
-      <Box position="absolute" top="1rem" left="1rem">
-        <About />
-      </Box>
+      <InfoBar />
     </Box>
   );
 }
