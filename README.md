@@ -30,6 +30,8 @@ The project is almost mature enough for first release, what remains is:
 
 ## Future work
 
+- [ ] Test alternative language models for quality, find locally evaluated model
+- [ ] Replace openai integration with huggingface model,
 - [ ] Prevent redownload of models on upstart, improve warmup startup time
 - [ ] Adjust and test with mobile
 - [ ] Replace build pipeline with less hardcoded config, perhaps terraform

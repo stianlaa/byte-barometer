@@ -6,6 +6,11 @@ COMMENT_COUNT_LIMIT = 100
 MESSAGE_LENGTH_LIMIT = 150
 
 
+@app.route("/available", methods=["GET"])
+def is_available():
+    return {}  # Status code 200 OK
+
+
 @socketio.on("query")
 def handle_query(json: dict):
     # Parse query and add request session identifier

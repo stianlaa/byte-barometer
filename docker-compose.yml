@@ -1,18 +1,16 @@
 version: '3'
 
 services:
-  byte-barometer:
-    image: byte-barometer:latest
+  backend-byte-barometer:
+    image: backend-byte-barometer:latest
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
 
     env_file:
-      - ../.env
-    environment:
-      - ENABLE_GPU=True
+      - .env
     volumes:
-      - .:/app
+      - ./backend:/app
       - ~/.cache/huggingface/transformers:/app/.cache/huggingface/transformers
     ports:
       - "3000:3000"
@@ -27,4 +25,13 @@ services:
                 - utility # nvidia-smi
                 - compute # CUDA
                 - video   # NVDEC/NVENC/NVCUVID
-    
+  watchdog-byte-barometer:
+    image: watchdog-byte-barometer:latest
+    build:
+      context: ./watchdog
+      dockerfile: Dockerfile
+
+    env_file:
+      - .env
+    ports:
+      - "2999:2999"
