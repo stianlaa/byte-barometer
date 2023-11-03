@@ -43,3 +43,4 @@ The project is almost mature enough for first release, what remains is:
 - [ ] Look into performance improvement
 - [ ] Add endpoint where describe byte barometer
 - [ ] Test lower gunicorn timeout, 30 is default, 300 is current
+- [ ] Tighten CORS

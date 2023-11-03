@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.10.8
 
 WORKDIR /app
 
@@ -14,4 +14,4 @@ RUN pip list
 COPY . .
 
 
-CMD ["gunicorn", "-b", "0.0.0.0:2999", "-t", "300", "app:app"]
+CMD ["python3", "app.py"]

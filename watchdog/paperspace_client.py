@@ -1,5 +1,7 @@
 import requests
 from os import environ
+from logger_setup import logger
+import json
 
 PAPERSPACE_API_KEY = environ.get("PAPERSPACE_API_KEY")
 PAPERSPACE_URL = "https://api.paperspace.com/v1/deployments"
@@ -23,33 +25,49 @@ class DeploymentStatus:
         self.spec = spec
 
 
-def get_deployment_status(app_id: str) -> DeploymentStatus:
+def get_deployment_status(app_id: str) -> DeploymentStatus | None:
     headers = {
         "accept": "application/json",
         "authorization": f"Bearer {PAPERSPACE_API_KEY}",
     }
     response = requests.get(f"{PAPERSPACE_URL}/{app_id}", headers=headers)
-    j = response.json()
-    return DeploymentStatus(
-        name=j["name"],
-        id=j["id"],
-        projectId=j["projectId"],
-        endpoint=j["endpoint"],
-        enabled=j["latestSpec"]["data"]["enabled"] == "true",
-        spec=j["latestSpec"],
-    )
+    if response.status_code == 200:
+        response_json = response.json()
+
+        return DeploymentStatus(
+            name=response_json["name"],
+            id=response_json["id"],
+            projectId=response_json["projectId"],
+            endpoint=response_json["endpoint"],
+            enabled=response_json["latestSpec"]["data"]["enabled"] == True,
+            spec=response_json["latestSpec"],
+        )
+    else:
+        logger.warning(response.json())
+        return None
 
 
-def wake_application(app_id: str, deployment_spec: str) -> bool:
-    print("Wake app")
+def change_backend_state(deployment_spec: str, enabled: bool) -> bool:
+    logger.info(f"Changing app state to: {enabled}")
     headers = {
         "accept": "application/json",
+        "content-type": "application/json",
         "authorization": f"Bearer {PAPERSPACE_API_KEY}",
     }
-    adjusted_spec = deployment_spec
-    # TODO adjust
 
-    response = requests.post(
-        f"{PAPERSPACE_URL}/{app_id}", headers=headers, data=adjusted_spec
-    )
-    return response.status_code == 200
+    config = deployment_spec["data"]
+    config["enabled"] = enabled
+
+    payload = {
+        "deploymentId": "ea647862-7e3f-46ec-b2ee-efe0e841eb8f",
+        "projectId": "plf3fs5whu1",
+        "config": config,
+    }
+    json_payload = json.dumps(payload)
+    response = requests.post(f"{PAPERSPACE_URL}", headers=headers, data=json_payload)
+
+    if response.status_code == requests.codes.ok:
+        return True
+    else:
+        logger.warning(f"Non-ok response during state change {response.json()}")
+        return False

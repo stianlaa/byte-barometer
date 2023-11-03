@@ -24,7 +24,9 @@ def get_comments(from_time: int, to_time: int) -> list[Comment]:
                 break
             except requests.RequestException as e:
                 if attempt < MAX_RETRIES - 1:  # i.e. if not the last attempt
-                    print(f"Error: {e}. Retrying in {DELAY_BETWEEN_RETRIES} seconds...")
+                    logger.error(
+                        f"Error: {e}. Retrying in {DELAY_BETWEEN_RETRIES} seconds..."
+                    )
                     time.sleep(DELAY_BETWEEN_RETRIES)
                     continue
                 else:
