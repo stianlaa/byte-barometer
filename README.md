@@ -25,7 +25,6 @@ The project is almost mature enough for first release, what remains is:
 
 - [ ] Make simple indicator to show if backend is available
 - [ ] Make watchdog scale down to zero containers when unused for a while
-- [ ] Test smallest available instance
 - [ ] Move to wss instead of ws to make application more secure
 
 ## Future work
@@ -34,7 +33,7 @@ The project is almost mature enough for first release, what remains is:
 - [ ] Replace openai integration with huggingface model,
 - [ ] Prevent redownload of models on upstart, improve warmup startup time
 - [ ] Adjust and test with mobile
-- [ ] Replace build pipeline with less hardcoded config, perhaps terraform
+- [ ] Replace build pipeline with less hardcoded config, perhaps terraform https://github.com/Paperspace/terraform-provider-paperspace?ref=blog.paperspace.com , should support both paperspace and digital ocean
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
 - [ ] Process and upsert much larger dataset
 - [ ] Make watchdog kick off upsert every 6 hours, to reduce overhead for startup

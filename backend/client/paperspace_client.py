@@ -47,9 +47,9 @@ def get_deployment_status(app_id: str) -> DeploymentStatus | None:
 
 
 def change_backend_state(deployment_spec: str, enabled: bool) -> bool:
-    logger.info(f"Changing app state to: {enabled}")
+    logger.info(f"Changing deployment state to: {enabled}")
     headers = {
-        "accept": "application/json",
+        "accept": "application/jswatchdog/paperspace_client.pyon",
         "content-type": "application/json",
         "authorization": f"Bearer {PAPERSPACE_API_KEY}",
     }
@@ -62,11 +62,15 @@ def change_backend_state(deployment_spec: str, enabled: bool) -> bool:
         "projectId": "plf3fs5whu1",
         "config": config,
     }
-    json_payload = json.dumps(payload)
-    response = requests.post(f"{PAPERSPACE_URL}", headers=headers, data=json_payload)
 
-    if response.status_code == requests.codes.ok:
-        return True
-    else:
-        logger.warning(f"Non-ok response during state change {response.json()}")
-        return False
+    # json_payload = json.dumps(payload)
+    # response = requests.post(f"{PAPERSPACE_URL}", headers=headers, data=json_payload)
+
+    # Todo remove and reintroduce rest
+    return True
+
+    # if response.status_code == requests.codes.ok:
+    #     return True
+    # else:
+    #     logger.warning(f"Non-ok response during state change {response.json()}")
+    #     return False
