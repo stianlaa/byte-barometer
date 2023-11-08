@@ -5,8 +5,10 @@ from enum import Enum
 from paperspace_client import get_deployment_status, change_backend_state
 from backend_client import is_backend_available
 from logger_setup import logger
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*", logging=True)
 
 # Global variable indicating enabled status
@@ -21,7 +23,7 @@ class BackendStatus(str, Enum):
     DISABLED = "DISABLED"
     WARM_UP = "WARM_UP"
     RUNNING = "RUNNING"
-    UNKNOWN = "ERROR"
+    UNKNOWN = "UNKNOWN"
 
 
 class StatusResponse:
