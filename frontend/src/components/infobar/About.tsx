@@ -1,6 +1,6 @@
 import {
   Heading,
-  IconButton,
+  Button,
   Popover,
   PopoverBody,
   PopoverCloseButton,
@@ -10,19 +10,21 @@ import {
   Text,
   Link,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon, QuestionIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { FaInfoCircle } from 'react-icons/fa';
 
 function About() {
   return (
     <Popover>
       <PopoverTrigger>
-        <IconButton
-          size="lg"
+        <Button
           bg="transparent"
           color="beige.700"
           aria-label="Disclaimer"
-          icon={<QuestionIcon w="70%" h="70%" />}
-        />
+          p="0"
+        >
+          <FaInfoCircle size="32px"/>
+        </Button>
       </PopoverTrigger>
       <PopoverContent p={4} bg="grey.500" w="60%" borderColor="grey.300">
         <PopoverCloseButton size="md" m="0.5rem" p="0.5rem" />
