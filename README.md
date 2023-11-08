@@ -30,7 +30,8 @@ The project is almost mature enough for first release, what remains is:
 ## Future work
 
 - [ ] Test alternative language models for quality, find locally evaluated model
-- [ ] Replace openai integration with huggingface model,
+- [ ] A: New cheaper 3.5 turbo details from openai, either adopt that model if sensible
+- [ ] B: Replace openai integration with huggingface model,
 - [ ] Prevent redownload of models on upstart, improve warmup startup time
 - [ ] Adjust and test with mobile
 - [ ] Replace build pipeline with less hardcoded config, perhaps terraform https://github.com/Paperspace/terraform-provider-paperspace?ref=blog.paperspace.com , should support both paperspace and digital ocean
@@ -43,3 +44,4 @@ The project is almost mature enough for first release, what remains is:
 - [ ] Add endpoint where describe byte barometer
 - [ ] Test lower gunicorn timeout, 30 is default, 300 is current
 - [ ] Tighten CORS
+- [ ] Consider adding tqdm wrapper around populate action, and cleaning up populate action.

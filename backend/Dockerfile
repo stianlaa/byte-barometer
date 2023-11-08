@@ -17,6 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Define default cache location 
-ENV TRANSFORMERS_CACHE=/app/.cache
+ENV TRANSFORMERS_CACHE=/.cache
 
 CMD ["gunicorn", "-k", "eventlet", "-b", "0.0.0.0:3000", "-t", "300", "app:app"]

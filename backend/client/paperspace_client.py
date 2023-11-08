@@ -63,14 +63,11 @@ def change_backend_state(deployment_spec: str, enabled: bool) -> bool:
         "config": config,
     }
 
-    # json_payload = json.dumps(payload)
-    # response = requests.post(f"{PAPERSPACE_URL}", headers=headers, data=json_payload)
+    json_payload = json.dumps(payload)
+    response = requests.post(f"{PAPERSPACE_URL}", headers=headers, data=json_payload)
 
-    # Todo remove and reintroduce rest
-    return True
-
-    # if response.status_code == requests.codes.ok:
-    #     return True
-    # else:
-    #     logger.warning(f"Non-ok response during state change {response.json()}")
-    #     return False
+    if response.status_code == requests.codes.ok:
+        return True
+    else:
+        logger.warning(f"Non-ok response during state change {response.json()}")
+        return False

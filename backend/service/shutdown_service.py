@@ -9,7 +9,7 @@ import time
 
 previous_activity = time.time()
 
-TIME_LIMIT = 30
+TIME_LIMIT = 120
 APP_ID = "ea647862-7e3f-46ec-b2ee-efe0e841eb8f"
 
 # Global variable to store the timestamp of the most recent availability check
@@ -19,6 +19,7 @@ most_recent_checkin = datetime.now()
 
 @app.route("/checkin", methods=["GET"])
 def checkin():
+    logger.info("Checking received")
     with checkin_lock:
         global most_recent_checkin
         most_recent_checkin = datetime.now()
@@ -35,7 +36,7 @@ def check_for_timeout():
             # Fetch deployment status for deployment spec
             deployment_status = get_deployment_status(APP_ID)
 
-            # Change deployment state 
+            # Change deployment state
             change_backend_state(deployment_status.spec, False)
 
 
