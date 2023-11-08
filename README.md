@@ -33,6 +33,7 @@ The project is almost mature enough for first release, what remains is:
 - [ ] A: New cheaper 3.5 turbo details from openai, either adopt that model if sensible
 - [ ] B: Replace openai integration with huggingface model,
 - [ ] Prevent redownload of models on upstart, improve warmup startup time
+- [ ] Add query DB and cache for results, show list of some of the chosen subjects and their results by default on loading.
 - [ ] Adjust and test with mobile
 - [ ] Replace build pipeline with less hardcoded config, perhaps terraform https://github.com/Paperspace/terraform-provider-paperspace?ref=blog.paperspace.com , should support both paperspace and digital ocean
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead

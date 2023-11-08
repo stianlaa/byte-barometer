@@ -3,7 +3,7 @@ from flask import Flask
 from flask_socketio import SocketIO
 from enum import Enum
 from paperspace_client import get_deployment_status, change_backend_state
-from backend_client import is_backend_available
+from backend_client import checkin_with_backend
 from logger_setup import logger
 from flask_cors import CORS
 
@@ -50,7 +50,7 @@ def wake_and_get_app_status():
     deployment_status = get_deployment_status(APP_ID)
 
     if deployment_status.enabled:
-        if is_backend_available():
+        if checkin_with_backend():
             # Return status, and timeout
             return StatusResponse(
                 BackendStatus.RUNNING,

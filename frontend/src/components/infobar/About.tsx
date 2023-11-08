@@ -51,10 +51,10 @@ function About() {
             </Text>
             <Text>
               New comments are added hourly, but it will be cut off at the
-              latest 500,000 text chunks or to save on costs.
+              latest 500,000 text chunks or so, in order to save on costs.
             </Text>
             <Text>
-              About the sentiment analysis it is aspect based around your query
+              The sentiment analysis is aspect based, and focused around your query
               subject. So long queries confuse it somewhat.
             </Text>
           </VStack>
