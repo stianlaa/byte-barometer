@@ -1,5 +1,5 @@
 import "./index.css";
-import { Box, Divider, Heading, Spinner, VStack } from "@chakra-ui/react";
+import { Box, Divider, Heading, Spinner } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { CommentWithSentiment } from "./components/comments/Comment";
 import OpinionVisualizer from "./components/visualization/OpinionVisualizer";
