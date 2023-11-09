@@ -23,7 +23,6 @@ This is one of my side projects, so there might be a bug or two hiding around. T
 
 The project is almost mature enough for first release, what remains is:
 
-- [ ] Make simple indicator to show if backend is available
 - [ ] Make watchdog scale down to zero containers when unused for a while
 - [ ] Move to wss instead of ws to make application more secure
 
