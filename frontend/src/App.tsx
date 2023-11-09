@@ -1,5 +1,5 @@
 import "./index.css";
-import { Box, Divider, Heading } from "@chakra-ui/react";
+import { Box, Divider, Heading, Spinner, VStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { CommentWithSentiment } from "./components/comments/Comment";
 import OpinionVisualizer from "./components/visualization/OpinionVisualizer";
@@ -96,7 +96,13 @@ function App() {
         settings={settings}
         setSettings={setSettings}
       />
-      <QueryInput setComments={setComments} />
+      {backendStatus.status !== "RUNNING" ? (<Box>
+        <Heading size="sm">Hi there!</Heading>We're waking up the GPUs to do some processing<Spinner />
+      </Box>) :
+        (
+          <QueryInput setComments={setComments} />
+        )
+      }
 
       <Divider
         borderColor="grey.300"
