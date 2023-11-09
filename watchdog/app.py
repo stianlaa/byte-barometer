@@ -44,7 +44,7 @@ class StatusResponse:
 
 @app.route("/status", methods=["GET"])
 def wake_and_get_app_status():
-    """Check in or wake with the backend, then return the current status of the backend."""
+    """Check in or wake up the backend, then return the current status of the backend."""
 
     # Fetch status
     deployment_status = get_deployment_status(APP_ID)
