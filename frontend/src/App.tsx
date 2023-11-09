@@ -96,14 +96,14 @@ function App() {
         settings={settings}
         setSettings={setSettings}
       />
-      {backendStatus.status !== "RUNNING" ? (<Box>
-        <Heading size="sm">Hi there!</Heading>We're waking up the GPUs to do some processing<Spinner />
-      </Box>) :
+      {backendStatus.status == "RUNNING" ?
         (
           <QueryInput setComments={setComments} />
-        )
+        ) :
+        (<Box>
+          <Heading size="sm">Hi there!</Heading>We're waking up the GPUs to do some processing<Spinner />
+        </Box>)
       }
-
       <Divider
         borderColor="grey.300"
         m="0.25rem auto 0.25rem auto"
