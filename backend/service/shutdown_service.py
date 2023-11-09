@@ -19,7 +19,6 @@ most_recent_checkin = datetime.now()
 
 @app.route("/checkin", methods=["GET"])
 def checkin():
-    logger.info("Checking received")
     with checkin_lock:
         global most_recent_checkin
         most_recent_checkin = datetime.now()

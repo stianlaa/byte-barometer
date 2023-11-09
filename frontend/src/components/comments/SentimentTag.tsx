@@ -1,4 +1,4 @@
-import { Tag, useColorModeValue } from "@chakra-ui/react";
+import { Tag } from "@chakra-ui/react";
 import { Sentiment } from "./Comment";
 import { NEGATIVE, POSITIVE } from "../../constants";
 
@@ -11,8 +11,8 @@ type SentimentProps = {
 };
 
 function GreatTag() {
-  const bg = useColorModeValue("tealgreen.600", "tealgreen.400");
-  const color = useColorModeValue("tealgreen.800", "tealgreen.600");
+  const bg = "tealgreen.500";
+  const color = "tealgreen.900";
   return (
     <Tag bg={bg} color={color}>
       Great
@@ -21,8 +21,8 @@ function GreatTag() {
 }
 
 function GoodTag() {
-  const bg = useColorModeValue("tealgreen.400", "tealgreen.200");
-  const color = useColorModeValue("tealgreen.800", "tealgreen.600");
+  const bg = "tealgreen.400";
+  const color = "tealgreen.800";
   return (
     <Tag bg={bg} color={color}>
       Good
@@ -31,8 +31,8 @@ function GoodTag() {
 }
 
 function NeutralTag() {
-  const bg = useColorModeValue("grey.700", "grey.500");
-  const color = useColorModeValue("grey.900", "grey.700");
+  const bg = "beige.400";
+  const color = "grey.600";
   return (
     <Tag bg={bg} color={color}>
       Ok
@@ -41,8 +41,8 @@ function NeutralTag() {
 }
 
 function BadTag() {
-  const bg = useColorModeValue("red.400", "red.200");
-  const color = useColorModeValue("red.800", "red.400");
+  const bg = "red.300";
+  const color = "red.800";
   return (
     <Tag bg={bg} color={color}>
       Bad
@@ -51,8 +51,8 @@ function BadTag() {
 }
 
 function TerribleTag() {
-  const bg = useColorModeValue("red.700", "red.500");
-  const color = useColorModeValue("red.900", "red.700");
+  const bg = "red.500";
+  const color = "red.900";
 
   return (
     <Tag bg={bg} color={color}>
