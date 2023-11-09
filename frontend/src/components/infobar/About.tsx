@@ -1,9 +1,7 @@
-import "./index.css";
 import {
   Heading,
-  IconButton,
+  Button,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
@@ -12,22 +10,23 @@ import {
   Text,
   Link,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon, QuestionIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { FaInfoCircle } from 'react-icons/fa';
 
 function About() {
   return (
     <Popover>
       <PopoverTrigger>
-        <IconButton
-          size="lg"
+        <Button
           bg="transparent"
           color="beige.700"
           aria-label="Disclaimer"
-          icon={<QuestionIcon w="70%" h="70%" />}
-        />
+          p="0"
+        >
+          <FaInfoCircle size="32px"/>
+        </Button>
       </PopoverTrigger>
       <PopoverContent p={4} bg="grey.500" w="60%" borderColor="grey.300">
-        <PopoverArrow />
         <PopoverCloseButton size="md" m="0.5rem" p="0.5rem" />
         <PopoverBody>
           <VStack spacing={2}>
@@ -52,10 +51,10 @@ function About() {
             </Text>
             <Text>
               New comments are added hourly, but it will be cut off at the
-              latest 500,000 text chunks or to save on costs.
+              latest 500,000 text chunks or so, in order to save on costs.
             </Text>
             <Text>
-              About the sentiment analysis it is aspect based around your query
+              The sentiment analysis is aspect based, and focused around your query
               subject. So long queries confuse it somewhat.
             </Text>
           </VStack>

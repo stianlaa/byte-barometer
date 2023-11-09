@@ -7,8 +7,7 @@ import {
   Center,
   Button,
 } from "@chakra-ui/react";
-import "./index.css";
-import { parseId } from "./document-util";
+import { parseId } from "../../document-util";
 import SentimentTag from "./SentimentTag";
 import { useState } from "react";
 
@@ -58,6 +57,12 @@ const createCommentText = (
 };
 
 function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
+  // TODO Find out why the slight offset of length, or different solution.
+  const isCommentComplete =
+    metadata.textStart === 0 &&
+    metadata.textEnd === metadata.commentText.length - 4;
+  console.log(`${metadata.commentText.length} - ${isCommentComplete}`);
+
   const [expanded, setExpanded] = useState(false);
   const documentId = parseId(id);
   return (
@@ -98,23 +103,25 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
         m="0.25rem  auto 0 auto"
         pl="0.25rem"
       >
-        {createCommentText(expanded, metadata)}
+        {isCommentComplete
+          ? metadata.commentText
+          : createCommentText(expanded, metadata)}
       </Box>
-      <Center>
-        <Button
-          mt="0.5rem"
-          mb="0.5rem"
-          w="40%"
-          height="1rem"
-          bg="transparent"
-          _hover={{ bg: "grey.300" }}
-          color="beige.700"
-          fontWeight={500}
-          aria-label={`${id}-expand-comment`}
-          onClick={() => setExpanded(!expanded)}
-        >
-          {expanded ? "Collapse" : "Expand"}
-        </Button>
+      <Center mt="0.5rem" mb="0.5rem">
+        {!isCommentComplete && (
+          <Button
+            w="40%"
+            height="1rem"
+            bg="transparent"
+            _hover={{ bg: "grey.300" }}
+            color="beige.700"
+            fontWeight={500}
+            aria-label={`${id}-expand-comment`}
+            onClick={() => setExpanded(!expanded)}
+          >
+            {expanded ? "Collapse" : "Expand"}
+          </Button>
+        )}
       </Center>
     </Box>
   );

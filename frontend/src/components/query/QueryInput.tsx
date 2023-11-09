@@ -1,5 +1,4 @@
-import "./index.css";
-import { CommentWithSentiment } from "./Comment";
+import { CommentWithSentiment } from "../comments/Comment";
 import {
   Box,
   Button,
@@ -16,15 +15,15 @@ import {
   SetStateAction,
 } from "react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import { socket, QueryResponseBatch } from "./socket-setup";
-import { GroupedComments } from "./App";
+import { socket, QueryResponseBatch } from "../../socket-setup";
+import { GroupedComments } from "../../App";
 import {
   EXAMPLE_SUBJECTS,
   NEGATIVE,
   NEUTRAL,
   POSITIVE,
   QUERY_COMMENT_COUNT,
-} from "./constants";
+} from "../../constants";
 
 type Query = {
   queryCommentCount: number;
@@ -35,12 +34,12 @@ export type QueryInputProps = {
   setComments: Dispatch<SetStateAction<GroupedComments>>;
 };
 
+const exampleSubject =
+  EXAMPLE_SUBJECTS[Math.floor(Math.random() * EXAMPLE_SUBJECTS.length)];
+
 function QueryInput({ setComments }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
-  const exampleSubject =
-    EXAMPLE_SUBJECTS[Math.floor(Math.random() * EXAMPLE_SUBJECTS.length)];
 
   const querySubject = async (queryString: string) => {
     setLoading(true);

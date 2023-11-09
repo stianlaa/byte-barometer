@@ -1,6 +1,6 @@
 import { VictoryPie } from "victory";
-import { NEGATIVE, NEUTRAL, POSITIVE } from "./constants";
-import { Settings } from "./App";
+import { NEGATIVE, NEUTRAL, POSITIVE } from "../../constants";
+import { Settings } from "../../App";
 
 type OpinionVisualizerProps = {
   positiveCount: number;

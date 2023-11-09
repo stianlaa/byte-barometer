@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  backend-byte-barometer:
+    image: backend-byte-barometer:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - ~/.cache/huggingface/transformers:/.cache/huggingface/transformers
+    ports:
+      - "3000:3000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+                - utility # nvidia-smi
+                - compute # CUDA
+                - video   # NVDEC/NVENC/NVCUVID
+  watchdog-byte-barometer:
+    image: watchdog-byte-barometer:latest
+    build:
+      context: ./watchdog
+      dockerfile: Dockerfile
+    depends_on:
+      - backend-byte-barometer
+
+    env_file:
+      - .env
+    ports:
+      - "2999:2999"

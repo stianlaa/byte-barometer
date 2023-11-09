@@ -1,12 +1,13 @@
 import "./index.css";
 import { Box, Divider, Heading } from "@chakra-ui/react";
-import { useState } from "react";
-import { CommentWithSentiment } from "./Comment";
-import OpinionVisualizer from "./OpinionVisualizer";
-import QueryInput from "./QueryInput";
-import CommentDisplay from "./CommentDisplay";
+import { useState, useEffect } from "react";
+import { CommentWithSentiment } from "./components/comments/Comment";
+import OpinionVisualizer from "./components/visualization/OpinionVisualizer";
+import QueryInput from "./components/query/QueryInput";
+import CommentDisplay from "./components/comments/CommentDisplay";
 import { RELEVANCE_LIMIT } from "./constants";
-import About from "./About";
+import InfoBar, { BackendStatus } from "./components/infobar/InfoBar";
+import { WATCHDOG_URL } from "./watchdog-client-setup";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -21,7 +22,6 @@ export type Settings = {
 };
 
 function App() {
-  console.log("Testing automatic deploy");
   const [comments, setComments] = useState<GroupedComments>({
     positive: [],
     neutral: [],
@@ -38,6 +38,38 @@ function App() {
     showNeutral: false,
     showNegative: true,
   });
+
+  const [backendStatus, setBackendStatus] = useState<BackendStatus>({
+    status: "NOT_FETCHED",
+    deploymentSpec: undefined,
+  });
+
+  useEffect(() => {
+    const fetchStatus = () => {
+      fetch(`${WATCHDOG_URL}/status`, { method: "GET" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => setBackendStatus(data))
+        .catch((error) => {
+          setBackendStatus({ status: "ERROR", deploymentSpec: undefined });
+          console.error("Error:", error);
+        });
+      // TODO reintroduce and/or/fix
+      // .finally(() => actions.setBackendStaus(false));
+    };
+
+    // Fetch immediately on mount
+    fetchStatus();
+
+    const intervalId = setInterval(fetchStatus, 20000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <Box
@@ -79,9 +111,7 @@ function App() {
         setSettings={setSettings}
       />
 
-      <Box position="absolute" top="1rem" left="1rem">
-        <About />
-      </Box>
+      <InfoBar backendStatus={backendStatus} />
     </Box>
   );
 }

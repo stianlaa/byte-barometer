@@ -1,5 +1,6 @@
+from logger_setup import logger
 from flask import request
-from flask_setup import socketio, app
+from flask_setup import socketio
 from action.query_index import Query, process_query
 
 COMMENT_COUNT_LIMIT = 100
@@ -22,5 +23,5 @@ def handle_query(json: dict):
     )
 
 
-def serve():
-    socketio.run(app)
+def setup_websocket_endpoints():
+    logger.info("Set up websocket endpoints")

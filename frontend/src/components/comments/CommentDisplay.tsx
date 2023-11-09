@@ -7,11 +7,11 @@ import {
   Center,
   Divider,
 } from "@chakra-ui/react";
-import { GroupedComments, Settings } from "./App";
+import { GroupedComments, Settings } from "../../App";
 import CommentStack from "./CommentStack";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { CommentWithSentiment } from "./Comment";
-import { NEGATIVE, POSITIVE } from "./constants";
+import { NEGATIVE, POSITIVE } from "../../constants";
 
 type CommentDisplayProps = {
   comments: GroupedComments;

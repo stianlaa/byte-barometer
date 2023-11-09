@@ -34,6 +34,14 @@ jobs:
           tags: |
             stianlaa/frontend-byte-barometer:latest
 
+      - name: Build and push watchdog image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./watchdog
+          push: true
+          tags: |
+            stianlaa/watchdog-byte-barometer:latest
+
       - name: Deploy frontend
         uses: fjogeleit/http-request-action@v1
         with:
@@ -49,4 +57,4 @@ jobs:
           method: "POST"
           bearerToken: ${{ secrets.PAPERSPACE_API_KEY}}
           customHeaders: '{"Content-Type": "application/json"}'
-          data: '{"deploymentId": "ea647862-7e3f-46ec-b2ee-efe0e841eb8f","projectId": "plf3fs5whu1","config": {"apiVersion": "v0alpha0","enabled": false,"name": "byte-barometer","image": "stianlaa/byte-barometer:latest","port": 3000,"env": [{"name": "HUGGINGFACE_API_KEY","value": "secret:HUGGINGFACE_API_KEY"},{"name": "OPENAI_API_KEY","value": "secret:OPENAI_API_KEY"},{"name": "PINECONE_API_KEY","value": "secret:PINECONE_API_KEY"},{"name": "PINECONE_ENVIRONMENT","value": "northamerica-northeast1-gcp"},{"name": "PINECONE_INDEX","value": "hackernews-embeddings"},{"name": "ENABLE_GPU","value": "True"}],"resources": {"replicas": 1,"instanceType": "P4000"}}}'
+          data: '{    "deploymentId": "ea647862-7e3f-46ec-b2ee-efe0e841eb8f",    "projectId": "plf3fs5whu1",    "config": {        "apiVersion": "v0alpha0",        "enabled": false,        "name": "byte-barometer",        "image": "stianlaa/backend-byte-barometer:latest",        "port": 3000,        "env": [            {                "name": "HUGGINGFACE_API_KEY",                "value": "secret:HUGGINGFACE_API_KEY"            },            {                "name": "OPENAI_API_KEY",                "value": "secret:OPENAI_API_KEY"            },            {                "name": "PINECONE_API_KEY",                "value": "secret:PINECONE_API_KEY"            },            {                "name": "PINECONE_ENVIRONMENT",                "value": "northamerica-northeast1-gcp"            },            {                "name": "PINECONE_INDEX",                "value": "hackernews-embeddings"            },            {                "name": "ENABLE_GPU",                "value": "True"            },            {                "name": "PAPERSPACE_API_KEY",                "value": "secret:PAPERSPACE_API_KEY"            }        ],        "resources": {            "replicas": 1,            "instanceType": "P4000"        }    }}'
