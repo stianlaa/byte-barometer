@@ -1,6 +1,6 @@
 # Byte-Barometer Backend
 
-This directory defines the backend for the Byte-Barometer application. It also provides subsequent utility for populating and managing the relevant vector database indices, through actions such as `create`, `delete` and `populate`.
+This directory defines the backend for the Byte-Barometer application. It also provides utility for populating the relevant vector database indices.
 
 # Quick summary
 
@@ -31,10 +31,10 @@ ENABLE_GPU=True
 
 # Getting started
 
-The backend application will regularly fetch, process and store new comments from hackernews so that they may be queried. However this will just happen to new comments, to populate the index with an initial set of data the `populate` action should be used through the tool script.
+The backend application will regularly fetch, process and store new comments from hackernews so that they may be queried. However this will just happen to new comments, to populate the index with an initial set of data you can do as follows:
 
 ```bash
-docker run --gpus all -v .:/app -it --env-file ../.env --entrypoint python3 byte-barometer tool.py populate -l 72000 -d 10000
+docker run --gpus all -v .:/app -it --env-file ../.env --entrypoint python3 byte-barometer populate.py -l 72000 -d 10000
 ```
 
 After initial setup, build the docker image if you haven't already

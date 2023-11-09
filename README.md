@@ -25,18 +25,18 @@ The project is almost mature enough for first release, what remains is:
 
 - [ ] Make watchdog scale down to zero containers when unused for a while
 - [ ] Move to wss instead of ws to make application more secure
+- [ ] Prevent redownload of models on startup, improve warmup startup time
+- [ ] Adjust and test with mobile
+- [ ] Process and upsert much larger dataset
 
 ## Future work
 
 - [ ] Test alternative language models for quality, find locally evaluated model
 - [ ] A: New cheaper 3.5 turbo details from openai, either adopt that model if sensible
 - [ ] B: Replace openai integration with huggingface model,
-- [ ] Prevent redownload of models on upstart, improve warmup startup time
 - [ ] Add query DB and cache for results, show list of some of the chosen subjects and their results by default on loading.
-- [ ] Adjust and test with mobile
 - [ ] Replace build pipeline with less hardcoded config, perhaps terraform https://github.com/Paperspace/terraform-provider-paperspace?ref=blog.paperspace.com , should support both paperspace and digital ocean
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
-- [ ] Process and upsert much larger dataset
 - [ ] Make watchdog kick off upsert every 6 hours, to reduce overhead for startup
 - [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
 - [ ] Fix gpu serialized inferance warning,
