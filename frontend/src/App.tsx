@@ -7,7 +7,6 @@ import QueryInput from "./components/query/QueryInput";
 import CommentDisplay from "./components/comments/CommentDisplay";
 import { RELEVANCE_LIMIT } from "./constants";
 import InfoBar, { BackendStatus } from "./components/infobar/InfoBar";
-import { WATCHDOG_URL } from "./watchdog-client-setup";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -46,20 +45,7 @@ function App() {
 
   useEffect(() => {
     const fetchStatus = () => {
-      fetch(`${WATCHDOG_URL}/status`, { method: "GET" })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => setBackendStatus(data))
-        .catch((error) => {
-          setBackendStatus({ status: "ERROR", deploymentSpec: undefined });
-          console.error("Error:", error);
-        });
-      // TODO reintroduce and/or/fix
-      // .finally(() => actions.setBackendStaus(false));
+      setBackendStatus({ status: "RUNNING", deploymentSpec: undefined });
     };
 
     // Fetch immediately on mount
