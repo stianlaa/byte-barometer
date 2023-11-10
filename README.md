@@ -21,9 +21,8 @@ This is one of my side projects, so there might be a bug or two hiding around. T
 
 The project is almost mature enough for first release, what remains is:
 
-- [ ] Prevent redownload of models on startup, improve warmup startup time
-- [ ] Move to wss instead of ws to make application more secure
 - [ ] Adjust and test with mobile
+- [ ] Move to wss instead of ws to make application more secure
 - [ ] Process and upsert much larger dataset
 
 ## Future work
@@ -35,9 +34,6 @@ The project is almost mature enough for first release, what remains is:
 - [ ] Replace build pipeline with less hardcoded config, perhaps terraform https://github.com/Paperspace/terraform-provider-paperspace?ref=blog.paperspace.com , should support both paperspace and digital ocean
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
 - [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
-- [ ] Fix gpu serialized inferance warning,
-- [ ] Look into performance improvement
-- [ ] Add endpoint where describe byte barometer
 - [ ] Test lower gunicorn timeout, 30 is default, 300 is current
 - [ ] Tighten CORS
 - [ ] Consider adding tqdm wrapper around populate action, and cleaning up populate action.
