@@ -61,7 +61,6 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
   const isCommentComplete =
     metadata.textStart === 0 &&
     metadata.textEnd === metadata.commentText.length - 4;
-  console.log(`${metadata.commentText.length} - ${isCommentComplete}`);
 
   const [expanded, setExpanded] = useState(false);
   const documentId = parseId(id);
