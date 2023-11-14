@@ -1,5 +1,5 @@
 import "./index.css";
-import { Box, Divider, Heading, Spinner } from "@chakra-ui/react";
+import { Box, Divider, Heading, Spinner, VStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { CommentWithSentiment } from "./components/comments/Comment";
 import OpinionVisualizer from "./components/visualization/OpinionVisualizer";
@@ -7,6 +7,7 @@ import QueryInput from "./components/query/QueryInput";
 import CommentDisplay from "./components/comments/CommentDisplay";
 import { RELEVANCE_LIMIT } from "./constants";
 import InfoBar, { BackendStatus } from "./components/infobar/InfoBar";
+import { BACKEND_URL } from "./socket-setup";
 
 export type GroupedComments = {
   positive: CommentWithSentiment[];
@@ -38,14 +39,21 @@ function App() {
     showNegative: true,
   });
 
-  const [backendStatus, setBackendStatus] = useState<BackendStatus>({
-    status: "NOT_FETCHED",
-    deploymentSpec: undefined,
-  });
+  const [backendStatus, setBackendStatus] = useState<BackendStatus>(BackendStatus.UNKNOWN);
 
   useEffect(() => {
     const fetchStatus = () => {
-      setBackendStatus({ status: "RUNNING", deploymentSpec: undefined });
+      fetch(`${BACKEND_URL}/checkin`, { method: "GET" })
+        .then((response) => {
+          if (response.ok) {
+            setBackendStatus(BackendStatus.RUNNING);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setBackendStatus(BackendStatus.ERROR);
+        });
+
     };
 
     // Fetch immediately on mount
@@ -82,13 +90,17 @@ function App() {
         settings={settings}
         setSettings={setSettings}
       />
-      {backendStatus.status == "RUNNING" ?
+      {backendStatus == BackendStatus.RUNNING ?
         (
           <QueryInput setComments={setComments} />
         ) :
-        (<Box>
-          <Heading size="sm">Hi there!</Heading>We're waking up the GPUs to do some processing<Spinner />
-        </Box>)
+        (<VStack>
+          <Heading size="sm">Hi there!</Heading>
+          <Box>
+            We're waiting for the backend to respond
+          </Box>
+          <Spinner />
+        </VStack>)
       }
       <Divider
         borderColor="grey.300"

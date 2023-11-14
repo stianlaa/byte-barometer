@@ -2,10 +2,11 @@ import { VStack } from "@chakra-ui/react";
 import About from "./About";
 import BackendStatusIndicator from "./BackendStatusIndicator";
 
-export type BackendStatus = {
-  status: string;
-  deploymentSpec: string | undefined;
-};
+export enum BackendStatus {
+  RUNNING,
+  ERROR,
+  UNKNOWN,
+}
 
 type InfoBarProps = {
   backendStatus: BackendStatus;
