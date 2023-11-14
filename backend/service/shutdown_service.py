@@ -9,7 +9,7 @@ import time
 
 previous_activity = time.time()
 
-TIME_LIMIT = 120
+TIME_LIMIT = 600 
 APP_ID = "ea647862-7e3f-46ec-b2ee-efe0e841eb8f"
 
 # Global variable to store the timestamp of the most recent availability check

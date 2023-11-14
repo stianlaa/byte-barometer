@@ -2,7 +2,7 @@ FROM nvidia/cuda:12.0.0-runtime-ubuntu22.04
 
 # SYSTEM
 RUN apt-get update &&  \
-    apt-get install --no-install-recommends -y git vim curl python3-pip python3-dev ffmpeg libsm6 libxext6 gcc g++ && \
+    apt-get install --no-install-recommends -y git vim curl python3-pip python3-dev && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
