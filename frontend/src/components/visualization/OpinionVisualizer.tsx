@@ -1,6 +1,7 @@
 import { VictoryPie } from "victory";
-import { NEGATIVE, NEUTRAL, POSITIVE } from "../../constants";
+import { MOBILE_MEDIA_QUERY, NEGATIVE, NEUTRAL, POSITIVE } from "../../constants";
 import { Settings } from "../../App";
+import { useMediaQuery } from "@chakra-ui/react";
 
 type OpinionVisualizerProps = {
   positiveCount: number;
@@ -35,6 +36,7 @@ function OpinionVisualizer({
   settings,
   setSettings,
 }: OpinionVisualizerProps) {
+  const [isLargerThan800] = useMediaQuery(MOBILE_MEDIA_QUERY)
   return (
     <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>
       <VictoryPie
@@ -92,15 +94,29 @@ function OpinionVisualizer({
             eventHandlers: {
               onClick: (_a, clickTarget) => {
                 setSettings((prev) => {
-                  const s: Settings = { ...prev };
-                  if (clickTarget.index === 0) {
-                    s.showPositive = !prev.showPositive;
-                  } else if (clickTarget.index === 1) {
-                    s.showNeutral = !prev.showNeutral;
+                  if (isLargerThan800) {
+
+                    const s: Settings = { ...prev };
+                    if (clickTarget.index === 0) {
+                      s.showPositive = !prev.showPositive;
+                    } else if (clickTarget.index === 1) {
+                      s.showNeutral = !prev.showNeutral;
+                    } else {
+                      s.showNegative = !prev.showNegative;
+                    }
+                    return s;
+
                   } else {
-                    s.showNegative = !prev.showNegative;
+                    const s: Settings = { showPositive: false, showNegative: false, showNeutral: false };
+                    if (clickTarget.index === 0) {
+                      s.showPositive = !prev.showPositive;
+                    } else if (clickTarget.index === 1) {
+                      s.showNeutral = !prev.showNeutral;
+                    } else {
+                      s.showNegative = !prev.showNegative;
+                    }
+                    return s;
                   }
-                  return s;
                 });
                 return [{ target: "data" }, { target: "labels" }];
               },

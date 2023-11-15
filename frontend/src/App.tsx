@@ -1,11 +1,11 @@
 import "./index.css";
-import { Box, Divider, Heading, Spinner, VStack } from "@chakra-ui/react";
+import { Box, Divider, Heading, Spinner, VStack, useMediaQuery } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { CommentWithSentiment } from "./components/comments/Comment";
 import OpinionVisualizer from "./components/visualization/OpinionVisualizer";
 import QueryInput from "./components/query/QueryInput";
 import CommentDisplay from "./components/comments/CommentDisplay";
-import { RELEVANCE_LIMIT } from "./constants";
+import { MOBILE_MEDIA_QUERY, RELEVANCE_LIMIT } from "./constants";
 import InfoBar, { BackendStatus } from "./components/infobar/InfoBar";
 import { BACKEND_URL } from "./socket-setup";
 
@@ -34,10 +34,30 @@ function App() {
   };
 
   const [settings, setSettings] = useState<Settings>({
-    showPositive: true,
+    showPositive: false,
     showNeutral: false,
-    showNegative: true,
+    showNegative: false,
   });
+
+  const [isLargerThan800] = useMediaQuery(MOBILE_MEDIA_QUERY)
+  useEffect(() => {
+    if (isLargerThan800) {
+      setSettings({
+        showPositive: true,
+        showNeutral: false,
+        showNegative: true,
+      });
+    }
+    else {
+      setSettings({
+        showPositive: true,
+        showNeutral: false,
+        showNegative: false,
+      });
+    }
+
+  }, [isLargerThan800])
+
 
   const [backendStatus, setBackendStatus] = useState<BackendStatus>(BackendStatus.UNKNOWN);
 
@@ -76,7 +96,7 @@ function App() {
         scrollbarWidth: "none",
       }}
     >
-      <Heading pt="1rem">Byte Barometer</Heading>
+      <Heading pt="1rem" size="lg">Byte Barometer</Heading>
       <Divider
         borderColor="grey.300"
         m="0.25rem  auto 0.25rem auto"
