@@ -35,7 +35,7 @@ function About() {
               This is a fun project that tries to answer
               <Text fontStyle="italic" as="span">
                 {" "}
-                "What does HackerNews think about X?"{" "}
+                "What does HackerNews think about {'<'}subject{'>'}?"{" "}
               </Text>
               Have a look at the
               <Link
