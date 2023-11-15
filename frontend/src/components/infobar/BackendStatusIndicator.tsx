@@ -40,8 +40,9 @@ const selectDescription = (status: BackendStatus) => {
       return <>
         <Heading size="md">Running!</Heading>
         <Text>
-          The backend has provisioned GPU resources, responds and should be ready to handle your queries. Ask away!
+          The backend has provisioned GPU resources, responds and should be ready to handle your queries.
         </Text>
+        <Text>Ask away!</Text>
       </>
     default:
       return <>

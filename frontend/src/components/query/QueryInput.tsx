@@ -2,10 +2,13 @@ import { CommentWithSentiment } from "../comments/Comment";
 import {
   Box,
   Button,
+  Center,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
   Spinner,
+  VStack,
 } from "@chakra-ui/react";
 import {
   useState,
@@ -18,12 +21,12 @@ import { ArrowRightIcon } from "@chakra-ui/icons";
 import { socket, QueryResponseBatch } from "../../socket-setup";
 import { GroupedComments } from "../../App";
 import {
-  EXAMPLE_SUBJECTS,
   NEGATIVE,
   NEUTRAL,
   POSITIVE,
   QUERY_COMMENT_COUNT,
 } from "../../constants";
+import QuickQueryList from "./QuickQueryPicker";
 
 type Query = {
   queryCommentCount: number;
@@ -33,9 +36,6 @@ type Query = {
 export type QueryInputProps = {
   setComments: Dispatch<SetStateAction<GroupedComments>>;
 };
-
-const exampleSubject =
-  EXAMPLE_SUBJECTS[Math.floor(Math.random() * EXAMPLE_SUBJECTS.length)];
 
 function QueryInput({ setComments }: QueryInputProps) {
   const [queryString, setQueryString] = useState<string>("");
@@ -97,42 +97,50 @@ function QueryInput({ setComments }: QueryInputProps) {
   }, [setComments]);
 
   return (
-    <InputGroup size="lg" width={"75%"} mr="auto" ml="auto" mb={5}>
-      <Input
-        fontSize={20}
-        color="grey.900"
-        bgColor="beige.500"
-        borderColor="grey.500"
-        value={queryString}
-        onChange={(e) => setQueryString(e.target.value)}
-        placeholder={`What does Hackernews think about.. ${exampleSubject}?`}
-        onKeyDown={handleCompletion}
-        sx={{
-          "::placeholder": {
-            color: "black",
-          },
-        }}
-      />
-      <InputRightElement>
-        {/* TODO use, dedicated spinner function */}
-        {/* https://chakra-ui.com/docs/components/icon-button/props */}
-
-        <Button
-          size="s"
+    <VStack>
+      <Center>
+        <Heading size="sm">
+          What does HackerNews think about.. {" "}
+        </Heading>
+        <QuickQueryList onClickQuery={(subject) => {
+          setQueryString(subject);
+          querySubject(subject);
+        }} />
+      </Center>
+      <InputGroup size="lg" width={"75%"} mr="auto" ml="auto" mb={5}>
+        <Input
+          fontSize={20}
+          color="grey.900"
           bgColor="beige.500"
-          onClick={() => querySubject(queryString)}
-        >
-          {loading ? (
-            <Box bgColor="beige.500">
-              <Spinner />
-            </Box>
-          ) : (
-            <ArrowRightIcon />
-          )}
-        </Button>
-      </InputRightElement>
-    </InputGroup>
-  );
+          borderColor="grey.500"
+          value={queryString}
+          onChange={(e) => setQueryString(e.target.value)}
+          // placeholder={`What does Hackernews think about.. ${exampleSubject}?`}
+          onKeyDown={handleCompletion}
+          sx={{
+            "::placeholder": {
+              color: "black",
+            },
+          }}
+        />
+        <InputRightElement>
+          <Button
+            size="s"
+            bgColor="beige.500"
+            color="grey.900"
+            onClick={() => querySubject(queryString)}
+          >
+            {loading ? (
+              <Box bgColor="beige.500">
+                <Spinner />
+              </Box>
+            ) : (
+              <ArrowRightIcon />
+            )}
+          </Button>
+        </InputRightElement>
+      </InputGroup>
+    </VStack >);
 }
 
 export default QueryInput;
