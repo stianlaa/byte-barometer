@@ -11,7 +11,7 @@ import { GroupedComments, Settings } from "../../App";
 import CommentStack from "./CommentStack";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { CommentWithSentiment } from "./Comment";
-import { NEGATIVE, POSITIVE } from "../../constants";
+import { NEGATIVE, POSITIVE, QUERY_COMMENT_COUNT } from "../../constants";
 
 type CommentDisplayProps = {
   comments: GroupedComments;
@@ -91,16 +91,16 @@ function CommentDisplay({
   return (
     <>
       <Center w="80%" ml="auto" mr="auto">
-        <Flex w="30%" direction="column" alignItems="flex-start">
-          <p>{allRelevantComments.length} Relevant comments</p>
-          <p>{relevantComments.positive.length} are positive</p>
-          <p>{relevantComments.negative.length} are negative</p>
+        <Flex w="35%" direction="column" alignItems="flex-start">
+          <p>{allRelevantComments.length}/{QUERY_COMMENT_COUNT} relevant</p>
+          <p>{relevantComments.positive.length} positive</p>
+          <p>{relevantComments.negative.length} negative</p>
         </Flex>
         <Box ml="auto" mr="auto">
           <Heading>{summarizeSentiment(allComments)}</Heading>
         </Box>
 
-        <Flex w="30%" direction="column" alignItems="flex-end">
+        <Flex w="35%" direction="column" alignItems="flex-end">
           <ToggleViewButton
             text="Positive"
             enabled={settings.showPositive}

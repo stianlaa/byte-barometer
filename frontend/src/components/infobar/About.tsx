@@ -23,10 +23,10 @@ function About() {
           aria-label="Disclaimer"
           p="0"
         >
-          <FaInfoCircle size="32px"/>
+          <FaInfoCircle size="32px" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent p={4} bg="grey.500" w="60%" borderColor="grey.300">
+      <PopoverContent p={4} m={4} bg="grey.500" borderColor="grey.300">
         <PopoverCloseButton size="md" m="0.5rem" p="0.5rem" />
         <PopoverBody>
           <VStack spacing={2}>
@@ -35,7 +35,7 @@ function About() {
               This is a fun project that tries to answer
               <Text fontStyle="italic" as="span">
                 {" "}
-                What does HackerNews think about X?{" "}
+                "What does HackerNews think about X?"{" "}
               </Text>
               Have a look at the
               <Link
@@ -55,7 +55,7 @@ function About() {
             </Text>
             <Text>
               The sentiment analysis is aspect based, and focused around your query
-              subject. So long queries confuse it somewhat.
+              subject. So use short and concise queries for the best results.
             </Text>
           </VStack>
         </PopoverBody>

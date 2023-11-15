@@ -47,7 +47,7 @@ const selectDescription = (status: BackendStatus) => {
       return <>
         <Heading size="md">Unknown</Heading>
         <Text>
-          OWe currently have no information about the state of the backend.
+          We currently have no information about the state of the backend.
         </Text>
       </>
   }
@@ -68,7 +68,7 @@ function BackendStatusIndicator({
           icon={selectIcon(backendStatus)}
         />
       </PopoverTrigger>
-      <PopoverContent p={4} bg="grey.500" w="60%" borderColor="grey.300">
+      <PopoverContent p={4} m={4} bg="grey.500" borderColor="grey.300">
         <PopoverCloseButton size="md" m="0.5rem" p="0.5rem" />
         <PopoverBody>
           <VStack spacing={2}>
