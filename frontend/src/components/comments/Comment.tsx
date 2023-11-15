@@ -11,6 +11,8 @@ import { parseId } from "../../document-util";
 import SentimentTag from "./SentimentTag";
 import { useState } from "react";
 
+const AUTHOR_MAX_LEN = 10;
+
 export type Sentiment = {
   label: string;
   score: number;
@@ -73,15 +75,16 @@ function Comment({ id, metadata, sentiment }: CommentWithSentiment) {
       w="100%"
     >
       <HStack spacing="1rem">
-        <Heading size="sm">
+        <Heading size="xs">
           <Link
             href={`https://news.ycombinator.com/user?id=${metadata.author}`}
             isExternal
           >
-            {metadata.author}
+            {metadata.author.substring(0, AUTHOR_MAX_LEN)}
           </Link>
         </Heading>
         <Link
+          size="sm"
           href={`https://news.ycombinator.com/item?id=${metadata.storyId}`}
           isExternal
         >

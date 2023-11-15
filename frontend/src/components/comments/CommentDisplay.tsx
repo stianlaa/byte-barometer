@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { GroupedComments, Settings } from "../../App";
 import CommentStack from "./CommentStack";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { CommentWithSentiment } from "./Comment";
 import { MOBILE_MEDIA_QUERY, NEGATIVE, POSITIVE, QUERY_COMMENT_COUNT } from "../../constants";
 
@@ -33,17 +32,12 @@ function ToggleViewButton({ text, enabled, onClick }: ToggleViewButtonProps) {
     <Flex direction="column" alignItems="flex-start">
       <Button
         color="beige.500"
-        bgColor="transparent"
+        bgColor={enabled ? "grey.300" : "transparent"}
         size="s"
         onClick={onClick}
       >
-        <Box p="0.25rem 0.25rem 0.25rem 0 ">
+        <Box p="0.25rem 0.25rem 0.25rem 0.25rem">
           {text}
-          {enabled ? (
-            <ViewIcon ml="0.25rem" bgColor="transparent" />
-          ) : (
-            <ViewOffIcon ml="0.25rem" bgColor="transparent" />
-          )}
         </Box>
       </Button>
     </Flex>

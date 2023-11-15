@@ -19,9 +19,9 @@ type BackendStatusIndicatorProps = {
 const selectIcon = (status: BackendStatus) => {
   switch (status) {
     case BackendStatus.ERROR:
-      return <TbCoffeeOff size="32px" />;
+      return <TbCoffeeOff size="32px" style={{ color: "#E9D502" }} />;
     case BackendStatus.RUNNING:
-      return <TbCoffee size="32px" />;
+      return <TbCoffee size="32px" style={{ color: "#ABCBB1" }} />;
     default:
       return <TbDropletQuestion size="32px" />
   }
@@ -40,7 +40,7 @@ const selectDescription = (status: BackendStatus) => {
       return <>
         <Heading size="md">Running!</Heading>
         <Text>
-          The backend has provisioned GPU resources, responds and should be ready to respond to queries. Ask away!
+          The backend has provisioned GPU resources, responds and should be ready to handle your queries. Ask away!
         </Text>
       </>
     default:
