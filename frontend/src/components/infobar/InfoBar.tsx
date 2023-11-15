@@ -15,7 +15,7 @@ type InfoBarProps = {
 function InfoBar({ backendStatus }: InfoBarProps) {
 
   return (
-    <VStack position="absolute" top="1rem" left="1rem">
+    <VStack position="absolute" bottom="1rem" left="1rem">
       <About />
       <BackendStatusIndicator backendStatus={backendStatus} />
     </VStack>

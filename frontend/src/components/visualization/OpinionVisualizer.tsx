@@ -1,6 +1,7 @@
 import { VictoryPie } from "victory";
-import { NEGATIVE, NEUTRAL, POSITIVE } from "../../constants";
+import { MOBILE_MEDIA_QUERY, NEGATIVE, NEUTRAL, POSITIVE } from "../../constants";
 import { Settings } from "../../App";
+import { useMediaQuery } from "@chakra-ui/react";
 
 type OpinionVisualizerProps = {
   positiveCount: number;
@@ -17,15 +18,15 @@ const mapInputData = (
 ) => {
   return positiveCount + neutralCount + negativeCount === 0
     ? [
-        { x: POSITIVE, y: 1 },
-        { x: NEUTRAL, y: 1 },
-        { x: NEGATIVE, y: 1 },
-      ]
+      { x: POSITIVE, y: 1 },
+      { x: NEUTRAL, y: 1 },
+      { x: NEGATIVE, y: 1 },
+    ]
     : [
-        { x: POSITIVE, y: positiveCount },
-        { x: NEUTRAL, y: neutralCount },
-        { x: NEGATIVE, y: negativeCount },
-      ];
+      { x: POSITIVE, y: positiveCount },
+      { x: NEUTRAL, y: neutralCount },
+      { x: NEGATIVE, y: negativeCount },
+    ];
 };
 
 function OpinionVisualizer({
@@ -35,15 +36,14 @@ function OpinionVisualizer({
   settings,
   setSettings,
 }: OpinionVisualizerProps) {
+  const [isLargerThan800] = useMediaQuery(MOBILE_MEDIA_QUERY)
   return (
     <svg viewBox="0 45 400 165" style={{ overflow: "hidden" }}>
       <VictoryPie
         key="ByteBarometerOpinionVisualizer"
-        // animate={{ duration: 400 }} // Somewhat iffy render as jitter
         standalone={false}
         width={400}
         height={400}
-        colorScale={["#749189", "#6B6B6B", "#945d5d"]}
         cornerRadius={15}
         startAngle={-90}
         endAngle={90}
@@ -51,7 +51,6 @@ function OpinionVisualizer({
         data={mapInputData(positiveCount, neutralCount, negativeCount)}
         labels={({ datum }) => {
           if (datum.x === POSITIVE) return "👍";
-          // else if (datum.x === NEUTRAL) return "";
           else if (datum.x === NEGATIVE) return "👎";
           else return "";
         }}
@@ -78,6 +77,15 @@ function OpinionVisualizer({
                 return settings.showNegative ? "#9F6E6E" : "#945d5d";
               }
             },
+            fill: ({ datum }) => {
+              if (datum.x === POSITIVE) {
+                return "#749189";
+              } else if (datum.x === NEUTRAL) {
+                return "#6B6B6B";
+              } else {
+                return "#945d5d";
+              }
+            },
           },
         }}
         events={[
@@ -86,15 +94,29 @@ function OpinionVisualizer({
             eventHandlers: {
               onClick: (_a, clickTarget) => {
                 setSettings((prev) => {
-                  const s: Settings = { ...prev };
-                  if (clickTarget.index === 0) {
-                    s.showPositive = !prev.showPositive;
-                  } else if (clickTarget.index === 1) {
-                    s.showNeutral = !prev.showNeutral;
+                  if (isLargerThan800) {
+
+                    const s: Settings = { ...prev };
+                    if (clickTarget.index === 0) {
+                      s.showPositive = !prev.showPositive;
+                    } else if (clickTarget.index === 1) {
+                      s.showNeutral = !prev.showNeutral;
+                    } else {
+                      s.showNegative = !prev.showNegative;
+                    }
+                    return s;
+
                   } else {
-                    s.showNegative = !prev.showNegative;
+                    const s: Settings = { showPositive: false, showNegative: false, showNeutral: false };
+                    if (clickTarget.index === 0) {
+                      s.showPositive = !prev.showPositive;
+                    } else if (clickTarget.index === 1) {
+                      s.showNeutral = !prev.showNeutral;
+                    } else {
+                      s.showNegative = !prev.showNegative;
+                    }
+                    return s;
                   }
-                  return s;
                 });
                 return [{ target: "data" }, { target: "labels" }];
               },

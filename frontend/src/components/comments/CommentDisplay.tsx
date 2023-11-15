@@ -4,14 +4,16 @@ import {
   Button,
   Heading,
   Flex,
-  Center,
   Divider,
+  HStack,
+  VStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { GroupedComments, Settings } from "../../App";
 import CommentStack from "./CommentStack";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { CommentWithSentiment } from "./Comment";
-import { NEGATIVE, POSITIVE } from "../../constants";
+import { MOBILE_MEDIA_QUERY, NEGATIVE, POSITIVE, QUERY_COMMENT_COUNT } from "../../constants";
 
 type CommentDisplayProps = {
   comments: GroupedComments;
@@ -54,6 +56,8 @@ function CommentDisplay({
   settings,
   setSettings,
 }: CommentDisplayProps) {
+  const [isLargerThan800] = useMediaQuery(MOBILE_MEDIA_QUERY)
+
   const allComments = comments.positive.concat(
     comments.neutral,
     comments.negative
@@ -90,61 +94,75 @@ function CommentDisplay({
 
   return (
     <>
-      <Center w="80%" ml="auto" mr="auto">
-        <Flex w="30%" direction="column" alignItems="flex-start">
-          <p>{allRelevantComments.length} Relevant comments</p>
-          <p>{relevantComments.positive.length} are positive</p>
-          <p>{relevantComments.negative.length} are negative</p>
-        </Flex>
-        <Box ml="auto" mr="auto">
-          <Heading>{summarizeSentiment(allComments)}</Heading>
-        </Box>
+      {allComments.length > 0 &&
+        <VStack w="80%" ml="auto" mr="auto">
+          <HStack ml="auto" mr="auto">
+            <Heading>{summarizeSentiment(allComments)}</Heading>
+          </HStack>
+          <HStack ml="auto" mr="auto">
+            {allRelevantComments.length}/{QUERY_COMMENT_COUNT} relevant comments,
+          </HStack>
 
-        <Flex w="30%" direction="column" alignItems="flex-end">
-          <ToggleViewButton
-            text="Positive"
-            enabled={settings.showPositive}
-            onClick={() =>
-              setSettings((prevSettings) => {
-                return {
-                  ...prevSettings,
-                  showPositive: !prevSettings.showPositive,
-                };
-              })
-            }
+          <Divider
+            borderColor="grey.300"
+            m="0.25rem  auto 0.25rem auto"
+            w="90%"
+            borderWidth="2px 0 0 0"
           />
-          <ToggleViewButton
-            text="Neutral"
-            enabled={settings.showNeutral}
-            onClick={() =>
-              setSettings((prevSettings) => {
-                return {
-                  ...prevSettings,
-                  showNeutral: !prevSettings.showNeutral,
-                };
-              })
-            }
-          />
-          <ToggleViewButton
-            text="Negative"
-            enabled={settings.showNegative}
-            onClick={() =>
-              setSettings((prevSettings) => {
-                return {
-                  ...prevSettings,
-                  showNegative: !prevSettings.showNegative,
-                };
-              })
-            }
-          />
-        </Flex>
-      </Center>
-      <Divider
-        borderColor="grey.300"
-        m="0.25rem  auto 0.25rem auto"
-        w="90%"
-        borderWidth="2px 0 0 0"
-      />
+
+          <HStack>
+            <ToggleViewButton
+              text="Positive"
+              enabled={settings.showPositive}
+              onClick={() =>
+                setSettings((prevSettings) => {
+                  if (isLargerThan800) {
+                    return {
+                      ...prevSettings,
+                      showPositive: !prevSettings.showPositive,
+                    };
+                  } else {
+                    return { showNegative: false, showPositive: !prevSettings.showPositive, showNeutral: false }
+                  }
+                })
+              }
+            />
+            <ToggleViewButton
+              text="Neutral"
+              enabled={settings.showNeutral}
+              onClick={() =>
+                setSettings((prevSettings) => {
+                  if (isLargerThan800) {
+                    return {
+                      ...prevSettings,
+                      showNeutral: !prevSettings.showNeutral,
+                    };
+                  } else {
+                    return { showNeutral: !prevSettings.showNeutral, showNegative: false, showPositive: false }
+                  }
+                })
+              }
+            />
+            <ToggleViewButton
+              text="Negative"
+              enabled={settings.showNegative}
+              onClick={() =>
+                setSettings((prevSettings) => {
+                  if (isLargerThan800) {
+                    return {
+                      ...prevSettings,
+                      showNegative: !prevSettings.showNegative,
+                    };
+                  } else {
+                    return { showNegative: !prevSettings.showNegative, showPositive: false, showNeutral: false }
+                  }
+                })
+              }
+            />
+          </HStack>
+        </VStack>
+      }
+
       <SimpleGrid columns={columnCount} spacing={10} mt="1rem">
         {settings.showPositive && (
           <CommentStack
