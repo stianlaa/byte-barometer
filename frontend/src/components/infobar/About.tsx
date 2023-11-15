@@ -32,7 +32,7 @@ function About() {
           <VStack spacing={2}>
             <Heading size="md">Hi there!</Heading>
             <Text>
-              This is a fun project that tries to answer
+              This is a side project that tries to answer
               <Text fontStyle="italic" as="span">
                 {" "}
                 "What does HackerNews think about {'<'}subject{'>'}?"{" "}
