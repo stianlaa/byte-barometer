@@ -21,7 +21,6 @@ This is one of my side projects, so there might be a bug or two hiding around. T
 
 The project is almost mature enough for first release, what remains is:
 
-- [ ] Repair summaryline
 - [ ] Move to wss instead of ws to make application more secure
 - [ ] Process and upsert much larger dataset
 

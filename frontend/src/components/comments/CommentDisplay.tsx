@@ -8,6 +8,7 @@ import {
   HStack,
   VStack,
   useMediaQuery,
+  Center,
 } from "@chakra-ui/react";
 import { GroupedComments, Settings } from "../../App";
 import CommentStack from "./CommentStack";
@@ -90,12 +91,20 @@ function CommentDisplay({
     <>
       {allComments.length > 0 &&
         <VStack w="80%" ml="auto" mr="auto">
-          <HStack ml="auto" mr="auto">
-            <Heading>{summarizeSentiment(allComments)}</Heading>
-          </HStack>
-          <HStack ml="auto" mr="auto">
-            {allRelevantComments.length}/{QUERY_COMMENT_COUNT} relevant comments,
-          </HStack>
+          <Flex w="100%" justify="center">
+            <VStack w="40%" textAlign="right" mr="1rem">
+              <Box w="100%" ml="auto">
+                {allRelevantComments.length}/{QUERY_COMMENT_COUNT} relevant comments
+              </Box>
+              <Box w="100%" ml="auto">
+                {relevantComments.positive.length} are positive 👍 and {relevantComments.negative.length} are negative 👎
+              </Box>
+            </VStack>
+
+            <Box w="40%" textAlign="left" ml="1rem" >
+              <Heading>{summarizeSentiment(allComments)}</Heading>
+            </Box>
+          </Flex>
 
           <Divider
             borderColor="grey.300"
