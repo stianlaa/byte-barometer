@@ -8,7 +8,6 @@ import {
   HStack,
   VStack,
   useMediaQuery,
-  Center,
 } from "@chakra-ui/react";
 import { GroupedComments, Settings } from "../../App";
 import CommentStack from "./CommentStack";
