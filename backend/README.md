@@ -34,19 +34,13 @@ ENABLE_GPU=True
 The backend application will regularly fetch, process and store new comments from hackernews so that they may be queried. However this will just happen to new comments, to populate the index with an initial set of data you can do as follows:
 
 ```bash
+source .venv/bin/activate
+# Last two months, up to 200 000 documents
+python3 populate.py -l 5184000 -d 200000
+```
+
+Alternatively if you prefer the docker image:
+
+```bash
 docker run --gpus all -v .:/app -it --env-file ../.env --entrypoint python3 byte-barometer populate.py -l 72000 -d 10000
 ```
-
-After initial setup, build the docker image if you haven't already
-
-```bash
-docker build -t byte-barometer .
-```
-
-Then run the backend using the docker compose file, keeping your working environment clean and separated. This assumes you've configured your .env file already.
-
-```bash
-docker compose up
-```
-
-With the docker container running the backend should serve and maintain the vector database data.

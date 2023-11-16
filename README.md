@@ -21,18 +21,16 @@ This is one of my side projects, so there might be a bug or two hiding around. T
 
 The project is almost mature enough for first release, what remains is:
 
-- [ ] Move to wss instead of ws to make application more secure
 - [ ] Process and upsert much larger dataset
 
 ## Future work
 
-- [ ] Test alternative language models for quality, find locally evaluated model
+- [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
 - [ ] Format comments, allow links etc.
 - [ ] A: New cheaper 3.5 turbo details from openai, either adopt that model if sensible
 - [ ] B: Replace openai integration with huggingface model,
 - [ ] Add query DB and cache for results, show list of some of the chosen subjects and their results by default on loading.
 - [ ] Replace build pipeline with less hardcoded config, perhaps terraform https://github.com/Paperspace/terraform-provider-paperspace?ref=blog.paperspace.com , should support both paperspace and digital ocean
-- [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead
 - [ ] Update cuda in use to 12.2.2 on Dockerfile and host platform, perhaps hindered by nvidia driver
 - [ ] Test lower gunicorn timeout, 30 is default, 300 is current
 - [ ] Tighten CORS

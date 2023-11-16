@@ -90,11 +90,12 @@ def upsert_document_chunk(documents: list[Document]):
             },
         }
         upsert_chunk.append(upsert_data)
-        with open(file_path, "a") as file:
-            tidy = upsert_data
-            tidy["values"] = []
-            tidy["sparse_values"] = []
-            file.write(json.dumps(tidy) + "\n")
+        if write_to_file:
+            with open(file_path, "a") as file:
+                tidy = upsert_data
+                tidy["values"] = []
+                tidy["sparse_values"] = []
+                file.write(json.dumps(tidy) + "\n")
 
     # Upsert or persist data
     if not write_to_file:
