@@ -2,8 +2,6 @@ import { CommentWithSentiment } from "../comments/Comment";
 import {
   Box,
   Button,
-  Center,
-  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -97,25 +95,16 @@ function QueryInput({ setComments }: QueryInputProps) {
   }, [setComments]);
 
   return (
-    <VStack>
-      <Center>
-        <Heading size="sm">
-          What does HackerNews think about.. {" "}
-        </Heading>
-        <QuickQueryList onClickQuery={(subject) => {
-          setQueryString(subject);
-          querySubject(subject);
-        }} />
-      </Center>
-      <InputGroup size="lg" width={"75%"} mr="auto" ml="auto" mb={5}>
+    <VStack w={"80%"} ml="auto" mr="auto" mb="0.5rem">
+      <InputGroup size="md">
         <Input
-          fontSize={20}
           color="grey.900"
           bgColor="beige.500"
           borderColor="grey.500"
           value={queryString}
           onChange={(e) => setQueryString(e.target.value)}
-          // placeholder={`What does Hackernews think about.. ${exampleSubject}?`}
+          placeholder={`What does Hackernews think about..`}
+          fontSize={["sm", "xl"]}
           onKeyDown={handleCompletion}
           sx={{
             "::placeholder": {
@@ -123,6 +112,7 @@ function QueryInput({ setComments }: QueryInputProps) {
             },
           }}
         />
+
         <InputRightElement>
           <Button
             size="s"
@@ -140,6 +130,10 @@ function QueryInput({ setComments }: QueryInputProps) {
           </Button>
         </InputRightElement>
       </InputGroup>
+      <QuickQueryList onClickQuery={(subject) => {
+        setQueryString(subject);
+        querySubject(subject);
+      }} />
     </VStack >);
 }
 
