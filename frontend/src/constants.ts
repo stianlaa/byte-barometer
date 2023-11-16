@@ -8,6 +8,7 @@ export const POSITIVE = "Positive";
 export const NEGATIVE = "Negative";
 export const NEUTRAL = "Neutral";
 
+export const EXAMPLE_SUBJECT_COUNT =  4;
 export const EXAMPLE_SUBJECTS = [
   "Rust",
   "commuting",

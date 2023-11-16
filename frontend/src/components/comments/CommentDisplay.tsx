@@ -1,6 +1,7 @@
 import {
   SimpleGrid,
   Box,
+  Text,
   Button,
   Heading,
   Flex,
@@ -8,6 +9,7 @@ import {
   HStack,
   VStack,
   useMediaQuery,
+  Center,
 } from "@chakra-ui/react";
 import { GroupedComments, Settings } from "../../App";
 import CommentStack from "./CommentStack";
@@ -90,24 +92,37 @@ function CommentDisplay({
     <>
       {allComments.length > 0 &&
         <VStack w="80%" ml="auto" mr="auto">
-          <Flex w="100%" justify="center">
-            <VStack w="40%" textAlign="right" mr="1rem">
-              <Box w="100%" ml="auto">
+          <Center w="100%" >
+            <VStack
+              // w="40%"
+              mr="0.5rem"
+              fontSize={["xs", "md"]}
+              align="right"
+              textAlign="right"
+              spacing={0}
+            >
+              <Text fontSize={["xs", "md"]}>
                 {allRelevantComments.length}/{QUERY_COMMENT_COUNT} relevant comments
-              </Box>
-              <Box w="100%" ml="auto">
-                {relevantComments.positive.length} are positive 👍 and {relevantComments.negative.length} are negative 👎
-              </Box>
+              </Text>
+              <Text >
+                {relevantComments.positive.length} positive, {relevantComments.negative.length} negative
+              </Text>
             </VStack>
 
-            <Box w="40%" textAlign="left" ml="1rem" >
-              <Heading>{summarizeSentiment(allComments)}</Heading>
-            </Box>
-          </Flex>
+            <VStack
+              // w="40%"
+              ml="0.5rem"
+              fontSize={["lg", "xl"]}
+              textAlign="left"
+              align="Left"
+            >
+              <Heading >{summarizeSentiment(allComments)}</Heading>
+            </VStack>
+          </Center>
 
           <Divider
             borderColor="grey.300"
-            m="0.25rem  auto 0.25rem auto"
+            m="0rem  auto 0rem auto"
             w="90%"
             borderWidth="2px 0 0 0"
           />
@@ -165,7 +180,9 @@ function CommentDisplay({
         </VStack>
       }
 
-      <SimpleGrid columns={columnCount} spacing={10} mt="1rem">
+      <SimpleGrid columns={columnCount} spacing={10} mt="1rem"
+        m={isLargerThan800 ? "1rem 0 0 0" : "0.5rem 0.5rem 0 0.5rem"}
+      >
         {settings.showPositive && (
           <CommentStack
             headingText="Positive"
