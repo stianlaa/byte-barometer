@@ -1,5 +1,5 @@
 from logger_setup import logger
-from torch import no_grad
+from torch import no_grad, cuda
 from splade.models.transformer_rep import Splade
 from transformers import AutoTokenizer
 from os import environ
@@ -16,10 +16,18 @@ class Toolbox:
             self._initialize_tokenizer()
 
     def _initialize_tokenizer(self):
-        logger.info("Initializing Splade toolbox")
         self._lazy = environ.get("LAZY_INIT_MODELS", "False") == "True"
         self._sparse_model = Splade(SPARSE_MODEL_ID, agg="max")
-        self._sparse_model.to("cpu")
+
+        if environ.get("ENABLE_GPU", "False") == "True":
+            logger.info("Initializing Splade toolbox with GPU")
+            self._sparse_model.to(0)
+        else:
+            logger.info("Initializing Splade toolbox with CPU")
+            logger.info("Initializing Dense embedding toolbox with CPU")
+            self._sparse_model.to("cpu")
+
+        # Eval now? Shouldn't be neccessary I think?
         self._sparse_model.eval()
 
         # Initialize the tokenizer
@@ -50,8 +58,10 @@ def create_sparse_embeddings(document_chunk) -> list:
         tokens = toolbox.tokenizer(document_text, return_tensors="pt")
 
         with no_grad():
+            device = 0 if environ.get("ENABLE_GPU", "False") == "True" else "cpu"
+
             # Create sparse embeddings
-            sparse_embeddings = toolbox.sparse_model(d_kwargs=tokens.to("cpu"))[
+            sparse_embeddings = toolbox.sparse_model(d_kwargs=tokens.to(device))[
                 "d_rep"
             ].squeeze()
 
@@ -60,4 +70,5 @@ def create_sparse_embeddings(document_chunk) -> list:
             values = sparse_embeddings[indices].cpu().tolist()
             sparse = {"indices": indices, "values": values}
             chunk_result.append(sparse)
+
     return chunk_result
