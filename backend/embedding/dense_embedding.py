@@ -1,7 +1,6 @@
-# from logger_setup import logger
+from logger_setup import logger
 from os import environ
 from sentence_transformers import SentenceTransformer
-import torch
 
 DENSE_MODEL_ID = "all-MiniLM-L6-v2"
 
@@ -15,8 +14,12 @@ class Toolbox:
             self._initialize_pipeline()
 
     def _initialize_pipeline(self):
-        # logger.info("Initializing Dense embedding toolbox")
-        self._sentence_transformer = SentenceTransformer(DENSE_MODEL_ID)
+        if environ.get("ENABLE_GPU", "False") == "True":
+            logger.info("Initializing Dense embedding toolbox with GPU")
+            self._sentence_transformer = SentenceTransformer(DENSE_MODEL_ID, device=0)
+        else:
+            logger.info("Initializing Dense embedding toolbox with CPU")
+            self._sentence_transformer = SentenceTransformer(DENSE_MODEL_ID)
 
     @property
     def sentence_transformer(self):
@@ -49,18 +52,3 @@ def openai_create_dense_embeddings(text_list: list[str]) -> list:
     embeddings = [entry["embedding"] for entry in data]
 
     return list(embeddings)
-
-
-if __name__ == "__main__":
-    # result = create_dense_embeddings(["The answer to life is"])
-    hf_result = create_dense_embeddings(
-        ["The answer to life is", "another example is "]
-    )
-    print(f"size 2: {len(hf_result)}")
-    print(f"size 384: {len(hf_result[0])}")
-
-    openai_result = openai_create_dense_embeddings(
-        ["The answer to life is", "another example is "]
-    )
-    print(f"size 2: {len(openai_result)}")
-    print(f"size 1536: {len(openai_result[0])}")
