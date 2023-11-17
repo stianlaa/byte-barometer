@@ -17,14 +17,6 @@ Like many web applications the Byte Barometer can be split into three layers, a 
 
 This is one of my side projects, so there might be a bug or two hiding around. The code will be kept open source and hosting, storage and GPU specs will intentionally be kept quite small for sake of costs. If you do happen to find it interesting and want to throw in a PR you are very welcome to do so!
 
-## Path to production
-
-The project is almost mature enough for first release, what remains is:
-
-- [ ] A: New cheaper 3.5 turbo details from openai, either adopt that model if sensible
-- [ ] B: Replace openai integration with huggingface model,
-- [ ] Process and upsert much larger dataset
-
 ## Future work
 
 - [ ] Improve sentence split by adjusting decoding to remove htmltags and other non-ascii character, Add use of https://pypi.org/project/semantic-text-splitter/ instead

@@ -10,10 +10,11 @@ from service.pinecone_client import create_index_if_missing
 
 def populate(args):
     create_index_if_missing()
-
-    logger.info("Populating index")
     last = 3600 if args.last is None else args.last
     documentLimit = 100 if args.documentLimit is None else args.documentLimit
+    logger.info(
+        f"Populating index with comments from last {last} seconds, up to {documentLimit} documents"
+    )
     populate_index(last, documentLimit)
 
 

@@ -21,12 +21,12 @@ class Toolbox:
 
     def _initialize_pipeline(self):
         if environ.get("ENABLE_GPU", "False") == "True":
-            logger.info("Initializing sentiment toolbox with GPU")
+            logger.info("Initializing Sentiment toolbox with GPU")
             self._sentiment_pipeline = pipeline(
                 "text-classification", model=SENTIMENT_MODEL_ID, device=0
             )
         else:
-            logger.info("Initializing sentiment toolbox with CPU")
+            logger.info("Initializing Sentiment toolbox with CPU")
             self._sentiment_pipeline = pipeline(
                 "text-classification", model=SENTIMENT_MODEL_ID
             )
