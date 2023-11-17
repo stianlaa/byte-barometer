@@ -1,16 +1,21 @@
+from dotenv import load_dotenv
+
+load_dotenv("../.env")
+
 from logger_setup import logger
 from argparse import ArgumentParser
-from action.populate_index import populate
+from action.populate_index import populate_index
 from service.pinecone_client import create_index_if_missing
 
 
 def populate(args):
     create_index_if_missing()
-
-    logger.info("Populating index")
     last = 3600 if args.last is None else args.last
     documentLimit = 100 if args.documentLimit is None else args.documentLimit
-    populate(last, documentLimit)
+    logger.info(
+        f"Populating index with comments from last {last} seconds, up to {documentLimit} documents"
+    )
+    populate_index(last, documentLimit)
 
 
 def main():

@@ -10,6 +10,8 @@ import json
 index = environ["PINECONE_INDEX"]
 write_to_file = environ.get("WRITE_TO_FILE", "False") == "True"
 file_path = "upsert_data.jsonl"
+dimension = 1536  # openai
+dimension = 384  # huggingface
 
 
 class Toolbox:
@@ -21,7 +23,7 @@ class Toolbox:
             self._initialize_index()
 
     def _initialize_index(self):
-        logger.info("Initializing semantic toolbox")
+        logger.info("Initializing Semantic toolbox")
         init(
             api_key=environ["PINECONE_API_KEY"],
             environment=environ["PINECONE_ENVIRONMENT"],
@@ -50,7 +52,7 @@ def create_index_if_missing():
         return
     else:
         logger.info(f"Creating index: {index}")
-        create_index(index, dimension=1536, metric="dotproduct", pod_type="s1")
+        create_index(index, dimension=dimension, metric="dotproduct", pod_type="s1")
         logger.info(f"Index created")
 
 
@@ -90,11 +92,12 @@ def upsert_document_chunk(documents: list[Document]):
             },
         }
         upsert_chunk.append(upsert_data)
-        with open(file_path, "a") as file:
-            tidy = upsert_data
-            tidy["values"] = []
-            tidy["sparse_values"] = []
-            file.write(json.dumps(tidy) + "\n")
+        if write_to_file:
+            with open(file_path, "a") as file:
+                tidy = upsert_data
+                tidy["values"] = []
+                tidy["sparse_values"] = []
+                file.write(json.dumps(tidy) + "\n")
 
     # Upsert or persist data
     if not write_to_file:

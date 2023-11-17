@@ -20,7 +20,7 @@ def slice_into_chunks(arr: list, chunk_size: int) -> list:
     return [arr[i : i + chunk_size] for i in range(0, len(arr), chunk_size)]
 
 
-def populate(last: int, document_limit: int) -> None:
+def populate_index(last: int, document_limit: int) -> None:
     # Define outer bounds of data to populate using
     populate_from = time.time() - last
     populate_to = time.time()
